@@ -1,0 +1,12 @@
+# TuxLabel – Python dependencies
+#
+# Install on Ubuntu / Linux Mint via apt (recommended):
+#   sudo apt install python3-pyqt6 python3-pyqt6.sip
+#
+# Or via pip in a virtual environment:
+#   pip install PyQt6
+#
+# Optional – only needed if you extend printing via Pillow:
+#   pip install Pillow
+
+PyQt6>=6.4.0
