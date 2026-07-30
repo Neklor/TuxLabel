@@ -2,6 +2,10 @@
 
 **Etiketten-Editor für Brother P-Touch Drucker (TZe-Bänder) unter Linux.**
 
+[![Download](https://img.shields.io/github/v/release/Neklor/TuxLabel?label=Download%20.deb&color=27AE60)](../../releases/latest)
+[![Lizenz: GPL-3.0](https://img.shields.io/badge/Lizenz-GPL--3.0-2C3E50)](LICENSE)
+[![Mit PayPal spenden](https://img.shields.io/badge/Spenden-PayPal-00457C?logo=paypal&logoColor=white)](https://paypal.me/CKrogmann)
+
 *(English version below — [jump to English](#tuxlabel-english))*
 
 TuxLabel ist ein Desktop-Programm für Linux, mit dem sich Etiketten für den
@@ -14,6 +18,18 @@ Kabelfähnchen.
 **[⬇ Herunterladen und installieren](../../releases/latest)** — für Ubuntu,
 Linux Mint und Debian als `.deb`-Paket zum Doppelklicken, ohne Terminal.
 [Andere Distributionen](#andere-distributionen--aus-dem-quellcode).
+
+> ### ☕ TuxLabel ist kostenlos
+>
+> Wenn es dir Arbeit erspart, kannst du die Weiterentwicklung mit einer Spende
+> unterstützen — **allgemein** für das Projekt oder **gezielt für ein
+> Druckermodell**, das TuxLabel noch nicht kennt. Kommt genug für Gerät und
+> Bänder zusammen, kaufe ich es und baue die Unterstützung ein.
+>
+> [![Mit PayPal spenden](https://img.shields.io/badge/Mit%20PayPal%20spenden-00457C?style=for-the-badge&logo=paypal&logoColor=white)](https://paypal.me/CKrogmann)
+>
+> Wie die Zuordnung zu einem Modell funktioniert, steht unter
+> [Projekt unterstützen](#projekt-unterstützen).
 
 ---
 
@@ -230,7 +246,7 @@ dafür könnt ihr das Projekt unterstützen.
 TuxLabel entsteht in meiner Freizeit und ist kostenlos. Wenn es dir Arbeit
 erspart, kannst du die Weiterentwicklung mit einer Spende unterstützen:
 
-**→ [paypal.me/CKrogmann](https://paypal.me/CKrogmann)**
+[![Mit PayPal spenden](https://img.shields.io/badge/Mit%20PayPal%20spenden-00457C?style=for-the-badge&logo=paypal&logoColor=white)](https://paypal.me/CKrogmann)
 
 Es gibt zwei Wege, und du entscheidest über das **Nachrichtenfeld** von PayPal,
 welchen du nimmst:
@@ -382,7 +398,7 @@ guessed. That's exactly why you can support the project.
 TuxLabel is free and built in my spare time. If it saves you work, you can
 support its development with a donation:
 
-**→ [paypal.me/CKrogmann](https://paypal.me/CKrogmann)**
+[![Donate with PayPal](https://img.shields.io/badge/Donate%20with%20PayPal-00457C?style=for-the-badge&logo=paypal&logoColor=white)](https://paypal.me/CKrogmann)
 
 PayPal's **message field** decides which of the two ways you choose:
 
