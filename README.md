@@ -11,31 +11,32 @@
 TuxLabel ist ein Desktop-Programm für Linux, mit dem sich Etiketten für den
 Brother PT-P700 gestalten und direkt über CUPS ausdrucken lassen — inklusive
 maßstabsgetreuer Vorschau (WYSIWYG), Bildern und einem eigenen Modus für
-Kabelfähnchen.
+Kabelfähnchen. Weitere Brother Label Drucker sind aktuell ungetestet, können aber
+auch angefragt werden, siehe [Projekt unterstützen](#projekt-unterstützen).
 
 ![TuxLabel – Hauptfenster im dunklen Design mit einem 12-mm-Etikett](docs/screenshot.png)
 
 **[⬇ Herunterladen und installieren](../../releases/latest)** — für Ubuntu,
-Linux Mint und Debian als `.deb`-Paket zum Doppelklicken, ohne Terminal.
-[Andere Distributionen](#andere-distributionen--aus-dem-quellcode).
+Linux Mint und Debian als `.deb` Paket. Zum installieren einfach die .deb Datei starten.
+[für andere Distributionen siehe hier](#andere-distributionen--über-den-quellcode).
 
 > ### ☕ TuxLabel ist kostenlos
 >
-> Wenn es dir Arbeit erspart, kannst du die Weiterentwicklung mit einer Spende
+> Wenn es für euch hilfreich ist, könnt ihr die Weiterentwicklung mit einer Spende
 > unterstützen — **allgemein** für das Projekt oder **gezielt für ein
-> Druckermodell**, das TuxLabel noch nicht kennt. Kommt genug für Gerät und
-> Bänder zusammen, kaufe ich es und baue die Unterstützung ein.
+> Druckermodell**, das TuxLabel noch nicht kennt. Kommt genug für ein bestimmtes Gerät und
+> Bänder zusammen, kaufe ich es und baue die Unterstützung gern ein.
 >
 > [![Mit PayPal spenden](https://img.shields.io/badge/Mit%20PayPal%20spenden-00457C?style=for-the-badge&logo=paypal&logoColor=white)](https://paypal.me/CKrogmann)
 >
-> Wie die Zuordnung zu einem Modell funktioniert, steht unter
+> Wie die Zuordnung von Spenden zu einem Modell funktioniert, steht unter
 > [Projekt unterstützen](#projekt-unterstützen).
 
 ---
 
 ## Funktionen
 
-**Bearbeiten**
+**Bearbeitung**
 * Textfelder mit freier Schriftart, -größe und -stil (fett, kursiv,
   unterstrichen, durchgestrichen), Ausrichtung links/zentriert/rechts/Blocksatz
 * Bilder aus Datei oder direkt aus der Zwischenablage (`Strg+V`)
@@ -47,9 +48,8 @@ Linux Mint und Debian als `.deb`-Paket zum Doppelklicken, ohne Terminal.
 * Datum und Uhrzeit einfügen (`F5`)
 
 **Band und Etikett**
-* Bandbreiten 3,5 / 6 / 9 / 12 / 24 mm — die druckbare Höhe entspricht Brothers
-  Spezifikation, damit die Ausgabe physikalisch maßhaltig bleibt
-* Lineal in Zentimetern, Zoom über `Strg`+Mausrad
+* Bandbreiten 3,5 / 6 / 9 / 12 / 24 mm
+* Lineal in Zentimetern, Zoom über `Strg` + Mausrad
 * Feste Etikettenlänge oder **Auto**-Länge, die mit dem Inhalt mitwächst
 
 **Kabelfähnchen-Modus**
@@ -60,16 +60,16 @@ Linux Mint und Debian als `.deb`-Paket zum Doppelklicken, ohne Terminal.
   Falzlinie in der Mitte
 
 **Drucken**
-* Ausgabe über CUPS (`lp`) an den PT-P700
+* Ausgabe über CUPS (`lp`) an den PT-P700 oder andere Modelle
 * Druckmodus wählbar: Linien-Modus für Text, Dithering für Fotos
 * Prüfung, ob die eingestellte Bandbreite zum eingelegten Band passt
 
 **Programm**
 * Dateiformat `.ptle` (JSON, Koordinaten in Millimetern), Verlauf der zuletzt
   geöffneten Dateien
-* Helles und dunkles Design
+* Darkmode vorhanden
 * Speicherbare Voreinstellungen für Bandbreite, Schriftart, -größe und -stil
-* Mehrsprachig: Deutsch ist eingebaut, Englisch/Spanisch/Französisch liegen als
+* Mehrsprachig: Deutsch ist fest eingebaut, Englisch/Spanisch/Französisch liegen als
   JSON-Dateien bei — eigene Übersetzungen sind ohne Programmieren möglich
   (siehe [lang/README.md](lang/README.md))
 
@@ -99,7 +99,7 @@ Wer das Terminal bevorzugt:
 sudo apt install ./tuxlabel_1.0.0_all.deb
 ```
 
-### Andere Distributionen — aus dem Quellcode
+### Andere Distributionen — über den Quellcode
 
 Fedora, Arch, openSUSE und alles andere: TuxLabel ist reines Python, es muss
 nichts kompiliert werden.
@@ -150,12 +150,10 @@ rendern). Die Versionsnummer zieht das Skript aus `tuxlabel/__init__.py`.
 
 ## Drucker einrichten
 
-> **Das ist der Schritt, der wirklich Mühe macht** — nicht die Installation
-> von TuxLabel. Ohne eingerichteten Drucker kannst du Etiketten entwerfen und
-> speichern, aber nicht drucken.
-
 TuxLabel rendert das Etikett in ein PNG mit 180 dpi und übergibt es via `lp`
-an CUPS. Der Drucker muss also als CUPS-Drucker vorhanden sein. Nachsehen:
+an CUPS. Der Drucker muss also als CUPS-Drucker vorhanden sein. 
+
+Überprüfen mit:
 
 ```bash
 lpstat -p          # eingerichtete Drucker anzeigen
@@ -163,8 +161,7 @@ lpstat -p          # eingerichtete Drucker anzeigen
 
 Erscheint der PT-P700 in dieser Liste, findet ihn auch der Druckdialog von
 TuxLabel. Falls nicht, braucht es zuerst den Brother-CUPS-Treiber für das
-Modell — den stellt Brother auf seinen Support-Seiten bereit; das ist ein
-Schritt außerhalb von TuxLabel.
+Modell — den stellt Brother auf seinen Support-Seiten bereit.
 
 > **Hinweis:** Die im Werkzeugkasten eingestellte Bandbreite muss dem
 > eingelegten TZe-Band entsprechen — sonst quittiert der PT-P700 den Auftrag
@@ -238,18 +235,18 @@ herstellerspezifische Teil steckt fast vollständig in
 
 Was dem im Weg steht, ist keine Programmierarbeit, sondern Hardware: Ein Modell
 zuverlässig zu unterstützen heißt, es tatsächlich in der Hand zu haben —
-Papierformate, Ränder und Treibereigenheiten lassen sich nicht erraten. Genau
-dafür könnt ihr das Projekt unterstützen.
+Papierformate, Ränder und Treibereigenheiten lassen sich nicht erraten. 
+Genau dafür könnt ihr dieses Projekt unterstützen.
 
 ## Projekt unterstützen
 
-TuxLabel entsteht in meiner Freizeit und ist kostenlos. Wenn es dir Arbeit
-erspart, kannst du die Weiterentwicklung mit einer Spende unterstützen:
+TuxLabel entsteht in meiner Freizeit und ist kostenlos. Wenn es euch gefällt,
+könnt ihr die Weiterentwicklung mit einer Spende unterstützen:
 
 [![Mit PayPal spenden](https://img.shields.io/badge/Mit%20PayPal%20spenden-00457C?style=for-the-badge&logo=paypal&logoColor=white)](https://paypal.me/CKrogmann)
 
-Es gibt zwei Wege, und du entscheidest über das **Nachrichtenfeld** von PayPal,
-welchen du nimmst:
+Es gibt zwei Wege, und ihr entscheidet über das **Nachrichtenfeld** von PayPal,
+welchen ihr wählt:
 
 **1. Allgemein für das Projekt** — einfach ohne Nachricht senden. Fließt in
 Pflege, Fehlerbehebung und neue Funktionen.
@@ -258,7 +255,7 @@ Pflege, Fehlerbehebung und neue Funktionen.
 Nachricht schreiben, zum Beispiel:
 
 ```
-Für DYMO LabelManager 280
+Für Brother PT-P710BTH
 ```
 
 Spenden mit Modellangabe sammle ich pro Modell. Reicht der Betrag für das Gerät
@@ -268,11 +265,9 @@ behandle sie als allgemeine Unterstützung.
 
 Praktische Hinweise:
 
-* Der Betrag lässt sich direkt in der Adresse vorwählen:
-  [paypal.me/CKrogmann/25](https://paypal.me/CKrogmann/25)
 * Welche Modelle bereits gewünscht wurden, steht in den
   [Issues mit dem Label `printer-request`](../../issues?q=label%3Aprinter-request).
-  Fehlt dein Modell, eröffne gern ein Issue — auch ohne Spende: das zeigt,
+  Fehlt dein Modell, eröffnet gern ein Issue — auch ohne Spende: das zeigt mir,
   wofür Bedarf besteht.
 * Über die Schaltfläche **Sponsor** oben auf der Projektseite geht es zum
   gleichen Link.
@@ -284,13 +279,15 @@ ein Modell zusammengekommen ist und woran ich arbeite.
 
 ## Mitmachen
 
-Fehlerberichte und Pull Requests sind willkommen. Besonders hilfreich:
+Fehlerberichte und Pull Requests sind willkommen. 
+Hilfreich sind:
 
 * **Übersetzungen** — dafür ist kein Programmieren nötig, die Anleitung steht
   in [lang/README.md](lang/README.md)
 * **Rückmeldungen zu anderen Modellen** — funktioniert der Druck? Das ist die
-  billigste Art, die Hersteller-Unterstützung auszubauen: Wer ein Gerät schon
-  besitzt, kann berichten, ohne dass ich es kaufen muss.
+  einfachste Art, die Hersteller-Unterstützung auszubauen: Wer ein Gerät
+  besitzt kann berichten ob es einwandfrei funktioniert oder ob es Fehler gibt,
+  so muss ich nur Modelle mit Problemen oder fehlenden Funktionen kaufen.
 
 Bitte im Fehlerbericht die Linux-Distribution, die Python- und PyQt6-Version,
 das Druckermodell sowie die betroffene Bandbreite angeben.
@@ -311,9 +308,31 @@ Copyright © 2026 Christoph Krogmann
 
 **A label editor for Brother P-Touch printers (TZe tapes) on Linux.**
 
+[![Download](https://img.shields.io/github/v/release/Neklor/TuxLabel?label=Download%20.deb&color=27AE60)](../../releases/latest)
+[![License: GPL-3.0](https://img.shields.io/badge/License-GPL--3.0-2C3E50)](LICENSE)
+[![Donate with PayPal](https://img.shields.io/badge/Donate-PayPal-00457C?logo=paypal&logoColor=white)](https://paypal.me/CKrogmann)
+
 TuxLabel is a Linux desktop application for designing labels for the Brother
 PT-P700 and printing them straight through CUPS — with a true-to-scale
-(WYSIWYG) preview, image support and a dedicated cable-flag mode.
+(WYSIWYG) preview, image support and a dedicated cable-flag mode. Other Brother
+label printers are currently untested, but can be requested — see
+[Supporting the project](#supporting-the-project).
+
+**[⬇ Download and install](../../releases/latest)** — for Ubuntu, Linux Mint
+and Debian as a `.deb` package. To install, simply launch the `.deb` file.
+[For other distributions, see here](#other-distributions--from-source).
+
+> ### ☕ TuxLabel is free
+>
+> If you find it useful, you can support its development with a donation —
+> **generally** for the project, or **earmarked for a printer model** TuxLabel
+> does not know yet. Once enough comes together for a particular device and
+> its tapes, I will buy it and gladly build in support.
+>
+> [![Donate with PayPal](https://img.shields.io/badge/Donate%20with%20PayPal-00457C?style=for-the-badge&logo=paypal&logoColor=white)](https://paypal.me/CKrogmann)
+>
+> How donations are attributed to a model is explained under
+> [Supporting the project](#supporting-the-project).
 
 ### Features
 
@@ -323,30 +342,33 @@ PT-P700 and printing them straight through CUPS — with a true-to-scale
 * Move with the mouse or arrow keys (1 mm, or 0.1 mm with `Ctrl`), resize via
   handles, copy formatting between text boxes, centre elements on the tape
 * Undo (up to 50 steps), insert date and time
-* Tape widths 3.5 / 6 / 9 / 12 / 24 mm using Brother's printable-height specs,
-  ruler in centimetres, `Ctrl`+wheel zoom
+* Tape widths 3.5 / 6 / 9 / 12 / 24 mm, ruler in centimetres,
+  `Ctrl` + wheel zoom
 * Fixed label length or **Auto** length that grows with the content
 * **Cable-flag mode:** splits the tape into left flag · centre bar · right
   flag, sizing the centre bar from the cable circumference (π × diameter) so
   the text never ends up wrapped around the cable; optional mirroring and a
   printable fold line
-* Printing via CUPS (`lp`) with a line mode for text and dithering for photos,
-  plus a check that the selected tape width matches the loaded tape
+* Printing via CUPS (`lp`) to the PT-P700 or other models, with a line mode
+  for text and dithering for photos, plus a check that the selected tape width
+  matches the loaded tape
 * `.ptle` file format (JSON, millimetre coordinates), recent-files list
-* Light and dark theme, storable defaults
-* Multilingual: German is built in; English, Spanish and French ship as JSON
-  files, and adding your own translation requires no programming — see
-  [lang/README.md](lang/README.md)
+* Dark mode available, storable defaults
+* Multilingual: German is built into the program; English, Spanish and French
+  ship as JSON files, and adding your own translation requires no programming
+  — see [lang/README.md](lang/README.md)
 
 ### Installation
 
 **Ubuntu, Linux Mint, Debian — no terminal needed.** On the
 **[releases page](../../releases/latest)**, download the file ending in
-**`.deb`** (`tuxlabel_<version>_all.deb`) and double-click it — *not* the
+**`.deb`** (`tuxlabel_<version>_all.deb`) and launch it — *not* the
 "Source code" archives, which cannot be installed that way. The package
 manager takes care of PyQt6, the menu entry and the icon; afterwards
 **TuxLabel** sits in your application menu under *Office*. From a terminal
 that is `sudo apt install ./tuxlabel_1.0.0_all.deb`.
+
+<a name="other-distributions--from-source"></a>
 
 **Other distributions — from source.** TuxLabel is pure Python, nothing needs
 compiling:
@@ -362,6 +384,22 @@ Run `python3 install_shortcut.py` to add an application-menu entry and a
 desktop shortcut; it writes nothing outside your home directory. To build the
 Debian package yourself, run `./tools/build-deb.sh`.
 
+### Setting up the printer
+
+TuxLabel renders the label to a PNG at 180 dpi and hands it to CUPS via `lp`,
+so the printer has to exist as a CUPS device. Check with:
+
+```bash
+lpstat -p          # list configured printers
+```
+
+If the PT-P700 appears in that list, TuxLabel's print dialog will find it too.
+If it does not, you first need Brother's CUPS driver for the model, which
+Brother provides on its support pages.
+
+> **Note:** The tape width set in the toolbar must match the TZe tape actually
+> loaded — otherwise the PT-P700 rejects the job and blinks red.
+
 ### Requirements
 
 Handled automatically by the `.deb` package; this list applies to every other
@@ -370,14 +408,8 @@ CUPS with a Brother PT-P700 driver. Only printing needs the last two —
 designing and saving works without a printer. Other P-Touch models with a CUPS
 driver may work but are untested.
 
-**Setting up the printer is the step that actually takes effort**, not
-installing TuxLabel. Check with `lpstat -p` whether your printer is a known
-CUPS device; if it is not, you need Brother's CUPS driver for the model first,
-which is a step outside TuxLabel.
-
-Note that the tape width set in the toolbar must match the TZe tape actually
-loaded, otherwise the PT-P700 rejects the job and blinks red. The full keyboard
-shortcut list is available in the app under *Help → Keyboard shortcuts*.
+The full keyboard shortcut list is available in the app under
+*Help → Keyboard shortcuts*.
 
 ### Roadmap
 
@@ -391,16 +423,17 @@ vendor-specific part lives almost entirely in
 
 What stands in the way is hardware, not code: supporting a model reliably means
 having it on the desk, because paper sizes, margins and driver quirks cannot be
-guessed. That's exactly why you can support the project.
+guessed.
+That is exactly why you can support this project.
 
 ### Supporting the project
 
-TuxLabel is free and built in my spare time. If it saves you work, you can
-support its development with a donation:
+TuxLabel is built in my spare time and is free. If you like it, you can support
+its development with a donation:
 
 [![Donate with PayPal](https://img.shields.io/badge/Donate%20with%20PayPal-00457C?style=for-the-badge&logo=paypal&logoColor=white)](https://paypal.me/CKrogmann)
 
-PayPal's **message field** decides which of the two ways you choose:
+There are two ways, and PayPal's **message field** decides which one you take:
 
 **1. General support** — just send without a message. Goes into maintenance,
 bug fixing and new features.
@@ -409,7 +442,7 @@ bug fixing and new features.
 for example:
 
 ```
-For DYMO LabelManager 280
+For Brother PT-P710BTH
 ```
 
 Earmarked donations are pooled per model. Once a model reaches the price of the
@@ -419,12 +452,10 @@ it as general support.
 
 Practical notes:
 
-* You can preset the amount in the URL:
-  [paypal.me/CKrogmann/25](https://paypal.me/CKrogmann/25)
 * Models requested so far are tracked in the
   [issues labelled `printer-request`](../../issues?q=label%3Aprinter-request).
   If yours is missing, feel free to open an issue — donation or not, it shows
-  where the demand is.
+  me where the demand is.
 * The **Sponsor** button at the top of the project page points to the same link.
 
 Donations are voluntary support for a private hobby project. They are not an
@@ -433,12 +464,17 @@ I will say openly when a model has been funded and what I am working on.
 
 ### Contributing
 
-Bug reports and pull requests are welcome — translations especially, since they
-need no programming. Reports about **other printer models** are just as
-valuable: if you already own a device, your feedback expands vendor support
-without anyone having to buy anything. When reporting a bug, please include your
-distribution, your Python and PyQt6 versions, the printer model and the tape
-width involved.
+Bug reports and pull requests are welcome.
+Particularly helpful are:
+
+* **Translations** — no programming required, the guide is in
+  [lang/README.md](lang/README.md)
+* **Reports about other models** — the easiest way to widen vendor support:
+  if you own a device, you can report whether it works flawlessly or where it
+  fails, so I only need to buy models that have problems or missing features.
+
+When reporting a bug, please include your distribution, your Python and PyQt6
+versions, the printer model and the tape width involved.
 
 ### License
 
