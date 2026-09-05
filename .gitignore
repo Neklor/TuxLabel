@@ -22,3 +22,6 @@ venv/
 # OS
 *.swp
 *~
+
+# Eigenes Werkzeug, nicht Teil der Auslieferung
+tools/make-social-preview.py

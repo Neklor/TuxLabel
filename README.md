@@ -8,13 +8,13 @@
 
 *(English version below — [jump to English](#tuxlabel-english))*
 
+![TuxLabel – Hauptfenster im dunklen Design mit einem 12-mm-Etikett](docs/screenshot.png)
+
 TuxLabel ist ein Desktop-Programm für Linux, mit dem sich Etiketten für den
 Brother PT-P700 gestalten und direkt über CUPS ausdrucken lassen — inklusive
 maßstabsgetreuer Vorschau (WYSIWYG), Bildern und einem eigenen Modus für
 Kabelfähnchen. Weitere Brother Label Drucker sind aktuell ungetestet, können aber
 auch angefragt werden, siehe [Projekt unterstützen](#projekt-unterstützen).
-
-![TuxLabel – Hauptfenster im dunklen Design mit einem 12-mm-Etikett](docs/screenshot.png)
 
 **[⬇ Herunterladen und installieren](../../releases/latest)** — für Ubuntu,
 Linux Mint und Debian als `.deb` Paket. Zum installieren einfach die .deb Datei starten.
