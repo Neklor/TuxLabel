@@ -3,6 +3,22 @@
 Jede Version steht hier zuerst auf Deutsch, direkt darunter auf Englisch.
 *Each version is listed in German first, followed by English.*
 
+## [1.0.1] — 2026-09-06
+
+### Behoben
+
+* **Bandbreite 18 mm war nicht auswählbar.** Die Breite war intern bereits
+  vollständig hinterlegt — druckbare Höhe (13,0 mm) und PPD-Name (`tz-18`)
+  waren vorhanden —, fehlte aber in der Auswahlliste der Werkzeugleiste.
+  TZe-Bänder mit 18 mm ließen sich dadurch nicht bedrucken.
+
+### Fixed *(English)*
+
+* **The 18 mm tape width could not be selected.** Everything else was already
+  in place — the printable height (13.0 mm) and the PPD name (`tz-18`) — but
+  the width was missing from the toolbar's list, so 18 mm TZe tapes could not
+  be printed.
+
 ## [1.0.0] — 2026-07-29
 
 Erste öffentliche Veröffentlichung.

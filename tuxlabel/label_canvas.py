@@ -74,6 +74,7 @@ TAPE_WIDTHS: dict[str, float] = {
     "6mm":   6,
     "9mm":   9,
     "12mm":  12,
+    "18mm":  18,
     "24mm":  24,
 }
 

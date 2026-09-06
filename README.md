@@ -48,7 +48,7 @@ Linux Mint und Debian als `.deb` Paket. Zum installieren einfach die .deb Datei 
 * Datum und Uhrzeit einfügen (`F5`)
 
 **Band und Etikett**
-* Bandbreiten 3,5 / 6 / 9 / 12 / 24 mm
+* Bandbreiten 3,5 / 6 / 9 / 12 / 18 / 24 mm
 * Lineal in Zentimetern, Zoom über `Strg` + Mausrad
 * Feste Etikettenlänge oder **Auto**-Länge, die mit dem Inhalt mitwächst
 
@@ -96,7 +96,7 @@ sich TuxLabel wie jedes andere Programm über die Anwendungsverwaltung.
 Wer das Terminal bevorzugt:
 
 ```bash
-sudo apt install ./tuxlabel_1.0.0_all.deb
+cd ~/Downloads && sudo apt install ./tuxlabel_*_all.deb
 ```
 
 ### Andere Distributionen — über den Quellcode
@@ -342,7 +342,7 @@ and Debian as a `.deb` package. To install, simply launch the `.deb` file.
 * Move with the mouse or arrow keys (1 mm, or 0.1 mm with `Ctrl`), resize via
   handles, copy formatting between text boxes, centre elements on the tape
 * Undo (up to 50 steps), insert date and time
-* Tape widths 3.5 / 6 / 9 / 12 / 24 mm, ruler in centimetres,
+* Tape widths 3.5 / 6 / 9 / 12 / 18 / 24 mm, ruler in centimetres,
   `Ctrl` + wheel zoom
 * Fixed label length or **Auto** length that grows with the content
 * **Cable-flag mode:** splits the tape into left flag · centre bar · right
@@ -366,7 +366,7 @@ and Debian as a `.deb` package. To install, simply launch the `.deb` file.
 "Source code" archives, which cannot be installed that way. The package
 manager takes care of PyQt6, the menu entry and the icon; afterwards
 **TuxLabel** sits in your application menu under *Office*. From a terminal
-that is `sudo apt install ./tuxlabel_1.0.0_all.deb`.
+that is `cd ~/Downloads && sudo apt install ./tuxlabel_*_all.deb`.
 
 <a name="other-distributions--from-source"></a>
 
