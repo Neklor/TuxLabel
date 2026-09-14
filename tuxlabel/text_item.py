@@ -26,9 +26,11 @@ _H_ALIGN_VALUES = (H_ALIGN_LEFT, H_ALIGN_CENTER, H_ALIGN_RIGHT, H_ALIGN_JUSTIFY)
 # das Band um 90°, steht normal gesetzter Text auf der Seite.
 #
 #   DIR_HORIZONTAL  Normalfall — Text läuft entlang des Bandes.
-#   DIR_STACKED     Zeichen einzeln aufrecht untereinander (»vertikale
-#                   Schrift« wie in Brothers Software). Beliebig lang, weil
-#                   die Kette entlang der Bandlänge wächst.
+#   DIR_STACKED     Zeichen einzeln aufrecht untereinander. Beliebig lang,
+#                   weil die Kette entlang der Bandlänge wächst. In der
+#                   Oberfläche heißt das »Vertikal« — so nennt es auch
+#                   Brothers Software, und von dort kommen die meisten
+#                   Nutzer. Der Name hier beschreibt dagegen die Mechanik.
 #   DIR_ROTATED     Der ganze Textblock um 90° gekippt. Die Zeile läuft quer
 #                   über das Band und ist damit auf dessen druckbare Höhe
 #                   begrenzt — nur für kurze Texte auf breitem Band sinnvoll.
@@ -45,6 +47,15 @@ _DIR_VALUES    = (DIR_HORIZONTAL, DIR_STACKED, DIR_ROTATED)
 # das LINKE Bandende beim Aufkleben nach OBEN zeigt und man von oben nach unten
 # liest, wenn das Band im Uhrzeigersinn hochkant gedreht wird.
 _ROTATION_DEG = -90.0
+
+# Zeilenhöhe im vertikalen Modus, in Prozent der normalen Zeilenhöhe der
+# Schrift. Dort steht je Zeile nur EIN Zeichen, und die normale Zeilenhöhe
+# bemisst sich an Oberlänge + Unterlänge + Durchschuss — also am
+# schlimmstmöglichen Zeichen. Bei Großbuchstaben bleibt dadurch sichtbar Luft,
+# die auf einem Etikett unnötig Band kostet. Der Wert ist bewusst nicht
+# aggressiver: Bei Paarungen wie »Ä« über »g« sollen sich die Zeichen noch
+# nicht berühren.
+_STACKED_LINE_HEIGHT_PCT = 78
 
 # IDs der Griffe
 HANDLE_TL = 0  # oben links (symmetrische Ecke)
@@ -570,6 +581,10 @@ class TextBox(QGraphicsItem):
         cursor.select(QTextCursor.SelectionType.Document)
         bfmt = QTextBlockFormat()
         bfmt.setAlignment(align)
+        if self._direction == DIR_STACKED and not self._editing:
+            bfmt.setLineHeight(_STACKED_LINE_HEIGHT_PCT,
+                               QTextBlockFormat.LineHeightTypes
+                               .ProportionalHeight.value)
         cursor.mergeBlockFormat(bfmt)
 
     def _handle_rects(self) -> dict:

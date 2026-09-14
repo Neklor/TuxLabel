@@ -11,10 +11,10 @@ Jede Version steht hier zuerst auf Deutsch, direkt darunter auf Englisch.
   — Kabel, Ordnerrücken, Schalterleisten. Drei Einstellungen in der
   Werkzeugleiste:
   * **Waagerecht** — unverändert der Normalfall.
-  * **Gestapelt** — die Zeichen stehen einzeln aufrecht untereinander, wie
-    bei Brothers »vertikaler Schrift«. Die Kette wächst entlang der
+  * **Vertikal** — die Zeichen stehen einzeln aufrecht untereinander, so
+    wie es auch Brothers Software nennt. Die Kette wächst entlang der
     Bandlänge, die Textlänge ist also nicht begrenzt.
-  * **Gedreht** — der ganze Textblock kippt um 90°. Die Zeile läuft quer
+  * **Gekippt** — der ganze Textblock kippt um 90°. Die Zeile läuft quer
     über das Band und muss daher kürzer als dessen druckbare Höhe sein;
     sinnvoll für kurze Texte auf breitem Band.
 
@@ -26,10 +26,10 @@ Jede Version steht hier zuerst auf Deutsch, direkt darunter auf Englisch.
 * **Per-text-box writing direction.** For tapes applied vertically — cables,
   folder spines, switch panels. Three settings in the toolbar:
   * **Horizontal** — the normal case, unchanged.
-  * **Stacked** — the characters sit one below the other, each upright, the
-    way Brother calls "vertical text". The chain grows along the tape, so
-    the text length is not limited.
-  * **Rotated** — the whole text block is tilted by 90°. The line then runs
+  * **Vertical** — the characters sit one below the other, each upright,
+    matching the name Brother's own software uses. The chain grows along
+    the tape, so the text length is not limited.
+  * **Tilted** — the whole text block is tilted by 90°. The line then runs
     across the tape and must be shorter than its printable height; useful
     for short text on wide tape.
 

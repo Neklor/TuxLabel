@@ -43,7 +43,7 @@ Linux Mint und Debian als `.deb` Paket. Zum installieren einfach die .deb Datei 
 * Verschieben per Maus oder Pfeiltasten (1 mm, mit `Strg` in 0,1-mm-Schritten),
   Größenänderung über Anfasser
 * Format übertragen von einem Textfeld auf ein anderes
-* Schriftrichtung je Textfeld: waagerecht, gestapelt oder um 90° gedreht —
+* Schriftrichtung je Textfeld: waagerecht, vertikal oder um 90° gekippt —
   für Bänder, die hochkant aufgeklebt werden
 * Elemente vertikal auf dem Band und horizontal auf dem Etikett zentrieren
 * Rückgängig (bis zu 50 Schritte), Ausschneiden/Kopieren/Einfügen, Verdoppeln
@@ -343,7 +343,7 @@ and Debian as a `.deb` package. To install, simply launch the `.deb` file.
 * Images from file or pasted from the clipboard (`Ctrl+V`)
 * Move with the mouse or arrow keys (1 mm, or 0.1 mm with `Ctrl`), resize via
   handles, copy formatting between text boxes, centre elements on the tape
-* Writing direction per text box — horizontal, stacked or rotated by 90°,
+* Writing direction per text box — horizontal, vertical or tilted by 90°,
   for tapes that are applied vertically
 * Undo (up to 50 steps), insert date and time
 * Tape widths 3.5 / 6 / 9 / 12 / 18 / 24 mm, ruler in centimetres,

@@ -98,15 +98,9 @@ _DEFAULTS: dict[str, object] = {
     "toolbar.superscript_tip":  "Hochgestellt",
     "toolbar.subscript":        "x₂",
     "toolbar.subscript_tip":    "Tiefgestellt",
-    "toolbar.textdir_horizontal_tip": ("Schrift waagerecht — der Normalfall.\n"
-                                       "Der Text läuft entlang des Bandes."),
-    "toolbar.textdir_stacked_tip":    ("Zeichen untereinander stapeln.\n"
-                                       "Jeder Buchstabe steht aufrecht, wenn das Band hochkant\n"
-                                       "aufgeklebt wird (Kabel, Ordnerrücken). Beliebig lang."),
-    "toolbar.textdir_rotated_tip":    ("Textblock um 90° kippen.\n"
-                                       "Die Zeile läuft quer über das Band und passt daher nur,\n"
-                                       "solange sie kürzer als die druckbare Bandhöhe ist —\n"
-                                       "für kurze Texte auf breitem Band."),
+    "toolbar.textdir_horizontal_tip": "Waagerecht",
+    "toolbar.textdir_stacked_tip":    "Vertikal — Zeichen untereinander",
+    "toolbar.textdir_rotated_tip":    "Textblock um 90° kippen",
     "toolbar.format_paint":     "Format ↷",
     "toolbar.format_paint_tip": ("Format übertragen:\n"
                                  "Ein Textfeld auswählen → Klick → auf Zielfeld klicken.\n"
@@ -302,7 +296,7 @@ _DEFAULTS: dict[str, object] = {
       <li><b>Format übertragen:</b> Quelltextfeld markieren, Schaltfläche
           <i>Format</i> klicken, dann auf das Zielfeld klicken.</li>
       <li><b>Schriftrichtung:</b> Für Bänder, die hochkant aufgeklebt
-          werden (Kabel, Ordnerrücken). <i>Gestapelt</i> stellt die
+          werden (Kabel, Ordnerrücken). <i>Vertikal</i> stellt die
           Buchstaben einzeln untereinander — beliebig lang.
           <i>Gedreht</i> kippt den ganzen Textblock um 90°; die Zeile läuft
           dann quer über das Band und muss kürzer als dessen druckbare Höhe
