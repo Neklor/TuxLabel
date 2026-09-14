@@ -272,7 +272,7 @@
     "      <i>Format</i> button, then click the target box.</li>",
     "  <li><b>Text direction:</b> For tapes applied vertically (cables,",
     "      folder spines). <i>Vertical</i> puts the characters one below the",
-    "      other, each upright — any length. <i>Rotated</i> tilts the whole",
+    "      other, each upright — any length. <i>Tilted</i> turns the whole",
     "      text block by 90°; the line then runs across the tape and must be",
     "      shorter than its printable height.</li>",
     "</ul>",

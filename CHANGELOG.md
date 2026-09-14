@@ -8,12 +8,11 @@ Jede Version steht hier zuerst auf Deutsch, direkt darunter auf Englisch.
 ### Neu
 
 * **Schriftrichtung je Textfeld.** Für Bänder, die hochkant aufgeklebt werden
-  — Kabel, Ordnerrücken, Schalterleisten. Drei Einstellungen in der
-  Werkzeugleiste:
-  * **Waagerecht** — unverändert der Normalfall.
-  * **Vertikal** — die Zeichen stehen einzeln aufrecht untereinander, so
-    wie es auch Brothers Software nennt. Die Kette wächst entlang der
-    Bandlänge, die Textlänge ist also nicht begrenzt.
+  — Kabel, Ordnerrücken, Schalterleisten — gibt es jetzt drei neue
+  Einstellungen in der Werkzeugleiste:
+  * **Waagerecht** — unverändert
+  * **Vertikal** — die Zeichen stehen einzeln aufrecht untereinander.
+    Die Kette wächst entlang der Bandlänge, die Textlänge ist also unbegrenzt.
   * **Gekippt** — der ganze Textblock kippt um 90°. Die Zeile läuft quer
     über das Band und muss daher kürzer als dessen druckbare Höhe sein;
     sinnvoll für kurze Texte auf breitem Band.
@@ -24,11 +23,11 @@ Jede Version steht hier zuerst auf Deutsch, direkt darunter auf Englisch.
 ### New *(English)*
 
 * **Per-text-box writing direction.** For tapes applied vertically — cables,
-  folder spines, switch panels. Three settings in the toolbar:
-  * **Horizontal** — the normal case, unchanged.
-  * **Vertical** — the characters sit one below the other, each upright,
-    matching the name Brother's own software uses. The chain grows along
-    the tape, so the text length is not limited.
+  folder spines, switch panels — there are now three new settings in the
+  toolbar:
+  * **Horizontal** — unchanged
+  * **Vertical** — the characters sit one below the other, each upright.
+    The chain grows along the tape, so the text length is unlimited.
   * **Tilted** — the whole text block is tilted by 90°. The line then runs
     across the tape and must be shorter than its printable height; useful
     for short text on wide tape.

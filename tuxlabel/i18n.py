@@ -298,7 +298,7 @@ _DEFAULTS: dict[str, object] = {
       <li><b>Schriftrichtung:</b> Für Bänder, die hochkant aufgeklebt
           werden (Kabel, Ordnerrücken). <i>Vertikal</i> stellt die
           Buchstaben einzeln untereinander — beliebig lang.
-          <i>Gedreht</i> kippt den ganzen Textblock um 90°; die Zeile läuft
+          <i>Gekippt</i> dreht den ganzen Textblock um 90°; die Zeile läuft
           dann quer über das Band und muss kürzer als dessen druckbare Höhe
           sein.</li>
     </ul>
