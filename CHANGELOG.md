@@ -3,6 +3,39 @@
 Jede Version steht hier zuerst auf Deutsch, direkt darunter auf Englisch.
 *Each version is listed in German first, followed by English.*
 
+## [1.1.0] — 2026-09-14
+
+### Neu
+
+* **Schriftrichtung je Textfeld.** Für Bänder, die hochkant aufgeklebt werden
+  — Kabel, Ordnerrücken, Schalterleisten. Drei Einstellungen in der
+  Werkzeugleiste:
+  * **Waagerecht** — unverändert der Normalfall.
+  * **Gestapelt** — die Zeichen stehen einzeln aufrecht untereinander, wie
+    bei Brothers »vertikaler Schrift«. Die Kette wächst entlang der
+    Bandlänge, die Textlänge ist also nicht begrenzt.
+  * **Gedreht** — der ganze Textblock kippt um 90°. Die Zeile läuft quer
+    über das Band und muss daher kürzer als dessen druckbare Höhe sein;
+    sinnvoll für kurze Texte auf breitem Band.
+
+  Die Einstellung wird in der `.ptle`-Datei gespeichert. Ältere Dateien
+  laden unverändert als waagerechter Text.
+
+### New *(English)*
+
+* **Per-text-box writing direction.** For tapes applied vertically — cables,
+  folder spines, switch panels. Three settings in the toolbar:
+  * **Horizontal** — the normal case, unchanged.
+  * **Stacked** — the characters sit one below the other, each upright, the
+    way Brother calls "vertical text". The chain grows along the tape, so
+    the text length is not limited.
+  * **Rotated** — the whole text block is tilted by 90°. The line then runs
+    across the tape and must be shorter than its printable height; useful
+    for short text on wide tape.
+
+  The setting is stored in the `.ptle` file. Older files load unchanged as
+  horizontal text.
+
 ## [1.0.1] — 2026-09-06
 
 ### Behoben

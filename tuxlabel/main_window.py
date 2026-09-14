@@ -33,7 +33,7 @@ from .dialogs import AboutDialog, HelpDialog, SettingsDialog, ShortcutsDialog
 from .i18n import fmt_number, tr
 from .theme import DARK_MODE_KEY
 from .icons import (
-    make_add_image_icon, make_add_text_icon, make_align_icon, make_print_icon,
+    make_add_image_icon, make_add_text_icon, make_align_icon, make_textdir_icon, make_print_icon,
 )
 from .image_item import ImageBox
 from .label_canvas import (
@@ -44,7 +44,9 @@ from .label_canvas import (
 )
 from .printer import print_label
 from .serialization import load_from_file, save_to_file, scene_to_dict, scene_from_dict
-from .text_item import TextBox
+from .text_item import (
+    TextBox, DIR_HORIZONTAL, DIR_STACKED, DIR_ROTATED,
+)
 
 
 # Maximale Anzahl der Einträge im Menü »Datei → Verlauf«
@@ -341,6 +343,24 @@ class MainWindow(QMainWindow):
 
         row1.addWidget(_vsep())
 
+        # Schriftrichtung — für Bänder, die hochkant aufgeklebt werden.
+        self._dir_group = QButtonGroup(self)
+        self._dir_group.setExclusive(True)
+        self._dir_buttons: dict[str, QPushButton] = {}
+        for kind in (DIR_HORIZONTAL, DIR_STACKED, DIR_ROTATED):
+            b = QPushButton()
+            b.setIcon(make_textdir_icon(kind, 28))
+            b.setCheckable(True)
+            b.setFixedWidth(30)
+            b.setToolTip(str(tr(f"toolbar.textdir_{kind}_tip")))
+            b.clicked.connect(lambda _chk, k=kind: self._set_text_direction(k))
+            self._dir_group.addButton(b)
+            self._dir_buttons[kind] = b
+            row1.addWidget(b)
+        self._dir_buttons[DIR_HORIZONTAL].setChecked(True)
+
+        row1.addWidget(_vsep())
+
         # --- Hochgestellt / Tiefgestellt ---
         self._btn_super = _fmt_btn(tr("toolbar.superscript"), tr("toolbar.superscript_tip"))
         _fit_button_width(self._btn_super, 32)
@@ -552,6 +572,10 @@ class MainWindow(QMainWindow):
         for item in self._target_text_boxes():
             item.set_h_align(align)
 
+    def _set_text_direction(self, direction: str) -> None:
+        for item in self._target_text_boxes():
+            item.set_direction(direction)
+
     def _toggle_format_paint(self, checked: bool) -> None:
         if checked:
             boxes = self._selected_text_boxes()
@@ -654,11 +678,13 @@ class MainWindow(QMainWindow):
         font = boxes[0].get_font()
         va   = boxes[0].get_vertical_align()
         ha   = boxes[0].get_h_align()
+        di   = boxes[0].get_direction()
 
         align_btns = tuple(self._align_buttons.values())
+        dir_btns   = tuple(self._dir_buttons.values())
         for w in (self._font_combo, self._size_combo,
                   self._btn_bold, self._btn_italic, self._btn_underline, self._btn_strike,
-                  self._btn_super, self._btn_sub, *align_btns):
+                  self._btn_super, self._btn_sub, *align_btns, *dir_btns):
             w.blockSignals(True)
 
         self._font_combo.setCurrentFont(font)
@@ -680,10 +706,12 @@ class MainWindow(QMainWindow):
         self._btn_sub.setChecked(va == -1)
         for k, btn in self._align_buttons.items():
             btn.setChecked(k == ha)
+        for k, btn in self._dir_buttons.items():
+            btn.setChecked(k == di)
 
         for w in (self._font_combo, self._size_combo,
                   self._btn_bold, self._btn_italic, self._btn_underline, self._btn_strike,
-                  self._btn_super, self._btn_sub, *align_btns):
+                  self._btn_super, self._btn_sub, *align_btns, *dir_btns):
             w.blockSignals(False)
 
     def _save_as_defaults(self) -> None:
@@ -1177,6 +1205,8 @@ class MainWindow(QMainWindow):
         self._btn_print.setIcon(make_print_icon(40, dark))
         for kind, btn in self._align_buttons.items():
             btn.setIcon(make_align_icon(kind, 28, dark))
+        for kind, btn in self._dir_buttons.items():
+            btn.setIcon(make_textdir_icon(kind, 28, dark))
         self._style_add_group(dark)
         self._style_status_length(dark)
         self._scene.apply_theme_background(dark)

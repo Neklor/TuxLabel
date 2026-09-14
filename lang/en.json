@@ -5,21 +5,20 @@
     "author": "TuxLabel",
     "version": 1
   },
-
   "startup.lang_title": "Switch language?",
   "startup.lang_body": "Your operating system is set to {language}.\nWould you like to switch TuxLabel to {language} as well?\n\n(You can change this at any time under File → Settings → Language.)",
   "startup.lang_body_fallback": "TuxLabel is not available in your system language.\nWould you like to switch from German to English?\n\n(You can change this at any time under File → Settings → Language.)",
-
   "format.decimal": ".",
   "format.datetime": "%Y-%m-%d %H:%M",
-
   "status.hint": "Double-click: edit text  |  Ctrl+V: paste image  |  Del: delete  |  Ctrl+wheel: zoom",
   "status.length": "Length: {cm} cm",
-
   "toolbar.title": "Tools",
   "toolbar.group_add": "Add",
   "toolbar.add_text_tip": "Insert text — new text box on the label",
-  "toolbar.add_image_tip": ["Insert image — load from file", "Tip: paste images from the clipboard with Ctrl+V"],
+  "toolbar.add_image_tip": [
+    "Insert image — load from file",
+    "Tip: paste images from the clipboard with Ctrl+V"
+  ],
   "toolbar.tape_width": "Tape width: ",
   "toolbar.tape_width_tip": "Width of the loaded TZe tape",
   "toolbar.font": " Font: ",
@@ -43,27 +42,45 @@
   "toolbar.superscript_tip": "Superscript",
   "toolbar.subscript": "x₂",
   "toolbar.subscript_tip": "Subscript",
+  "toolbar.textdir_horizontal_tip": "Horizontal text — the normal case.\nThe text runs along the tape.",
+  "toolbar.textdir_stacked_tip": "Stack characters on top of each other.\nEvery letter stays upright once the tape is applied vertically\n(cables, folder spines). Any length.",
+  "toolbar.textdir_rotated_tip": "Tilt the whole text block by 90°.\nThe line then runs across the tape, so it only fits while it is\nshorter than the printable tape height — short text on wide tape.",
   "toolbar.format_paint": "Format ↷",
-  "toolbar.format_paint_tip": ["Format painter:", "Select a text box → click → click the target box.", "Cancel: Escape or click again."],
+  "toolbar.format_paint_tip": [
+    "Format painter:",
+    "Select a text box → click → click the target box.",
+    "Cancel: Escape or click again."
+  ],
   "toolbar.vcenter_tip": "Center the selected text boxes vertically on the tape",
   "toolbar.hcenter_tip": "Center the selected text boxes horizontally on the label",
   "toolbar.length": " Length: ",
   "toolbar.length_tip": "Length of the label in mm",
   "toolbar.mm_suffix": " mm",
   "toolbar.auto": "Auto",
-  "toolbar.auto_tip": ["Extend the length automatically when content no longer fits.", "Disable for a fixed label length."],
+  "toolbar.auto_tip": [
+    "Extend the length automatically when content no longer fits.",
+    "Disable for a fixed label length."
+  ],
   "toolbar.flag": "Flag",
-  "toolbar.flag_tip": ["Cable flag mode: the tape is split into left flag · middle bar (cable wrap) · right flag.", "The middle bar is derived from the cable diameter (circumference)."],
+  "toolbar.flag_tip": [
+    "Cable flag mode: the tape is split into left flag · middle bar (cable wrap) · right flag.",
+    "The middle bar is derived from the cable diameter (circumference)."
+  ],
   "toolbar.flag_dia_prefix": "⌀ ",
   "toolbar.flag_dia_tip": "Cable diameter. The middle bar is set to the circumference (π × diameter) so the text does not sit on the cable.",
   "toolbar.flag_mid_prefix": "Mid ",
   "toolbar.flag_mid_tip": "Width of the middle bar in mm. Follows the cable diameter, but can be adjusted manually.",
   "toolbar.flag_copy": "Mirror",
-  "toolbar.flag_copy_tip": ["Automatically copy the left flag to the right one (same alignment).", "Disable to give the two halves different text."],
+  "toolbar.flag_copy_tip": [
+    "Automatically copy the left flag to the right one (same alignment).",
+    "Disable to give the two halves different text."
+  ],
   "toolbar.save_defaults": "★ Default",
-  "toolbar.save_defaults_tip": ["Save the current tape width, font, font size and font style", "as the default preset (same as File → Settings)"],
+  "toolbar.save_defaults_tip": [
+    "Save the current tape width, font, font size and font style",
+    "as the default preset (same as File → Settings)"
+  ],
   "toolbar.print_tip": "Print label (Ctrl+P)",
-
   "menu.file": "&File",
   "menu.file_new": "&New",
   "menu.file_open": "&Open…",
@@ -87,7 +104,6 @@
   "menu.help_about": "&About",
   "menu.recent_empty": "(empty)",
   "menu.recent_clear": "Clear history",
-
   "msg.load_image_title": "Load image",
   "msg.image_filter": "Images (*.png *.jpg *.jpeg *.bmp *.gif *.webp *.tif *.tiff);;All files (*.*)",
   "msg.load_image_failed": "The image could not be loaded:\n{path}",
@@ -110,9 +126,7 @@
   "msg.nothing_to_undo": "Nothing left to undo.",
   "msg.unsaved_title": "Save changes?",
   "msg.unsaved_body": "The current label has unsaved changes.\n\nDo you want to save the changes?",
-
   "item.default_text": "Text",
-
   "settings.title": "Settings",
   "settings.tab_defaults": "Defaults",
   "settings.tab_appearance": "Appearance",
@@ -138,41 +152,104 @@
   "settings.open_lang_folder_tip": "Opens the language folder in the file manager — put your own language files (JSON) here.",
   "settings.language_restart_title": "Language changed",
   "settings.language_restart_body": "The new language takes effect after restarting TuxLabel.",
-
   "about.title": "About TuxLabel",
   "about.body": "<p>Editor for Brother PT-P700 labels (TZe tapes).</p><p><b>Author:</b> Christoph Krogmann</p>",
-
   "shortcuts.title": "Keyboard shortcuts",
   "shortcuts.sections": [
-    ["File", [
-      ["Ctrl+N",       "New label"],
-      ["Ctrl+O",       "Open label"],
-      ["Ctrl+S",       "Save"],
-      ["Ctrl+Shift+S", "Save as"],
-      ["Ctrl+Z",       "Undo"],
-      ["Ctrl+Q",       "Quit"]
-    ]],
-    ["Edit", [
-      ["Ctrl+X", "Cut"],
-      ["Ctrl+C", "Copy"],
-      ["Ctrl+V", "Paste"],
-      ["Del",    "Delete"],
-      ["Ctrl+D", "Duplicate"],
-      ["Ctrl+A", "Select all"],
-      ["F5",     "Insert date and time"]
-    ]],
-    ["Move", [
-      ["Arrow key",      "Move by 1 mm"],
-      ["Ctrl+arrow key", "Fine move by 0.1 mm"]
-    ]],
-    ["View", [
-      ["Ctrl+mouse wheel", "Zoom"]
-    ]],
-    ["Print", [
-      ["Ctrl+P", "Print"]
-    ]]
+    [
+      "File",
+      [
+        [
+          "Ctrl+N",
+          "New label"
+        ],
+        [
+          "Ctrl+O",
+          "Open label"
+        ],
+        [
+          "Ctrl+S",
+          "Save"
+        ],
+        [
+          "Ctrl+Shift+S",
+          "Save as"
+        ],
+        [
+          "Ctrl+Z",
+          "Undo"
+        ],
+        [
+          "Ctrl+Q",
+          "Quit"
+        ]
+      ]
+    ],
+    [
+      "Edit",
+      [
+        [
+          "Ctrl+X",
+          "Cut"
+        ],
+        [
+          "Ctrl+C",
+          "Copy"
+        ],
+        [
+          "Ctrl+V",
+          "Paste"
+        ],
+        [
+          "Del",
+          "Delete"
+        ],
+        [
+          "Ctrl+D",
+          "Duplicate"
+        ],
+        [
+          "Ctrl+A",
+          "Select all"
+        ],
+        [
+          "F5",
+          "Insert date and time"
+        ]
+      ]
+    ],
+    [
+      "Move",
+      [
+        [
+          "Arrow key",
+          "Move by 1 mm"
+        ],
+        [
+          "Ctrl+arrow key",
+          "Fine move by 0.1 mm"
+        ]
+      ]
+    ],
+    [
+      "View",
+      [
+        [
+          "Ctrl+mouse wheel",
+          "Zoom"
+        ]
+      ]
+    ],
+    [
+      "Print",
+      [
+        [
+          "Ctrl+P",
+          "Print"
+        ]
+      ]
+    ]
   ],
-
   "help.title": "Help",
   "help.html": [
     "<html><body style='font-family: sans-serif;'>",
@@ -193,6 +270,11 @@
     "      handles.</li>",
     "  <li><b>Format painter:</b> Select the source text box, click the",
     "      <i>Format</i> button, then click the target box.</li>",
+    "  <li><b>Text direction:</b> For tapes applied vertically (cables,",
+    "      folder spines). <i>Stacked</i> puts the characters one below the",
+    "      other, each upright — any length. <i>Rotated</i> tilts the whole",
+    "      text block by 90°; the line then runs across the tape and must be",
+    "      shorter than its printable height.</li>",
     "</ul>",
     "",
     "<h3>Tape width and length</h3>",
@@ -221,7 +303,6 @@
     "   <i>Help → Keyboard shortcuts</i>.</p>",
     "</body></html>"
   ],
-
   "print.title": "Print label",
   "print.printer_row": "Printer:",
   "print.refresh_tip": "Refresh printer list",

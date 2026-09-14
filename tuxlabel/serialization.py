@@ -63,6 +63,9 @@ def item_to_dict(item) -> dict | None:
             "strikeout":   font.strikeOut(),
             "vert_align":  item.get_vertical_align(),
             "h_align":     item.get_h_align(),
+            # Seit 1.1.0. Ältere Dateien haben den Schlüssel nicht und
+            # laden über den Vorgabewert als waagerechter Text.
+            "direction":   item.get_direction(),
         }
     if isinstance(item, ImageBox):
         return {
@@ -101,6 +104,9 @@ def item_from_dict(entry: dict):
         tb.set_font(font)
         tb.set_vertical_align(int(entry.get("vert_align", 0)))
         tb.set_h_align(entry.get("h_align", "left"))
+        # Vor dem Text setzen: set_direction baut das Dokument neu auf, ein
+        # danach gesetzter Text würde die Stapelung sonst erneut auslösen.
+        tb.set_direction(entry.get("direction", "horizontal"))
         tb.set_text(entry.get("text", ""))
         tb.setPos(float(entry.get("x_mm", 0)) * ppmm,
                   float(entry.get("y_mm", 0)) * ppmm)

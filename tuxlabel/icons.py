@@ -306,6 +306,46 @@ def make_app_icon() -> QIcon:
     return icon
 
 
+def make_textdir_icon(kind: str, size: int = 28, dark: bool | None = None) -> QIcon:
+    """Symbol für die Schriftrichtung eines Textfeldes.
+
+    *kind* ist "horizontal", "stacked" oder "rotated". Gezeichnet werden zwei
+    Buchstaben in genau der Anordnung, die der Modus erzeugt — das erklärt sich
+    ohne Beschriftung besser als ein abstraktes Pfeilsymbol."""
+    pm = QPixmap(size, size)
+    pm.fill(Qt.GlobalColor.transparent)
+    p = QPainter(pm)
+    p.setRenderHint(QPainter.RenderHint.Antialiasing)
+    p.setRenderHint(QPainter.RenderHint.TextAntialiasing)
+    p.setPen(QPen(_ink(dark)))
+
+    f = p.font()
+    f.setBold(True)
+    f.setPixelSize(max(7, int(size * 0.44)))
+    p.setFont(f)
+
+    if kind == "stacked":
+        # Zwei aufrechte Buchstaben untereinander
+        p.drawText(QRectF(0, size * 0.06, size, size * 0.46),
+                   int(Qt.AlignmentFlag.AlignCenter), "A")
+        p.drawText(QRectF(0, size * 0.48, size, size * 0.46),
+                   int(Qt.AlignmentFlag.AlignCenter), "B")
+    elif kind == "rotated":
+        # Ganzer Schriftzug um 90° gekippt — wie im Modus selbst
+        p.save()
+        p.translate(size / 2.0, size / 2.0)
+        p.rotate(-90)
+        p.drawText(QRectF(-size / 2.0, -size / 2.0, size, size),
+                   int(Qt.AlignmentFlag.AlignCenter), "AB")
+        p.restore()
+    else:
+        p.drawText(QRectF(0, 0, size, size),
+                   int(Qt.AlignmentFlag.AlignCenter), "AB")
+
+    p.end()
+    return QIcon(pm)
+
+
 def make_add_image_icon(size: int = 28, dark: bool | None = None) -> QIcon:
     """Ein kleines Bild (Rahmen, Berg, Sonne) mit »+«-Abzeichen — »Bild hinzufügen«."""
     pm = QPixmap(size, size)

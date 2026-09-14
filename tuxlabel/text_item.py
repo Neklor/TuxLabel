@@ -21,6 +21,31 @@ H_ALIGN_RIGHT   = "right"
 H_ALIGN_JUSTIFY = "justify"
 _H_ALIGN_VALUES = (H_ALIGN_LEFT, H_ALIGN_CENTER, H_ALIGN_RIGHT, H_ALIGN_JUSTIFY)
 
+# Schriftrichtung eines Textfeldes. Sie dient dem Fall, dass das fertige Band
+# HOCHKANT aufgeklebt wird (Kabel, Ordnerrücken, Schalterleisten): dreht man
+# das Band um 90°, steht normal gesetzter Text auf der Seite.
+#
+#   DIR_HORIZONTAL  Normalfall — Text läuft entlang des Bandes.
+#   DIR_STACKED     Zeichen einzeln aufrecht untereinander (»vertikale
+#                   Schrift« wie in Brothers Software). Beliebig lang, weil
+#                   die Kette entlang der Bandlänge wächst.
+#   DIR_ROTATED     Der ganze Textblock um 90° gekippt. Die Zeile läuft quer
+#                   über das Band und ist damit auf dessen druckbare Höhe
+#                   begrenzt — nur für kurze Texte auf breitem Band sinnvoll.
+#
+# Technisch teilen sich STACKED und ROTATED dieselbe Drehung um -90°; sie
+# unterscheiden sich allein darin, ob das angezeigte Dokument zuvor auf ein
+# Zeichen je Zeile umgebrochen wird.
+DIR_HORIZONTAL = "horizontal"
+DIR_STACKED    = "stacked"
+DIR_ROTATED    = "rotated"
+_DIR_VALUES    = (DIR_HORIZONTAL, DIR_STACKED, DIR_ROTATED)
+
+# Drehwinkel für STACKED und ROTATED. Negativ = gegen den Uhrzeigersinn, damit
+# das LINKE Bandende beim Aufkleben nach OBEN zeigt und man von oben nach unten
+# liest, wenn das Band im Uhrzeigersinn hochkant gedreht wird.
+_ROTATION_DEG = -90.0
+
 # IDs der Griffe
 HANDLE_TL = 0  # oben links (symmetrische Ecke)
 HANDLE_T  = 1  # oben (asymmetrische Kante)
@@ -122,6 +147,12 @@ class _EditableText(QGraphicsTextItem):
         cursor.clearSelection()
         self.setTextCursor(cursor)
         super().focusOutEvent(event)
+        # Dem Textfeld melden, dass die Eingabe vorbei ist — es stellt eine
+        # ggf. abgeschaltete Schriftrichtung wieder her.
+        box = self.parentItem()
+        on_edit_done = getattr(box, "_on_edit_finished", None)
+        if callable(on_edit_done):
+            on_edit_done()
         # Bearbeitung ist abgeschlossen — die Szene die während des Tippens
         # eingefrorenen Aktualisierungen von Fähnchenlänge / Spiegel-Overlay
         # erneut anwenden lassen.
@@ -169,6 +200,23 @@ class TextBox(QGraphicsItem):
         # 0 = normal, 1 = hochgestellt, -1 = tiefgestellt
         self._vert_align: int = 0
 
+        # Schriftrichtung, siehe DIR_* oben.
+        self._direction: str = DIR_HORIZONTAL
+
+        # Der vom Nutzer eingegebene Text — die Quelle der Wahrheit. Im
+        # gestapelten Modus weicht das ANGEZEIGTE Dokument davon ab (ein
+        # Zeichen je Zeile), deshalb reicht das Dokument allein nicht.
+        self._logical_text: str = str(tr("item.default_text"))
+
+        # Verhindert, dass der programmgesteuerte Neuaufbau des Dokuments
+        # über contentsChanged wieder _logical_text überschreibt.
+        self._rebuilding: bool = False
+
+        # Während der Inline-Bearbeitung wird immer waagerecht und ungestapelt
+        # angezeigt — in einem gedrehten, auf Einzelzeichen umgebrochenen
+        # Dokument lässt sich nicht sinnvoll tippen.
+        self._editing: bool = False
+
         # Horizontale Ausrichtung der Textzeilen innerhalb des Feldes. Bleibt
         # erhalten: wird beim Ändern der Feldgröße oder beim Bearbeiten des
         # Textes weiter angewendet. Sichtbar unterscheidet sie sich nur, wenn
@@ -215,14 +263,54 @@ class TextBox(QGraphicsItem):
         return self._text_item.font()
 
     def get_text(self) -> str:
-        return self._text_item.toPlainText()
+        """Der eingegebene Text — nicht die ggf. gestapelte Anzeigefassung."""
+        return self._logical_text
 
     def set_text(self, text: str) -> None:
-        self._text_item.setPlainText(text)
-        # setPlainText baut das Dokument neu auf, daher unsere Formatierung erneut anwenden.
-        self._apply_block_format()
-        if self._vert_align != 0:
-            self._apply_char_format()
+        self._logical_text = text
+        self._rebuild_display()
+
+    def set_direction(self, direction: str) -> None:
+        """Setzt die Schriftrichtung (DIR_HORIZONTAL / DIR_STACKED / DIR_ROTATED)."""
+        if direction not in _DIR_VALUES:
+            direction = DIR_HORIZONTAL
+        if direction == self._direction:
+            return
+        self._direction = direction
+        # Gedrehte Felder folgen immer ihrem Inhalt. Eine feste Breite wäre
+        # hier irreführend: Der Breitengriff verstellt nach der Drehung die
+        # Ausdehnung QUER zum Band, nicht die Zeilenlänge.
+        if direction != DIR_HORIZONTAL:
+            self._auto_width = True
+        self._rebuild_display()
+
+    def get_direction(self) -> str:
+        return self._direction
+
+    def _display_text(self) -> str:
+        """Der Text so, wie er im Dokument stehen soll.
+
+        Im gestapelten Modus ein Zeichen je Zeile; gedreht ergibt das die
+        aufrecht untereinander stehende Zeichenkette. Eigene Zeilenumbrüche
+        des Nutzers entfallen dabei — gestapelt ist eine einzelne Kette."""
+        if self._direction == DIR_STACKED and not self._editing:
+            chars = [c for c in self._logical_text if c not in "\n\u2028\u2029"]
+            return "\n".join(chars)
+        return self._logical_text
+
+    def _rebuild_display(self) -> None:
+        """Baut das angezeigte Dokument aus _logical_text neu auf."""
+        self._rebuilding = True
+        try:
+            self._text_item.setPlainText(self._display_text())
+            # setPlainText verwirft das Dokument, daher Formatierung erneut anwenden.
+            self._apply_block_format()
+            if self._vert_align != 0:
+                self._apply_char_format()
+        finally:
+            self._rebuilding = False
+        self._update_text_geometry()
+        self.update()
 
     def set_vertical_align(self, align: int) -> None:
         """Setzt 0=normal, 1=hochgestellt, -1=tiefgestellt für das gesamte Textfeld."""
@@ -368,21 +456,33 @@ class TextBox(QGraphicsItem):
         # unverändert lassen.
         if self._auto_width:
             doc_w = self._text_item.boundingRect().width()
-            tw = max(MIN_W, round(doc_w) + 2.0)
+            # MIN_W ist eine Mindestbreite für das ANFASSEN mit der Maus und gilt
+            # deshalb nur waagerecht. Bei gedrehtem Text liegt diese Ausdehnung
+            # QUER zum Band: Dort wären 40 px = 10,6 mm mehr, als ein 12-mm-Band
+            # überhaupt bedrucken kann (8,5 mm), und der Text ragte hinaus.
+            floor = MIN_W if (self._direction == DIR_HORIZONTAL or self._editing) else 1.0
+            tw = max(floor, round(doc_w) + 2.0)
         else:
             tw = self._rect.width()
 
+        # Die Drehung vertauscht die Ausdehnungen: Was in Textkoordinaten die
+        # Zeilenlänge ist, liegt gedreht QUER zum Band, und umgekehrt.
+        if self._direction == DIR_HORIZONTAL or self._editing:
+            box_w, box_h = tw, th
+        else:
+            box_w, box_h = th, tw
+
         new_w = self._rect.width()
         new_h = self._rect.height()
-        height_changed = th > 0 and abs(th - new_h) > 0.5
-        width_changed  = abs(tw - new_w) > 0.5
+        height_changed = box_h > 0 and abs(box_h - new_h) > 0.5
+        width_changed  = abs(box_w - new_w) > 0.5
 
         if height_changed or width_changed:
             old_h = new_h
             if height_changed:
-                new_h = th
+                new_h = box_h
             if width_changed:
-                new_w = tw
+                new_w = box_w
             self.prepareGeometryChange()
             self._rect = QRectF(0, 0, new_w, new_h)
             # Das Feld um seine vertikale Mitte wachsen / schrumpfen lassen.
@@ -396,14 +496,41 @@ class TextBox(QGraphicsItem):
                 self.setY(self.y() - (new_h - old_h) / 2.0)
         self._geometry_seeded = True
 
-        # Das Textelement so positionieren, dass die »Tinten«-Oberkante mit der
-        # Oberkante des Feldes fluchtet. Qt zeichnet die Grundlinie der ersten
-        # Zeile bei y=ascent ab der Oberkante des Textelements, sodass die
-        # »Tinten«-Oberkante bei y=(ascent-ink_above) liegt. Das Textelement um
-        # diesen Betrag nach oben verschieben, damit ink_top bei Feld-y=0 landet.
-        self._text_item.setPos(1.0, -round(fm.ascent() - ink_above))
+        # Abstand von der Oberkante des Textelements bis zur ersten »Tinte«:
+        # Qt zeichnet die Grundlinie bei y=ascent, die Tinte beginnt also bei
+        # y=(ascent-ink_above).
+        a = round(fm.ascent() - ink_above)
+
+        if self._direction == DIR_HORIZONTAL or self._editing:
+            self._text_item.setRotation(0.0)
+            # Das Textelement so anheben, dass die Tinten-Oberkante bei y=0 des
+            # Feldes liegt.
+            self._text_item.setPos(1.0, -a)
+        else:
+            # Drehung um -90° um den Ursprung bildet den lokalen Punkt (x, y)
+            # auf (y, -x) ab. Die Tinte liegt lokal bei
+            #     x ∈ [0, doc_w],  y ∈ [a, a + th]
+            # und nach der Drehung folglich bei
+            #     x ∈ [a, a + th], y ∈ [-doc_w, 0].
+            # Die Verschiebung schiebt das in das Feld (0, 0, box_w, box_h);
+            # das 1.0 hält denselben schmalen Rand wie im waagerechten Fall.
+            self._text_item.setRotation(_ROTATION_DEG)
+            self._text_item.setPos(-a, box_h - 1.0)
+
+    def _on_edit_finished(self) -> None:
+        """Inline-Bearbeitung beendet — Schriftrichtung wieder anwenden."""
+        if not self._editing:
+            return
+        self._editing = False
+        self._rebuild_display()
 
     def _on_text_changed(self) -> None:
+        # Während eines programmgesteuerten Neuaufbaus nichts tun — sonst
+        # würde die gestapelte Anzeigefassung als Nutzertext übernommen.
+        if self._rebuilding:
+            return
+        # Sonst stammt die Änderung vom Tippen: Dokument ist maßgeblich.
+        self._logical_text = self._text_item.toPlainText()
         # Textänderungen können die gerenderte Texthöhe vergrößern/verkleinern
         # (z. B. Zeilenumbruch bei Größenänderung). Das Feld synchron halten.
         self._update_text_geometry()
@@ -538,6 +665,14 @@ class TextBox(QGraphicsItem):
 
     def mouseDoubleClickEvent(self, event) -> None:
         if event.button() == Qt.MouseButton.LeftButton:
+            # Gedrehte und gestapelte Felder für die Dauer der Eingabe
+            # waagerecht und ungestapelt zeigen: In einem um 90° gekippten,
+            # auf Einzelzeichen umgebrochenen Dokument lässt sich weder
+            # sinnvoll tippen noch der Cursor setzen. Beim Verlassen des
+            # Bearbeitungsmodus wird die Richtung wieder angewendet.
+            if self._direction != DIR_HORIZONTAL:
+                self._editing = True
+                self._rebuild_display()
             # Maus auf dem Textelement aktivieren, damit der Nutzer den Cursor
             # während der Bearbeitung durch Klick in den Text positionieren kann.
             self._text_item.setAcceptedMouseButtons(Qt.MouseButton.AllButtons)
