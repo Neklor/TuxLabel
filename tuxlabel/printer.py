@@ -264,6 +264,56 @@ def _render_to_png(
         Abdunkeln zusammengesetzt, sodass jedes schwarze Pixel aus einem der
         Durchgänge erscheint.
     """
+    from . import text_item as _ti
+    from .text_item import TextBox
+    from .image_item import ImageBox
+
+    # --- Schatten-Ebene ------------------------------------------------------
+    # Schatten sind grau, der Thermodruck kennt aber nur Schwarz und Weiß. Sie
+    # bekommen deshalb eine eigene Ebene, die mit Floyd-Steinberg gerastert
+    # wird — dasselbe Verfahren, das Fotos ihre Tonwerte erhält. Der Text läuft
+    # weiter über den Schwellwert und bleibt scharfkantig.
+    #
+    # Das geschieht in JEDEM Druckmodus, nicht nur bei dither=True: Liefe der
+    # Schatten über den Schwellwert, würde sein Grau (Helligkeit 102) nach
+    # vollem Schwarz kippen und mit dem Text zu einer fetten Glyphe verschmelzen.
+    shadow_layer = None
+    if any(isinstance(it, TextBox) and it.get_shadow() for it in scene.items()):
+        prev_pass = _ti._SHADOW_PASS
+        _ti._SHADOW_PASS = "shadow"
+        try:
+            shadow_only = scene.render_to_image(
+                dpi=PRINT_DPI,
+                item_filter=lambda it: isinstance(it, TextBox),
+                vertical_offset_mm=vertical_offset_mm,
+            )
+        finally:
+            _ti._SHADOW_PASS = prev_pass
+        shadow_layer = _dither_image(shadow_only)
+
+    def _finish(image: QImage) -> None:
+        """Schatten unterlegen, Falzlinie ziehen, speichern."""
+        if shadow_layer is not None:
+            image = _combine_min(image, shadow_layer)
+        if draw_flag_middle:
+            _draw_flag_middle_line(image, scene)
+        image.save(path, "PNG")
+
+    # Für alle folgenden Durchgänge den Schatten unterdrücken — er steckt
+    # bereits in shadow_layer und würde sonst doppelt erscheinen.
+    prev_pass = _ti._SHADOW_PASS
+    if shadow_layer is not None:
+        _ti._SHADOW_PASS = "text"
+    try:
+        _render_body(scene, _finish, darkness_threshold, dither,
+                     vertical_offset_mm)
+    finally:
+        _ti._SHADOW_PASS = prev_pass
+
+
+def _render_body(scene, _finish, darkness_threshold, dither,
+                 vertical_offset_mm) -> None:
+    """Der eigentliche Aufbau des Etikettenbildes ohne Schatten-Ebene."""
     from .text_item import TextBox
     from .image_item import ImageBox
 
@@ -293,30 +343,21 @@ def _render_to_png(
             )
             image_bin = _dither_image(image_only)
 
-            combined = _combine_min(text_bin, image_bin)
-            if draw_flag_middle:
-                _draw_flag_middle_line(combined, scene)
-            combined.save(path, "PNG")
+            _finish(_combine_min(text_bin, image_bin))
             return
 
         # Nur ein Inhaltstyp → einfach die gesamte Szene rastern
         image = scene.render_to_image(
             dpi=PRINT_DPI, vertical_offset_mm=vertical_offset_mm,
         )
-        image = _dither_image(image)
-        if draw_flag_middle:
-            _draw_flag_middle_line(image, scene)
-        image.save(path, "PNG")
+        _finish(_dither_image(image))
         return
 
     # Einfacher Schwellwert-Modus
     image = scene.render_to_image(
         dpi=PRINT_DPI, vertical_offset_mm=vertical_offset_mm,
     )
-    image = _binarize_image(image, darkness_threshold)
-    if draw_flag_middle:
-        _draw_flag_middle_line(image, scene)
-    image.save(path, "PNG")
+    _finish(_binarize_image(image, darkness_threshold))
 
 
 def _send_to_printer(

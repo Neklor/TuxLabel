@@ -98,6 +98,7 @@ _DEFAULTS: dict[str, object] = {
     "toolbar.superscript_tip":  "Hochgestellt",
     "toolbar.subscript":        "x₂",
     "toolbar.subscript_tip":    "Tiefgestellt",
+    "toolbar.shadow_tip":       "Schatten",
     "toolbar.textdir_horizontal_tip": "Waagerecht",
     "toolbar.textdir_stacked_tip":    "Vertikal — Zeichen untereinander",
     "toolbar.textdir_rotated_tip":    "Textblock um 90° kippen",
@@ -295,6 +296,12 @@ _DEFAULTS: dict[str, object] = {
           Griffe ziehen.</li>
       <li><b>Format übertragen:</b> Quelltextfeld markieren, Schaltfläche
           <i>Format</i> klicken, dann auf das Zielfeld klicken.</li>
+      <li><b>Schatten:</b> Legt einen grauen, versetzten Schatten hinter die
+          Schrift. Das Band kennt nur Schwarz und Weiß — das Grau entsteht
+          beim Drucken durch dieselbe Rasterung, die auch Fotos ihre
+          Zwischentöne gibt. Der Text selbst bleibt davon unberührt und
+          scharfkantig. Der Effekt wirkt umso deutlicher, je größer die
+          Schrift ist.</li>
       <li><b>Schriftrichtung:</b> Für Bänder, die hochkant aufgeklebt
           werden (Kabel, Ordnerrücken). <i>Vertikal</i> stellt die
           Buchstaben einzeln untereinander — beliebig lang.

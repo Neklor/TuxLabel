@@ -306,6 +306,39 @@ def make_app_icon() -> QIcon:
     return icon
 
 
+def make_shadow_icon(size: int = 28, dark: bool | None = None) -> QIcon:
+    """Symbol für den Schatten-Schalter: ein »A« mit versetztem Schatten.
+
+    Der Schatten wird hier nur angedeutet (halbtransparent) — auf dem Etikett
+    entsteht er massiv mit weißem Trennrand, aber als Werkzeugleisten-Symbol
+    liest sich die weiche Andeutung bei 28 px besser."""
+    pm = QPixmap(size, size)
+    pm.fill(Qt.GlobalColor.transparent)
+    p = QPainter(pm)
+    p.setRenderHint(QPainter.RenderHint.Antialiasing)
+    p.setRenderHint(QPainter.RenderHint.TextAntialiasing)
+
+    f = p.font()
+    f.setBold(True)
+    f.setPixelSize(max(10, int(size * 0.62)))
+    p.setFont(f)
+    rect = QRectF(0, 0, size, size)
+    off = max(1.5, size * 0.09)
+
+    ink = _ink(dark)
+    ghost = QColor(ink)
+    ghost.setAlpha(110)
+    p.setPen(QPen(ghost))
+    p.translate(off, off)
+    p.drawText(rect, int(Qt.AlignmentFlag.AlignCenter), "A")
+    p.translate(-off, -off)
+
+    p.setPen(QPen(ink))
+    p.drawText(rect, int(Qt.AlignmentFlag.AlignCenter), "A")
+    p.end()
+    return QIcon(pm)
+
+
 def make_textdir_icon(kind: str, size: int = 28, dark: bool | None = None) -> QIcon:
     """Symbol für die Schriftrichtung eines Textfeldes.
 

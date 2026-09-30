@@ -42,6 +42,8 @@ Linux Mint und Debian als `.deb` Paket. Zum installieren einfach die .deb Datei 
 * Bilder aus Datei oder direkt aus der Zwischenablage (`Strg+V`)
 * Verschieben per Maus oder Pfeiltasten (1 mm, mit `Strg` in 0,1-mm-Schritten),
   Größenänderung über Anfasser
+* Schatten je Textfeld — grauer Schatten hinter der Schrift, der auch
+  auf dem Band grau erscheint
 * Format übertragen von einem Textfeld auf ein anderes
 * Schriftrichtung je Textfeld: waagerecht, vertikal oder um 90° gekippt —
   für Bänder, die hochkant aufgeklebt werden
@@ -345,6 +347,8 @@ and Debian as a `.deb` package. To install, simply launch the `.deb` file.
   handles, copy formatting between text boxes, centre elements on the tape
 * Writing direction per text box — horizontal, vertical or tilted by 90°,
   for tapes that are applied vertically
+* Shadow per text box — a grey shadow behind the text that also comes
+  out grey on the tape
 * Undo (up to 50 steps), insert date and time
 * Tape widths 3.5 / 6 / 9 / 12 / 18 / 24 mm, ruler in centimetres,
   `Ctrl` + wheel zoom

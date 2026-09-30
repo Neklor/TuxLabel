@@ -66,6 +66,8 @@ def item_to_dict(item) -> dict | None:
             # Seit 1.1.0. Ältere Dateien haben den Schlüssel nicht und
             # laden über den Vorgabewert als waagerechter Text.
             "direction":   item.get_direction(),
+            # Seit 1.2.0; fehlt der Schlüssel, wird ohne Schatten geladen.
+            "shadow":      item.get_shadow(),
         }
     if isinstance(item, ImageBox):
         return {
@@ -107,6 +109,7 @@ def item_from_dict(entry: dict):
         # Vor dem Text setzen: set_direction baut das Dokument neu auf, ein
         # danach gesetzter Text würde die Stapelung sonst erneut auslösen.
         tb.set_direction(entry.get("direction", "horizontal"))
+        tb.set_shadow(bool(entry.get("shadow", False)))
         tb.set_text(entry.get("text", ""))
         tb.setPos(float(entry.get("x_mm", 0)) * ppmm,
                   float(entry.get("y_mm", 0)) * ppmm)

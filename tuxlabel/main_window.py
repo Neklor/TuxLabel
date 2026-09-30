@@ -33,7 +33,7 @@ from .dialogs import AboutDialog, HelpDialog, SettingsDialog, ShortcutsDialog
 from .i18n import fmt_number, tr
 from .theme import DARK_MODE_KEY
 from .icons import (
-    make_add_image_icon, make_add_text_icon, make_align_icon, make_textdir_icon, make_print_icon,
+    make_add_image_icon, make_add_text_icon, make_align_icon, make_textdir_icon, make_shadow_icon, make_print_icon,
 )
 from .image_item import ImageBox
 from .label_canvas import (
@@ -323,6 +323,17 @@ class MainWindow(QMainWindow):
         self._btn_strike.clicked.connect(lambda chk: self._set_font_attr("strikeout", chk))
         row1.addWidget(self._btn_strike)
 
+        # Schatten ist KEINE Schrifteigenschaft, sondern gehört wie die
+        # Schriftrichtung zum Textfeld — deshalb eigener Setter statt
+        # _set_font_attr.
+        self._btn_shadow = QPushButton()
+        self._btn_shadow.setIcon(make_shadow_icon(28))
+        self._btn_shadow.setCheckable(True)
+        self._btn_shadow.setFixedWidth(30)
+        self._btn_shadow.setToolTip(str(tr("toolbar.shadow_tip")))
+        self._btn_shadow.clicked.connect(self._set_text_shadow)
+        row1.addWidget(self._btn_shadow)
+
         row1.addWidget(_vsep())
 
         # --- Horizontale Textausrichtung ---
@@ -576,6 +587,10 @@ class MainWindow(QMainWindow):
         for item in self._target_text_boxes():
             item.set_direction(direction)
 
+    def _set_text_shadow(self, on: bool) -> None:
+        for item in self._target_text_boxes():
+            item.set_shadow(on)
+
     def _toggle_format_paint(self, checked: bool) -> None:
         if checked:
             boxes = self._selected_text_boxes()
@@ -679,12 +694,13 @@ class MainWindow(QMainWindow):
         va   = boxes[0].get_vertical_align()
         ha   = boxes[0].get_h_align()
         di   = boxes[0].get_direction()
+        sh   = boxes[0].get_shadow()
 
         align_btns = tuple(self._align_buttons.values())
         dir_btns   = tuple(self._dir_buttons.values())
         for w in (self._font_combo, self._size_combo,
                   self._btn_bold, self._btn_italic, self._btn_underline, self._btn_strike,
-                  self._btn_super, self._btn_sub, *align_btns, *dir_btns):
+                  self._btn_super, self._btn_sub, *align_btns, *dir_btns, self._btn_shadow):
             w.blockSignals(True)
 
         self._font_combo.setCurrentFont(font)
@@ -708,10 +724,11 @@ class MainWindow(QMainWindow):
             btn.setChecked(k == ha)
         for k, btn in self._dir_buttons.items():
             btn.setChecked(k == di)
+        self._btn_shadow.setChecked(sh)
 
         for w in (self._font_combo, self._size_combo,
                   self._btn_bold, self._btn_italic, self._btn_underline, self._btn_strike,
-                  self._btn_super, self._btn_sub, *align_btns, *dir_btns):
+                  self._btn_super, self._btn_sub, *align_btns, *dir_btns, self._btn_shadow):
             w.blockSignals(False)
 
     def _save_as_defaults(self) -> None:
@@ -1207,6 +1224,7 @@ class MainWindow(QMainWindow):
             btn.setIcon(make_align_icon(kind, 28, dark))
         for kind, btn in self._dir_buttons.items():
             btn.setIcon(make_textdir_icon(kind, 28, dark))
+        self._btn_shadow.setIcon(make_shadow_icon(28, dark))
         self._style_add_group(dark)
         self._style_status_length(dark)
         self._scene.apply_theme_background(dark)

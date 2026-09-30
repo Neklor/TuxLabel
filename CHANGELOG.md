@@ -3,6 +3,38 @@
 Jede Version steht hier zuerst auf Deutsch, direkt darunter auf Englisch.
 *Each version is listed in German first, followed by English.*
 
+## [1.2.0] — 2026-09-30
+
+### Neu
+
+* **Schatten je Textfeld**, ein Knopf in der Werkzeugleiste. Die Schrift
+  bekommt einen grauen Schatten, der auch auf dem Band grau erscheint —
+  die Buchstaben selbst bleiben scharf. Je größer die Schrift, desto
+  deutlicher wirkt der Effekt.
+
+  Der Schatten lässt sich mit allen Schriftrichtungen kombinieren und wird
+  in der `.ptle`-Datei gespeichert. Ältere Dateien laden unverändert ohne
+  Schatten.
+
+### Geändert
+
+* **Format übertragen** überträgt jetzt auch Schriftrichtung und Schatten.
+  Bisher blieben sie beim Zielfeld unverändert stehen.
+
+### New *(English)*
+
+* **Per-text-box shadow**, one button in the toolbar. The text gets a grey
+  shadow that also comes out grey on the tape, while the letters themselves
+  stay crisp. The larger the font, the clearer the effect.
+
+  The shadow combines with every writing direction and is stored in the
+  `.ptle` file. Older files load unchanged, without a shadow.
+
+### Changed *(English)*
+
+* **Format painter** now carries the writing direction and the shadow as
+  well. Previously both were left untouched on the target box.
+
 ## [1.1.0] — 2026-09-14
 
 ### Neu

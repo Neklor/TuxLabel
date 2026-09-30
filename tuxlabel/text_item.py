@@ -8,7 +8,7 @@ from PyQt6.QtWidgets import (
 )
 from PyQt6.QtCore import Qt, QRectF, QPointF
 from PyQt6.QtGui import (
-    QPainter, QPen, QColor, QBrush, QFont, QFontMetricsF,
+    QPainter, QPainterPath, QPen, QColor, QBrush, QFont, QFontMetricsF,
     QTextCursor, QTextCharFormat, QTextBlockFormat, QKeySequence,
 )
 
@@ -56,6 +56,37 @@ _ROTATION_DEG = -90.0
 # aggressiver: Bei Paarungen wie »Ä« über »g« sollen sich die Zeichen noch
 # nicht berühren.
 _STACKED_LINE_HEIGHT_PCT = 78
+
+# --- Schatten ---------------------------------------------------------------
+# Der Schatten wird GRAU gezeichnet, obwohl der Drucker nur Schwarz und Weiß
+# kennt. Möglich wird das durch dasselbe Verfahren, das Fotos schon nutzen:
+# printer._render_to_png rendert den Schatten in eine eigene Ebene und rastert
+# sie mit Floyd-Steinberg, während der Text weiterhin über den Schwellwert läuft
+# und damit scharfkantig bleibt. Beide Ebenen werden per _combine_min vereint.
+#
+# Auf dem Band entsteht so ein Punktmuster, das aus normalem Betrachtungsabstand
+# als Grau gelesen wird — genau wie bei einem gerasterten Foto. Der Bildschirm
+# zeigt echtes Grau, das Band die Rasterung davon; die maßstabsgetreue Vorschau
+# bleibt also gültig.
+#
+# Eine frühere Fassung zog stattdessen einen weißen Trennrand um die Glyphen
+# und setzte den Schatten massiv schwarz. Das war nötig, solange alles über
+# denselben Schwellwert lief — sah aber nach Konturschrift aus statt nach
+# Schatten. Mit der eigenen Rasterebene ist der Rand überflüssig.
+SHADOW_GREY = 102            # Helligkeit des Schattens (0 = schwarz, 255 = weiß)
+# Der Versatz ist bewusst knapp gehalten. Sitzt der Schatten weiter weg, liest
+# er sich als eigene Form neben dem Buchstaben statt als dessen Schatten und
+# stört damit die Lesbarkeit — bei 24 pt getestet mit 0,085 / 0,065 / 0,050 /
+# 0,035; ab etwa 0,05 bleibt er klar erkennbar, ohne zu konkurrieren.
+SHADOW_OFFSET_FRAC = 0.050   # Versatz, als Anteil der Schriftgröße
+SHADOW_OFFSET_MIN  = 1.5     # darunter verschwindet er in der Rasterung
+
+# Steuert, welche Lagen gezeichnet werden. Wird von printer._render_to_png
+# gesetzt, um Schatten und Text in getrennte Bilder zu rendern:
+#   None       beides (Bildschirm)
+#   "shadow"   nur der graue Schatten
+#   "text"     nur der Text, ohne Schatten
+_SHADOW_PASS: str | None = None
 
 # IDs der Griffe
 HANDLE_TL = 0  # oben links (symmetrische Ecke)
@@ -128,7 +159,72 @@ class _EditableText(QGraphicsTextItem):
       Die TextBox selbst kann das nicht, weil sie nicht fokussierbar ist.
     """
 
+    def _glyph_path(self) -> QPainterPath:
+        """Baut die Umrisse des gesamten Textes als einen Pfad.
+
+        Der Weg über das Layout des Dokuments statt über einen einfachen
+        drawText() ist nötig, damit Zeilenumbrüche, Ausrichtung und der
+        vertikale Modus (je Absatz ein Zeichen) genauso sitzen wie ohne
+        Schatten — der Schalter darf die Anordnung nicht verschieben.
+
+        Unterstreichung und Durchstreichung sind keine Glyphen und fehlen in
+        den Umrissen; sie werden darum als Rechtecke ergänzt und bekommen so
+        Schatten und Kontur wie der übrige Text."""
+        doc  = self.document()
+        font = self.font()
+        fm   = QFontMetricsF(font)
+        path = QPainterPath()
+
+        block = doc.begin()
+        while block.isValid():
+            layout = block.layout()
+            text   = block.text()
+            for i in range(layout.lineCount()):
+                line  = layout.lineAt(i)
+                start = line.textStart()
+                chunk = text[start:start + line.textLength()]
+                if not chunk:
+                    continue
+                # Layout-Position ist die linke OBERE Ecke der Zeile; addText
+                # erwartet die Grundlinie.
+                origin = layout.position() + line.position()
+                base_x = origin.x()
+                base_y = origin.y() + line.ascent()
+                path.addText(QPointF(base_x, base_y), font, chunk)
+
+                if font.underline() or font.strikeOut():
+                    w  = fm.horizontalAdvance(chunk)
+                    lw = max(1.0, fm.lineWidth())
+                    if font.underline():
+                        path.addRect(QRectF(base_x, base_y + fm.underlinePos(), w, lw))
+                    if font.strikeOut():
+                        path.addRect(QRectF(base_x, base_y - fm.strikeOutPos(), w, lw))
+            block = block.next()
+        return path
+
     def paint(self, painter, option, widget=None):
+        box = self.parentItem()
+        # Beim Tippen normal zeichnen: Der eingebaute Renderer setzt Cursor und
+        # Auswahl, ein selbst gezeichneter Pfad könnte das nicht.
+        editing = bool(getattr(box, "_editing", False)) or bool(
+            self.textInteractionFlags() & Qt.TextInteractionFlag.TextEditorInteraction)
+        shadow = box is not None and getattr(box, "_shadow", False) and not editing
+
+        if shadow and _SHADOW_PASS != "text":
+            painter.save()
+            painter.setRenderHint(QPainter.RenderHint.Antialiasing, True)
+            off = box.shadow_offset()
+            painter.translate(off, off)
+            painter.setPen(Qt.PenStyle.NoPen)
+            painter.setBrush(QBrush(QColor(SHADOW_GREY, SHADOW_GREY, SHADOW_GREY)))
+            painter.drawPath(self._glyph_path())
+            painter.restore()
+
+        # Im reinen Schatten-Durchgang bleibt der Text weg — er kommt aus der
+        # scharf binarisierten Ebene.
+        if _SHADOW_PASS == "shadow":
+            return
+
         # Auswahl-/Fokus-Zustand entfernen, damit QGraphicsTextItem seinen
         # eingebauten gepunkteten Rahmen nicht über die Umrandung der TextBox zeichnet.
         opt = QStyleOptionGraphicsItem(option)
@@ -214,6 +310,9 @@ class TextBox(QGraphicsItem):
         # Schriftrichtung, siehe DIR_* oben.
         self._direction: str = DIR_HORIZONTAL
 
+        # Schatten (hohle Schrift mit versetztem massivem Schatten), siehe oben.
+        self._shadow: bool = False
+
         # Der vom Nutzer eingegebene Text — die Quelle der Wahrheit. Im
         # gestapelten Modus weicht das ANGEZEIGTE Dokument davon ab (ein
         # Zeichen je Zeile), deshalb reicht das Dokument allein nicht.
@@ -298,6 +397,30 @@ class TextBox(QGraphicsItem):
     def get_direction(self) -> str:
         return self._direction
 
+    def set_shadow(self, on: bool) -> None:
+        """Schaltet den Schatten für dieses Textfeld ein oder aus."""
+        on = bool(on)
+        if on == self._shadow:
+            return
+        self._shadow = on
+        # Die Kontur trägt nach außen auf und die Glyphen bekommen einen
+        # Schatten — beides vergrößert die »Tinte«, das Feld muss also neu
+        # vermessen werden.
+        self._update_text_geometry()
+        self.update()
+        self._text_item.update()
+
+    def get_shadow(self) -> bool:
+        return self._shadow
+
+    def shadow_offset(self) -> float:
+        """Versatz des Schattens in Pixeln, abgeleitet aus der Schriftgröße.
+
+        Gemeinsam genutzt von der Darstellung und von der Geometrieberechnung,
+        damit das Feld genau so groß wird, wie der Schatten Platz braucht."""
+        px = QFontMetricsF(self._text_item.font()).height()
+        return max(SHADOW_OFFSET_MIN, px * SHADOW_OFFSET_FRAC)
+
     def _display_text(self) -> str:
         """Der Text so, wie er im Dokument stehen soll.
 
@@ -369,6 +492,8 @@ class TextBox(QGraphicsItem):
             "font":       QFont(self._text_item.font()),
             "vert_align": self._vert_align,
             "h_align":    self._h_align,
+            "direction":  self._direction,
+            "shadow":     self._shadow,
         }
 
     def apply_format(self, fmt: dict) -> None:
@@ -379,6 +504,10 @@ class TextBox(QGraphicsItem):
             self.set_vertical_align(fmt["vert_align"])
         if "h_align" in fmt:
             self.set_h_align(fmt["h_align"])
+        if "direction" in fmt:
+            self.set_direction(fmt["direction"])
+        if "shadow" in fmt:
+            self.set_shadow(fmt["shadow"])
 
     # ------------------------------------------------------------------
     # Interne Hilfsfunktionen
@@ -453,6 +582,13 @@ class TextBox(QGraphicsItem):
             ink_above = fm.capHeight()
             ink_below = fm.descent()
 
+        # Der Schatten trägt nach rechts unten auf. Ohne diesen Zuschlag
+        # schnitte das Feld ihn ab und der Text stünde nicht mehr dort, wo er
+        # ohne Schatten stünde.
+        pad_trail = self.shadow_offset() if (self._shadow and not self._editing) else 0.0
+        pad_lead = 0.0
+        ink_below += pad_trail
+
         # Stapelung mehrerer Zeilen
         line_h = fm.lineSpacing()
         doc_h  = self._text_item.boundingRect().height()
@@ -472,7 +608,7 @@ class TextBox(QGraphicsItem):
             # QUER zum Band: Dort wären 40 px = 10,6 mm mehr, als ein 12-mm-Band
             # überhaupt bedrucken kann (8,5 mm), und der Text ragte hinaus.
             floor = MIN_W if (self._direction == DIR_HORIZONTAL or self._editing) else 1.0
-            tw = max(floor, round(doc_w) + 2.0)
+            tw = max(floor, round(doc_w + pad_trail) + 2.0)
         else:
             tw = self._rect.width()
 
