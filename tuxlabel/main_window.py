@@ -784,9 +784,10 @@ class MainWindow(QMainWindow):
 
     def _center_horizontal(self) -> None:
         """Zentriert ausgewählte Textfelder horizontal zwischen den Sicherheitsrändern."""
-        from .label_canvas import PIXELS_PER_MM, MARGIN_MM
-        left_px  = MARGIN_MM * PIXELS_PER_MM
-        right_px = (self._scene.get_label_length_mm() - MARGIN_MM) * PIXELS_PER_MM
+        from .label_canvas import PIXELS_PER_MM, margin_mm
+        m = margin_mm()
+        left_px  = m * PIXELS_PER_MM
+        right_px = (self._scene.get_label_length_mm() - m) * PIXELS_PER_MM
         for item in self._selected_text_boxes():
             item_w_px = item._rect.width()
             item.setX(left_px + (right_px - left_px - item_w_px) / 2)
@@ -1148,6 +1149,10 @@ class MainWindow(QMainWindow):
 
     def _open_settings(self) -> None:
         SettingsDialog(self).exec()
+
+    def refresh_margin(self) -> None:
+        """Übernimmt einen geänderten Sicherheitsrand sofort."""
+        self._scene.rebuild_after_margin_change()
 
     def _is_dark_theme(self) -> bool:
         # Der gespeicherte Schalter ist die maßgebliche Absicht; auf die

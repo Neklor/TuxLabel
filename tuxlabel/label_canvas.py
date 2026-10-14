@@ -30,7 +30,7 @@ import json
 import math
 
 from PyQt6.QtCore import (
-    Qt, QRectF, QPointF, QTimer, QByteArray, QMimeData, pyqtSignal,
+    Qt, QRectF, QPointF, QTimer, QByteArray, QMimeData, QSettings, pyqtSignal,
 )
 from PyQt6.QtGui import (
     QColor, QFont, QFontMetricsF, QImage, QPainter, QPalette, QPen,
@@ -60,8 +60,28 @@ PTLABEL_MIME = "application/x-ptlabel-items"
 # ---------------------------------------------------------------------------
 PIXELS_PER_MM: float = 96.0 / 25.4   # ≈ 3.779 px/mm  (Fallback = 96 DPI)
 
-# Sicherheitsrand, der an jedem Ende des Etiketts angezeigt wird (mm)
-MARGIN_MM: int = 5
+# Sicherheitsrand an jedem Ende des Etiketts (mm).
+#
+# Das ist KEINE Druckergrenze — der PT-P700 druckt bis an die Schnittkante,
+# nachgeprüft am Gerät. Der Rand ist eine Reserve gegen die Schnitttoleranz:
+# Steht Text hart an der Kante, entscheidet der Schnitt darüber, ob der erste
+# Buchstabe vollständig bleibt.
+#
+# Er wirkt an drei Stellen: Die Auto-Länge rechnet ihn rechts auf den Inhalt,
+# die Mindestlänge ergibt sich aus zwei Rändern, und »horizontal zentrieren«
+# bezieht sich auf den Bereich dazwischen. Dargestellt wird er als rosa Fläche
+# mit roter Linie.
+#
+# Einstellbar unter Datei → Einstellungen; 0 schaltet ihn ganz ab.
+MARGIN_SETTING_KEY = "label_margin_mm"
+MARGIN_DEFAULT_MM  = 2.0
+MARGIN_MAX_MM      = 10.0
+
+
+def margin_mm() -> float:
+    """Der eingestellte Sicherheitsrand in mm."""
+    v = QSettings().value(MARGIN_SETTING_KEY, MARGIN_DEFAULT_MM, float)
+    return max(0.0, min(MARGIN_MAX_MM, v))
 
 # Standard-Zeichenflächenlänge (mm) – sichtbarer Bereich, nicht die Drucklänge
 DEFAULT_LABEL_LENGTH_MM = 30
@@ -360,7 +380,7 @@ class LabelScene(QGraphicsScene):
         self._flag_mode          = False
         self._cable_diameter_mm  = 5.0
         self._flag_middle_mm     = math.pi * self._cable_diameter_mm
-        self._flag_width_mm      = MARGIN_MM * 2 + 5.0   # Halbfähnchenbreite (wächst passend mit)
+        self._flag_width_mm      = margin_mm() * 2 + 5.0   # Halbfähnchenbreite (wächst passend mit)
         self._flag_copy          = True
         self._flag_overlay: QGraphicsPixmapItem | None = None
         self._flag_overlay_sig   = None
@@ -493,7 +513,7 @@ class LabelScene(QGraphicsScene):
         dem Ursprung des rechten Fähnchens gemessen, damit beide Hälften
         symmetrisch bleiben. Gibt nie weniger als ein sinnvolles Minimum zurück.
         """
-        floor_mm    = MARGIN_MM * 2 + 5.0
+        floor_mm    = margin_mm() * 2 + 5.0
         middle      = self._flag_middle_mm
         center_mm   = self._flag_width_mm + middle / 2.0
         right_org   = self._flag_width_mm + middle
@@ -508,7 +528,8 @@ class LabelScene(QGraphicsScene):
                 left_extent = max(left_extent, right_mm)
             else:
                 right_over = max(right_over, right_mm - right_org)
-        return max(floor_mm, left_extent + MARGIN_MM, right_over + MARGIN_MM)
+        m = margin_mm()
+        return max(floor_mm, left_extent + m, right_over + m)
 
     def _flag_recompute(self) -> None:
         """Vergrößert die Halbfähnchenbreite passend zum Inhalt und aktualisiert die Länge."""
@@ -530,7 +551,9 @@ class LabelScene(QGraphicsScene):
     def get_print_length_mm(self) -> float:
         """Mindest-Etikettenlänge für den aktuellen Inhalt zuzüglich Sicherheitsränder.
 
-        = linker Rand (5 mm) + rechteste Inhaltskante + rechter Rand (5 mm)
+        = rechteste Inhaltskante + ein Sicherheitsrand, mindestens aber zwei
+        Ränder plus einen schmalen Inhaltsstreifen. Der Rand ist einstellbar
+        (siehe ``margin_mm``), ab Werk 2 mm.
         """
         max_right_px = 0.0
         for item in self.items():
@@ -541,7 +564,8 @@ class LabelScene(QGraphicsScene):
 
         content_right_mm = max_right_px / PIXELS_PER_MM
         # Mindestens: zwei Ränder + ein winziger Inhaltsstreifen
-        return max(content_right_mm + MARGIN_MM, MARGIN_MM * 2 + 5)
+        m = margin_mm()
+        return max(content_right_mm + m, m * 2 + 5)
 
     def set_auto_length(self, auto: bool) -> None:
         self._auto_length = auto
@@ -604,6 +628,14 @@ class LabelScene(QGraphicsScene):
         if self._flag_mode and self._flag_copy:
             self._flag_overlay_timer.start()
 
+    def rebuild_after_margin_change(self) -> None:
+        """Übernimmt einen in den Einstellungen geänderten Sicherheitsrand.
+
+        Betroffen sind die rosa Markierungen, die Mindestlänge und — bei
+        eingeschalteter Auto-Länge — die Etikettenlänge selbst."""
+        self._safe_rebuild()
+        self._schedule_auto_expand()
+
     def _safe_rebuild(self) -> None:
         self._rebuilding = True
         try:
@@ -636,7 +668,7 @@ class LabelScene(QGraphicsScene):
         box_h_px = item._rect.height()
 
         printable_h_px = _printable_mm(self._tape_width_mm) * PIXELS_PER_MM
-        x = MARGIN_MM * PIXELS_PER_MM
+        x = margin_mm() * PIXELS_PER_MM
         y = (printable_h_px - box_h_px) / 2.0
 
         item.setPos(x, y)
@@ -683,7 +715,7 @@ class LabelScene(QGraphicsScene):
 
         # Am linken Sicherheitsrand platzieren, vertikal im druckbaren Bereich
         # zentriert (sodass der Einzug oben und unten gespiegelt ist).
-        x = MARGIN_MM * PIXELS_PER_MM
+        x = margin_mm() * PIXELS_PER_MM
         item.setPos(x, inset_px)
         self.addItem(item)
         self.clearSelection()
@@ -1230,7 +1262,7 @@ class LabelScene(QGraphicsScene):
         h_printable = _printable_mm(self._tape_width_mm) * PIXELS_PER_MM
         h_full      = self._tape_width_mm * PIXELS_PER_MM
         margin      = (h_full - h_printable) / 2.0     # vertikaler nicht druckbarer Streifen (je Seite)
-        m           = MARGIN_MM * PIXELS_PER_MM        # horizontaler Sicherheitsrand
+        m           = margin_mm() * PIXELS_PER_MM      # horizontaler Sicherheitsrand
         scene_margin = max(30, m)
 
         # Zusätzlicher Platz über dem Band, damit die Linealleiste (plus etwas
@@ -1289,15 +1321,18 @@ class LabelScene(QGraphicsScene):
             r.setFlag(QGraphicsRectItem.GraphicsItemFlag.ItemIsSelectable, False)
             self._bg_items.append(r)
 
-        _add_zone(0,     m)          # linker Rand
-        _add_zone(w - m, m)          # rechter Rand
+        # Bei abgeschaltetem Rand (0 mm) entfallen Tönung und Linien ganz —
+        # sonst lägen die gestrichelten Linien genau auf dem Etikettenrahmen.
+        if m > 0.5:
+            _add_zone(0,     m)      # linker Rand
+            _add_zone(w - m, m)      # rechter Rand
 
-        # --- Gestrichelte Begrenzungslinien (horizontale Sicherheitsränder) ---
-        dash_pen = QPen(_COLOR_MARGIN_LINE, 0.5, Qt.PenStyle.DashLine)
-        for x in (m, w - m):
-            line = self.addLine(x, 0, x, h_printable, dash_pen)
-            line.setZValue(-0.5)
-            self._bg_items.append(line)
+            # --- Gestrichelte Begrenzungslinien (horizontale Sicherheitsränder) ---
+            dash_pen = QPen(_COLOR_MARGIN_LINE, 0.5, Qt.PenStyle.DashLine)
+            for x in (m, w - m):
+                line = self.addLine(x, 0, x, h_printable, dash_pen)
+                line.setZValue(-0.5)
+                self._bg_items.append(line)
 
         # --- Kabelfähnchen-Hilfslinien (mittleres Wickelband + Falzlinie + Kopie-Tönung) ---
         # Alle Fähnchen-Hilfslinien kommen in _bg_items, damit sie im

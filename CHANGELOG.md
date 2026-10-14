@@ -3,6 +3,34 @@
 Jede Version steht hier zuerst auf Deutsch, direkt darunter auf Englisch.
 *Each version is listed in German first, followed by English.*
 
+## [1.4.0] — 2026-10-14
+
+### Neu
+
+* **Sicherheitsrand einstellbar.** Die rosa getönten Streifen an Anfang und
+  Ende des Etiketts halten Platz für die Schnitttoleranz frei. Unter
+  *Datei → Einstellungen* lassen sie sich jetzt zwischen 0 und 10 mm
+  einstellen — Vorgabe bleiben 2 mm, 0 schaltet sie ab.
+
+  Der Rand bestimmt außerdem, wie weit die Auto-Länge über den Inhalt
+  hinauswächst und worauf sich »horizontal zentrieren« bezieht. Die Änderung
+  wirkt sofort auf dem Etikett.
+
+* Die **Hilfe** erklärt jetzt, wozu der Sicherheitsrand da ist.
+
+### New *(English)*
+
+* **Configurable safety margin.** The pink strips at the start and end of the
+  label keep space free for the cutting tolerance. Under *File → Settings*
+  they can now be set between 0 and 10 mm — the default stays 2 mm, and 0
+  switches them off.
+
+  The margin also determines how far the automatic length grows beyond the
+  content, and what "centre horizontally" refers to. A change takes effect on
+  the label immediately.
+
+* The **help** now explains what the safety margin is for.
+
 ## [1.3.0] — 2026-10-14
 
 ### Neu

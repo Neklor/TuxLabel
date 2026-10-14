@@ -207,12 +207,18 @@ _DEFAULTS: dict[str, object] = {
     "settings.italic":         "Kursiv",
     "settings.underline":      "Unterstrichen",
     "settings.strikeout":      "Durchgestrichen",
+    "settings.margin_row":     "Sicherheitsrand:",
+    "settings.margin_tip":     ("Freier Rand an beiden Enden des Etiketts.\n"
+                                "Der Drucker könnte bis an die Schnittkante drucken — der Rand "
+                                "ist eine Reserve\ngegen die Schnitttoleranz. Er bestimmt auch, "
+                                "wie weit die Auto-Länge\nüber den Inhalt hinauswächst.\n"
+                                "0 schaltet ihn ab."),
     "settings.flag_row":       "Fähnchen:",
     "settings.flag_midline":   ("Mittellinie (Falzlinie) drucken — hilft beim mittigen "
                                 "Aufkleben"),
-    "settings.defaults_hint":  ("Diese Werte gelten beim Programmstart und beim Klick auf "
-                                "»Neu«. Sie entsprechen dem »Standard«-Knopf in der "
-                                "Werkzeugleiste."),
+    "settings.defaults_hint":  ("Bandbreite und Schrift gelten beim Programmstart und beim "
+                                "Klick auf »Neu«; sie entsprechen dem »Standard«-Knopf in der "
+                                "Werkzeugleiste. Fähnchen und Sicherheitsrand wirken sofort."),
     "settings.theme_row":      "Design:",
     "settings.dark_mode":      "Dunkles Design (Darkmode) verwenden",
     "settings.dark_hint":      ("Der Darkmode betrifft nur die Programmoberfläche. Das Etikett "
@@ -316,6 +322,14 @@ _DEFAULTS: dict[str, object] = {
        oberhalb des Etiketts zeigt die aktuelle Länge in Zentimetern; mit
        der Schaltfläche <b>Auto</b> wächst die Etikettenlänge automatisch
        mit dem Inhalt.</p>
+    <p>Die rosa getönten Streifen an Anfang und Ende sind der
+       <b>Sicherheitsrand</b>. Der PT-P700 druckt bis an die Schnittkante,
+       doch der Schnitt sitzt nicht auf den Zehntelmillimeter genau — steht
+       Text hart an der Kante, kann der erste oder letzte Buchstabe
+       angeschnitten werden. Der Rand hält diesen Platz frei und bestimmt
+       zugleich, wie weit die Auto-Länge über den Inhalt hinauswächst.
+       Unter <i>Datei → Einstellungen</i> ist er zwischen 0 und 10&nbsp;mm
+       einstellbar; 0 schaltet ihn ab.</p>
 
     <h3>Datei verwalten</h3>
     <ul>
