@@ -368,6 +368,8 @@ _DEFAULTS: dict[str, object] = {
                                "druckbaren Bereichs und werden abgeschnitten "
                                "gedruckt:\n{items}\n\n"
                                "Trotzdem drucken?"),
+    "print.overflow_proceed": "Trotzdem drucken",
+    "print.overflow_cancel":  "Zurück zum Etikett",
     "print.overflow_image":   "(Bild)",
     "print.overflow_empty_text": "(leeres Textfeld)",
     "print.offset_row":       "Vertikaler Versatz:",

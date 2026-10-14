@@ -330,6 +330,8 @@
   "print.overflow_title": "Content extends beyond the printable area",
   "print.overflow_body": "The following items lie partly outside the printable area and will be printed cut off:\n{items}\n\nPrint anyway?",
   "print.overflow_image": "(image)",
+  "print.overflow_proceed": "Print anyway",
+  "print.overflow_cancel": "Back to the label",
   "print.overflow_empty_text": "(empty text box)",
   "print.offset_tip": "Shifts the printed content vertically on the tape.\nNegative = up, positive = down.\n\nIf content is cut off at the bottom edge (e.g. 'p' descenders):\ntry a small negative value (-0.3 to -0.8 mm).\n\nThe last value is remembered.",
   "print.button_print": "Print",

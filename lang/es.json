@@ -249,6 +249,8 @@
   "print.overflow_title": "El contenido sobresale del área imprimible",
   "print.overflow_body": "Los siguientes elementos quedan en parte fuera del área imprimible y se imprimirán cortados:\n{items}\n\n¿Imprimir de todos modos?",
   "print.overflow_image": "(imagen)",
+  "print.overflow_proceed": "Imprimir de todos modos",
+  "print.overflow_cancel": "Volver a la etiqueta",
   "print.overflow_empty_text": "(campo de texto vacío)",
   "print.offset_tip": "Desplaza verticalmente el contenido impreso en la cinta.\nNegativo = hacia arriba, positivo = hacia abajo.\n\nSi se corta en el borde inferior (p. ej. los trazos descendentes de la «p»):\npruebe un pequeño valor negativo (-0,3 a -0,8 mm).\n\nSe recuerda el último valor ajustado.",
   "print.button_print": "Imprimir",

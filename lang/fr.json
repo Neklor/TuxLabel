@@ -250,6 +250,8 @@
   "print.overflow_title": "Le contenu dépasse la zone imprimable",
   "print.overflow_body": "Les éléments suivants se trouvent en partie hors de la zone imprimable et seront imprimés tronqués :\n{items}\n\nImprimer quand même ?",
   "print.overflow_image": "(image)",
+  "print.overflow_proceed": "Imprimer quand même",
+  "print.overflow_cancel": "Retour à l'étiquette",
   "print.overflow_empty_text": "(champ de texte vide)",
   "print.offset_tip": "Décale verticalement le contenu imprimé sur le ruban.\nNégatif = vers le haut, positif = vers le bas.\n\nSi le bas est coupé (p. ex. les jambages du « p ») :\nessayez une petite valeur négative (-0,3 à -0,8 mm).\n\nLa dernière valeur est mémorisée.",
   "print.button_print": "Imprimer",

@@ -677,14 +677,22 @@ class PrintDialog(QDialog):
 
         over = _overflowing_items(self._scene)
         if over:
-            answer = QMessageBox.warning(
-                self,
-                str(tr("print.overflow_title")),
-                str(tr("print.overflow_body", items="\n  • " + "\n  • ".join(over))),
-                QMessageBox.StandardButton.Ok | QMessageBox.StandardButton.Cancel,
-                QMessageBox.StandardButton.Cancel,
-            )
-            if answer != QMessageBox.StandardButton.Ok:
+            # Die Warnung hält niemanden auf — sie macht den Beschnitt nur
+            # sichtbar. Manchmal ist er gewollt, etwa wenn eine Unterlänge um
+            # Zehntelmillimeter ansteht. Deshalb eigens beschriftete Knöpfe
+            # statt eines unverbindlichen »OK«.
+            box = QMessageBox(self)
+            box.setIcon(QMessageBox.Icon.Warning)
+            box.setWindowTitle(str(tr("print.overflow_title")))
+            box.setText(str(tr("print.overflow_body",
+                               items="\n  • " + "\n  • ".join(over))))
+            go = box.addButton(str(tr("print.overflow_proceed")),
+                               QMessageBox.ButtonRole.AcceptRole)
+            back = box.addButton(str(tr("print.overflow_cancel")),
+                                 QMessageBox.ButtonRole.RejectRole)
+            box.setDefaultButton(back)
+            box.exec()
+            if box.clickedButton() is not go:
                 return
 
         # In temporäre Datei rendern
