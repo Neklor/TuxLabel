@@ -264,6 +264,52 @@ def _draw_flag_middle_line(image: QImage, scene: "LabelScene") -> None:
     painter.end()
 
 
+def _overflowing_items(scene) -> list[str]:
+    """Namen der Elemente, die über den druckbaren Bereich hinausragen.
+
+    Gedruckt wird nur, was innerhalb des Bereichs liegt; alles andere schneidet
+    der Rand ab. Der Editor zeigt das zwar an, aber auf einem langen Etikett
+    mit vielen Feldern übersieht man es leicht — deshalb vor dem Druck noch
+    einmal nachsehen.
+
+    Geprüft wird in beide Richtungen: quer zum Band (die druckbare Höhe) und
+    längs (die eingestellte Etikettenlänge)."""
+    from .label_canvas import PIXELS_PER_MM, _printable_mm
+    from .text_item import TextBox
+    from .image_item import ImageBox
+
+    h_px = _printable_mm(scene.get_tape_width_mm()) * PIXELS_PER_MM
+    w_px = scene.get_label_length_mm() * PIXELS_PER_MM
+    # Toleranz gegen Rundungsrauschen, aber klein genug für den Fall, der das
+    # auslöste: 24 pt auf 12-mm-Band steht 0,115 mm über und schneidet dabei
+    # sichtbar die Unterlänge ab.
+    tol  = 0.05 * PIXELS_PER_MM   # 0,05 mm
+
+    names: list[str] = []
+    for item in scene.items():
+        if not isinstance(item, (TextBox, ImageBox)):
+            continue
+        r = item.sceneBoundingRect()
+        # sceneBoundingRect enthält die Anfasser; der Inhalt ist das _rect.
+        rect = getattr(item, "_rect", None)
+        if rect is not None:
+            top    = item.y() + rect.top()
+            bottom = item.y() + rect.bottom()
+            left   = item.x() + rect.left()
+            right  = item.x() + rect.right()
+        else:
+            top, bottom, left, right = r.top(), r.bottom(), r.left(), r.right()
+
+        if (top < -tol or bottom > h_px + tol
+                or left < -tol or right > w_px + tol):
+            if isinstance(item, TextBox):
+                txt = (item.get_text() or "").strip().replace("\n", " ")
+                names.append(f'"{txt[:24]}"' if txt else str(tr("print.overflow_empty_text")))
+            else:
+                names.append(str(tr("print.overflow_image")))
+    return names
+
+
 def _render_to_png(
     scene: "LabelScene",
     path: str,
@@ -628,6 +674,18 @@ class PrintDialog(QDialog):
         if not printer_name or printer_name.startswith("("):
             QMessageBox.warning(self, tr("print.no_printer_title"), tr("print.no_printer_body"))
             return
+
+        over = _overflowing_items(self._scene)
+        if over:
+            answer = QMessageBox.warning(
+                self,
+                str(tr("print.overflow_title")),
+                str(tr("print.overflow_body", items="\n  • " + "\n  • ".join(over))),
+                QMessageBox.StandardButton.Ok | QMessageBox.StandardButton.Cancel,
+                QMessageBox.StandardButton.Cancel,
+            )
+            if answer != QMessageBox.StandardButton.Ok:
+                return
 
         # In temporäre Datei rendern
         tmp_fd, tmp_path = tempfile.mkstemp(suffix=".png", prefix="pt_label_")

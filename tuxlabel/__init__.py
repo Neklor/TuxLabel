@@ -9,4 +9,4 @@ Das Dateiformat hat eine eigene, unabhängige Version — siehe
 ``serialization.FILE_VERSION``.
 """
 
-__version__ = "1.2.1"
+__version__ = "1.3.0"

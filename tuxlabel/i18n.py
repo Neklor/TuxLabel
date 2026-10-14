@@ -363,6 +363,13 @@ _DEFAULTS: dict[str, object] = {
                                "Foto-Modus (Dithering): Grauwerte werden durch Punktmuster "
                                "angenähert (Floyd-Steinberg). Beste Wahl für Bilder/Fotos; "
                                "Textkanten können dabei leicht körnig wirken."),
+    "print.overflow_title":   "Inhalt ragt über den druckbaren Bereich hinaus",
+    "print.overflow_body":    ("Folgende Elemente liegen teilweise außerhalb des "
+                               "druckbaren Bereichs und werden abgeschnitten "
+                               "gedruckt:\n{items}\n\n"
+                               "Trotzdem drucken?"),
+    "print.overflow_image":   "(Bild)",
+    "print.overflow_empty_text": "(leeres Textfeld)",
     "print.offset_row":       "Vertikaler Versatz:",
     "print.offset_tip":       ("Verschiebt den gedruckten Inhalt vertikal auf dem Band.\n"
                                "Negativ = nach oben, Positiv = nach unten.\n\n"

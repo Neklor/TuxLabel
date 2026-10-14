@@ -3,6 +3,28 @@
 Jede Version steht hier zuerst auf Deutsch, direkt darunter auf Englisch.
 *Each version is listed in German first, followed by English.*
 
+## [1.3.0] — 2026-10-14
+
+### Neu
+
+* **Warnung vor dem Drucken, wenn Inhalt übersteht.** Ragt ein Textfeld oder
+  Bild über den druckbaren Bereich hinaus — quer zum Band oder über das
+  Etikettenende —, fragt TuxLabel vor dem Druck nach und nennt die
+  betroffenen Elemente. Gedruckt wird nur auf Bestätigung.
+
+  Bisher wurde überstehender Inhalt wortlos abgeschnitten. Auf einem langen
+  Etikett mit vielen Feldern fällt das leicht erst auf dem fertigen Band auf.
+
+### New *(English)*
+
+* **Warning before printing when content overflows.** If a text box or image
+  extends beyond the printable area — across the tape or past the end of the
+  label — TuxLabel asks before printing and names the items concerned.
+  Printing continues only on confirmation.
+
+  Overflowing content used to be cut off silently, which on a long label with
+  many fields is easy to miss until the tape comes out.
+
 ## [1.2.1] — 2026-10-14
 
 ### Behoben
