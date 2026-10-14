@@ -159,6 +159,17 @@ def _get_printer_tape_mm(printer_name: str) -> float | None:
     return None
 
 
+def _offset_key(tape_mm: float) -> str:
+    """QSettings-Schlüssel für den vertikalen Versatz EINER Bandbreite.
+
+    Der nötige Versatz hängt vom Band ab: Brothers PPD legt den druckbaren
+    Streifen je Bandbreite unterschiedlich weit außermittig. Ein gemeinsamer
+    Wert zwänge dazu, ihn bei jedem Bandwechsel nachzustellen — und genau das
+    fiel auf, als ein 24-mm-Etikett den untersten Textblock verlor, während
+    12 mm bei 0 mm korrekt druckte."""
+    return f"print_vertical_offset_mm/{tape_mm:g}"
+
+
 def _binarize_image(image: QImage, threshold: int) -> QImage:
     """Wandelt ein gerendertes Etikettenbild für den Thermodruck in reines
     Schwarz/Weiß um.
@@ -234,12 +245,22 @@ def _draw_flag_middle_line(image: QImage, scene: "LabelScene") -> None:
     ausrichten lässt."""
     if not scene.get_flag_mode():
         return
+    from .label_canvas import PRINT_HARDWARE_LEADER_MM, _head_band_mm
+
     ppmm = PRINT_DPI / 25.4
-    fold_mm = scene.get_flag_width_mm() + scene.get_flag_middle_mm() / 2.0
+    # Das Bild umfasst seit 1.2.1 die ganze Seite: Der Etikettinhalt beginnt
+    # erst nach dem halben Vorlauf und liegt senkrecht im Druckkopfbereich.
+    # Beide Versätze gelten auch für die Falzlinie.
+    lead_mm = PRINT_HARDWARE_LEADER_MM / 2.0
+    band_top_mm, band_bot_mm = _head_band_mm(scene.get_tape_width_mm())
+
+    fold_mm = lead_mm + scene.get_flag_width_mm() + scene.get_flag_middle_mm() / 2.0
     x = int(round(fold_mm * ppmm))
     w = max(1, int(round(0.3 * ppmm)))   # ~0,3 mm dick
+    y0 = int(round(band_top_mm * ppmm))
+    y1 = int(round(band_bot_mm * ppmm))
     painter = QPainter(image)
-    painter.fillRect(x - w // 2, 0, w, image.height(), Qt.GlobalColor.black)
+    painter.fillRect(x - w // 2, y0, w, max(1, y1 - y0), Qt.GlobalColor.black)
     painter.end()
 
 
@@ -539,13 +560,22 @@ class PrintDialog(QDialog):
         # abschneiden kann. Dieses Drehfeld lässt den Nutzer die richtige
         # Verschiebung empirisch einstellen und merkt sie sich für das nächste Mal.
         self._offset_spin = QDoubleSpinBox()
-        self._offset_spin.setRange(-3.0, 3.0)
+        # Reichweite großzügig: Am PT-P700 wurde auf 24-mm-Band ein Versatz
+        # von mehreren Millimetern nötig, um den unteren Rand nutzbar zu
+        # machen. Mit den früheren ±3 mm war das nicht erreichbar.
+        self._offset_spin.setRange(-6.0, 6.0)
         self._offset_spin.setSingleStep(0.1)
         self._offset_spin.setDecimals(1)
         self._offset_spin.setSuffix(" mm")
         self._offset_spin.setToolTip(tr("print.offset_tip"))
-        saved_offset = QSettings().value("print_vertical_offset_mm", 0.0, float)
-        self._offset_spin.setValue(saved_offset)
+        # Pro Bandbreite gemerkt. Fehlt der Wert, gilt der früher global
+        # gespeicherte als Startwert, damit eine bestehende Einstellung beim
+        # Aktualisieren nicht verlorengeht.
+        _s = QSettings()
+        _tape = self._scene.get_tape_width_mm()
+        _legacy = _s.value("print_vertical_offset_mm", 0.0, float)
+        self._offset_spin.setValue(
+            _s.value(_offset_key(_tape), _legacy, float))
         form2.addRow(tr("print.offset_row"), self._offset_spin)
 
         layout.addLayout(form2)
@@ -605,7 +635,8 @@ class PrintDialog(QDialog):
 
         dither, threshold = self._darkness_combo.currentData()
         offset_mm = self._offset_spin.value()
-        QSettings().setValue("print_vertical_offset_mm", offset_mm)
+        QSettings().setValue(
+            _offset_key(self._scene.get_tape_width_mm()), offset_mm)
         draw_flag_middle = QSettings().value(
             "flag_print_middle_line", True, bool
         )

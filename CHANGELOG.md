@@ -3,6 +3,49 @@
 Jede Version steht hier zuerst auf Deutsch, direkt darunter auf Englisch.
 *Each version is listed in German first, followed by English.*
 
+## [1.2.1] — 2026-10-14
+
+### Behoben
+
+* **Auf 24-mm-Band fehlte der untere Teil des Etiketts.** Inhalt im unteren
+  Bereich wurde nicht gedruckt, obwohl der Editor ihn als innerhalb des
+  druckbaren Bereichs anzeigte.
+
+  Der Druckkopf des PT-P700 erreicht nicht die volle Bandbreite und sitzt
+  außerdem nicht mittig. TuxLabel ging von einer größeren, mittigen Fläche
+  aus und legte den Inhalt teils dorthin, wo der Drucker ihn nicht erreicht.
+
+  Für 24-mm-Band sind jetzt 16,8 mm druckbar statt 17,5 mm, und der Bereich
+  liegt an der richtigen Stelle. **Bestehende Etiketten** mit Inhalt am
+  unteren Rand zeigen diesen nun außerhalb des druckbaren Bereichs — er muss
+  einmal nach oben gerückt werden, danach druckt er vollständig. Für alle
+  anderen Bandbreiten ändert sich nichts.
+
+### Geändert
+
+* Der **vertikale Versatz** im Druckdialog wird jetzt für jede Bandbreite
+  getrennt gespeichert und lässt sich bis ±6 mm einstellen.
+
+### Fixed *(English)*
+
+* **On 24 mm tape the lower part of the label was missing.** Content near the
+  bottom did not print, even though the editor showed it inside the printable
+  area.
+
+  The PT-P700's print head does not span the full tape width and is not
+  centred on it. TuxLabel assumed a larger, centred area and placed content
+  where the printer cannot reach.
+
+  For 24 mm tape the printable height is now 16.8 mm instead of 17.5 mm, and
+  it sits in the right place. **Existing labels** with content near the bottom
+  now show it outside the printable area; move it up once and it prints in
+  full. Nothing changes for the other tape widths.
+
+### Changed *(English)*
+
+* The **vertical offset** in the print dialog is now stored separately for
+  each tape width and can be set up to ±6 mm.
+
 ## [1.2.0] — 2026-09-30
 
 ### Neu

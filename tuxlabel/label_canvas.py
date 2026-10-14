@@ -85,19 +85,80 @@ TAPE_WIDTHS: dict[str, float] = {
 # Bandrändern), hat CUPS keinen »Auto-Fit«-Spielraum mehr, um unseren Inhalt
 # aufs Band zu skalieren — der Inhalt wird in seiner wörtlichen physischen
 # Größe auf den druckbaren Streifen des Druckers gedruckt.
-TAPE_PRINTABLE_MM: dict[float, float] = {
-    3.5: 2.2,
-    6:   3.0,
-    9:   6.0,
-    12:  8.5,
-    18:  13.0,
-    24:  17.5,
+# LAGE DES DRUCKKOPFS AUF DEM BAND, als (Beginn, Ende) in mm vom oberen
+# Bandrand. Das ist NICHT dasselbe wie Brothers Angabe zur Druckhöhe: Der Kopf
+# des PT-P700 erreicht nicht die Bandmitte, sondern sitzt zum oberen Rand
+# verschoben.
+#
+# Für 24 mm am Gerät ausgemessen (Oktober 2026), und zwar durchgehend statt
+# geschätzt: Ein schwarzer Balken, der im Bild exakt von 2,00 bis 17,00 mm
+# reichte, landete auf dem Band bei 6,16 bis 21,20 mm. Daraus folgt die
+# Abbildung Band = 1,00267 × Bild + 4,155 — also praktisch 1:1 mit festem
+# Versatz. Der Druckkopf selbst reicht auf dem Band von 4,16 bis 21,00 mm
+# (am vollflächigen Ausdruck mit dem Messschieber abgenommen); zurückgerechnet
+# sind das im Bild 0,00 bis 16,80 mm.
+#
+# Die Rechnung erklärt auch den alten Fehler: Das frühere, nur 17,5 mm hohe
+# Bild wurde von CUPS mittig bei 3,77 bis 21,27 mm abgelegt, nutzbar war davon
+# bis 16,80 — Inhalt unterhalb von 13,0 mm Bildhöhe erreichte den Kopf nie.
+#
+# Für die übrigen Breiten ist die Lage NICHT nachgemessen. Dort stehen genau
+# die Werte, die sich bisher ergaben (Bild der Höhe TAPE_PRINTABLE_MM, von
+# CUPS mittig aufs Band gesetzt) — am gedruckten Ergebnis ändert sich für sie
+# also nichts. Wer ein anderes Band nachmisst, trägt den Befund hier ein.
+# Maße der Seite, die TuxLabel an CUPS meldet. Brothers PPD lehnt Custom-Seiten
+# unter 36 pt ab, weshalb schmale Bänder auf dieses Mindestmaß angehoben werden
+# — die Seite ist dann BREITER als das Band. Die Lagen unten beziehen sich
+# deshalb auf die SEITE, nicht auf das Band; nur bei 18 und 24 mm fällt beides
+# zusammen.
+PT_PER_MM          = 72.0 / 25.4     # ≈ 2,83465
+PPD_CUSTOM_MIN_PT  = 36              # Untergrenze der PPD für Custom-Seiten
+
+
+def _page_width_mm(tape_mm: float) -> float:
+    """Breite der gemeldeten Seite in mm — gleich der Bandbreite oder dem
+    Mindestmaß der PPD, je nachdem, was größer ist."""
+    pt = max(PPD_CUSTOM_MIN_PT, round(tape_mm * PT_PER_MM))
+    return pt / PT_PER_MM
+
+
+def _page_length_mm(total_length_mm: float) -> float:
+    """Länge der gemeldeten Seite in mm.
+
+    Beide Maße werden hier aus derselben Rundung auf ganze Punkte abgeleitet,
+    die auch printer._send_to_printer verwendet. Nur so stimmt das
+    Seitenverhältnis des Bildes exakt mit dem der Seite überein — weicht es
+    ab, passt CUPS das Bild ein und skaliert es leicht."""
+    pt = max(PPD_CUSTOM_MIN_PT, round(total_length_mm * PT_PER_MM))
+    return pt / PT_PER_MM
+
+
+TAPE_HEAD_BAND_MM: dict[float, tuple[float, float]] = {
+    3.5: (5.250,  7.450),   # unverändert, nicht nachgemessen
+    6:   (4.850,  7.850),   # unverändert, nicht nachgemessen
+    9:   (3.350,  9.350),   # unverändert, nicht nachgemessen
+    12:  (2.100, 10.600),   # unverändert, nicht nachgemessen
+    18:  (2.496, 15.496),   # unverändert, nicht nachgemessen
+    24:  (0.000, 16.800),   # ausgemessen
 }
 
 
+def _head_band_mm(tape_mm: float) -> tuple[float, float]:
+    """Beginn und Ende des Druckkopfbereichs (mm ab oberem Bandrand)."""
+    band = TAPE_HEAD_BAND_MM.get(tape_mm)
+    if band is None:
+        # Unbekanntes Band: die ganze Seite annehmen.
+        return (0.0, _page_width_mm(tape_mm))
+    return band
+
+
 def _printable_mm(tape_mm: float) -> float:
-    """Gibt die druckbare Höhe (mm) für eine gegebene Bandbreite zurück."""
-    return TAPE_PRINTABLE_MM.get(tape_mm, float(tape_mm))
+    """Gibt die druckbare Höhe (mm) für eine gegebene Bandbreite zurück.
+
+    Ergibt sich aus der Lage des Druckkopfs — nur was der Kopf erreicht, ist
+    bedruckbar."""
+    a, b = _head_band_mm(tape_mm)
+    return b - a
 
 
 # Zusätzlicher Sicherheitseinzug (mm) beim automatischen Platzieren von
@@ -843,21 +904,31 @@ class LabelScene(QGraphicsScene):
             # physischen Größe (oder mit einer bekannten, festen Dehnung aus dem
             # abbildbaren Bereich der PPD, die zumindest vorhersehbar ist).
             print_length_mm = float(self._label_length_mm)
-            printable_mm    = _printable_mm(self._tape_width_mm)
+            tape_mm         = float(self._tape_width_mm)
+            band_top_mm, band_bot_mm = _head_band_mm(tape_mm)
+            printable_mm    = band_bot_mm - band_top_mm
             px_per_mm       = dpi / 25.4
 
-            # Das PNG wird nur auf die Etikettenlänge des Editors dimensioniert —
-            # der ~21,6-mm-Hardware-Vorlauf des P700 wird NICHT ins PNG
-            # gerendert, sondern nur in der Custom-Seitenlänge berücksichtigt,
-            # die wir an CUPS senden (siehe _send_to_printer in printer.py).
-            w_px       = max(1, round(print_length_mm * px_per_mm))
-            h_print_px = max(1, round(printable_mm    * px_per_mm))
+            # Das Bild umfasst die GANZE Seite: volle Bandbreite und die Länge
+            # einschließlich des Hardware-Vorlaufs. Nur dann stimmt sein
+            # Seitenverhältnis mit der Seite überein, die _send_to_printer an
+            # CUPS meldet — andernfalls setzt CUPS das schmalere Bild MITTIG
+            # aufs Band. Da der Druckkopf des PT-P700 nicht mittig sitzt
+            # (siehe TAPE_HEAD_BAND_MM), fiel der untere Teil des Inhalts
+            # dadurch hinter dessen Ende und wurde nie gedruckt.
+            #
+            # Mit voller Seitengröße legt TuxLabel die Lage selbst fest.
+            page_len_mm   = _page_length_mm(
+                print_length_mm + PRINT_HARDWARE_LEADER_MM)
+            page_width_mm = _page_width_mm(tape_mm)
+            w_px = max(1, round(page_len_mm   * px_per_mm))
+            h_px = max(1, round(page_width_mm * px_per_mm))
 
             # vertical_offset_mm verschiebt den Inhalt innerhalb des erfassten
             # Quellbereichs: positiv = Inhalt bewegt sich im Druck nach unten.
             source_y_offset = -vertical_offset_mm * PIXELS_PER_MM
 
-            image = QImage(w_px, h_print_px, QImage.Format.Format_RGB32)
+            image = QImage(w_px, h_px, QImage.Format.Format_RGB32)
             image.fill(Qt.GlobalColor.white)
 
             # Die Druck-DPI in den Bild-Metadaten speichern (PNG / EXIF)
@@ -869,12 +940,21 @@ class LabelScene(QGraphicsScene):
             painter.setRenderHint(QPainter.RenderHint.Antialiasing)
             painter.setRenderHint(QPainter.RenderHint.TextAntialiasing)
 
+            # Der Vorlauf verteilt sich je zur Hälfte auf Anfang und Ende —
+            # genau so lag das Etikett bisher, als CUPS das kürzere Bild
+            # mittig auf die längere Seite setzte. In der Länge ändert sich
+            # dadurch nichts.
+            lead_px   = ((page_len_mm - print_length_mm) / 2.0) * px_per_mm
+            target_rect = QRectF(
+                lead_px, band_top_mm * px_per_mm,
+                print_length_mm * px_per_mm,
+                printable_mm    * px_per_mm,
+            )
             source_rect = QRectF(
                 0, source_y_offset,
                 print_length_mm * PIXELS_PER_MM,
                 printable_mm    * PIXELS_PER_MM,
             )
-            target_rect = QRectF(0, 0, w_px, h_print_px)
             self.render(painter, target_rect, source_rect)
             painter.end()
 
