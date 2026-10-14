@@ -186,6 +186,22 @@ darum; diese Liste ist für alle anderen Wege gedacht.
 Der Editor ist nicht an den PT-P700 gebunden — andere P-Touch-Modelle mit
 CUPS-Treiber können funktionieren, sind aber ungetestet.
 
+### Und macOS?
+
+Nicht unterstützt und nicht geplant. Das Programm selbst ist nicht an Linux
+gebunden — PyQt6 läuft auch auf macOS, und im Code stecken keine
+linuxspezifischen Pfade —, aus dem Quellcode dürfte der Editor dort also
+starten. Das **Drucken** wäre dagegen Neuarbeit: TuxLabel spricht mit der PPD
+des Linux-Treibers `printer-driver-ptouch` und verlässt sich auf dessen
+Seitennamen, Optionen und die daran ausgemessenen Druckränder. Brother liefert
+für macOS einen eigenen Treiber mit anderem Optionssatz; das müsste an echter
+Hardware neu vermessen werden — die habe ich nicht.
+
+Dazu kommt der wichtigere Grund: Für macOS gibt es P-touch Editor von Brother,
+kostenlos und gepflegt. TuxLabel ist entstanden, weil es für **Linux** nichts
+Vergleichbares gibt. Dort ist die Lücke, dort bleibt die Priorität. Beiträge
+dazu sind willkommen, getestet werden können sie von mir aber nicht.
+
 ## Tastenkürzel
 
 | Kürzel | Funktion |
@@ -418,6 +434,21 @@ driver may work but are untested.
 
 The full keyboard shortcut list is available in the app under
 *Help → Keyboard shortcuts*.
+
+#### What about macOS?
+
+Not supported and not planned. The application itself is not tied to Linux —
+PyQt6 runs on macOS and the code contains no Linux-specific paths — so the
+editor would most likely start from source. Printing is the problem: TuxLabel
+talks to the PPD of the Linux `printer-driver-ptouch` driver and relies on its
+page names, options and the print margins measured against it. Brother ships
+its own macOS driver with a different set of options, which would have to be
+re-measured on real hardware that I do not have.
+
+The more important reason: Brother's P-touch Editor is available for macOS,
+free and maintained. TuxLabel exists because there is nothing comparable for
+**Linux** — that is where the gap is and where the priority stays.
+Contributions are welcome, but I cannot test them.
 
 ### Roadmap
 
