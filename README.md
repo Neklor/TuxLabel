@@ -196,7 +196,9 @@ sudo apt install printer-driver-ptouch     # Ubuntu / Mint / Debian
 
 Welche Geräte überhaupt in Frage kommen, entscheidet `printer-driver-ptouch`
 und nicht TuxLabel: Was dort eine PPD erhält und in `lpstat -p` auftaucht,
-findet auch der Druckdialog. Diese Modelle sind tatsächlich im Einsatz:
+findet auch der Druckdialog.
+
+Diese Modelle wurden bereits getestet:
 
 | Modell | Rückmeldung |
 | --- | --- |
@@ -489,7 +491,9 @@ sudo apt install printer-driver-ptouch     # Ubuntu / Mint / Debian
 
 Which devices are possible at all is decided by `printer-driver-ptouch`, not by
 TuxLabel: whatever gets a PPD there and shows up in `lpstat -p` will be found
-by the print dialog as well. These models are in actual use:
+by the print dialog as well.
+
+These models have already been tested:
 
 | Model | Report |
 | --- | --- |
