@@ -5,7 +5,7 @@
 
 import sys
 
-from PyQt6.QtCore import QSettings
+from PyQt6.QtCore import QSettings, QTimer
 from PyQt6.QtWidgets import QApplication
 
 # Nur die Versionsnummer — tuxlabel/__init__.py importiert bewusst kein PyQt,
@@ -68,6 +68,13 @@ def main() -> None:
     from tuxlabel.i18n import maybe_offer_system_language
     maybe_offer_system_language()
 
+    # Einmalige Frage, ob beim Start nach Updates gesucht werden darf. Läuft
+    # NACH der Sprachwahl, damit der Dialog in der gewählten Sprache erscheint,
+    # und vor dem Hauptfenster. Ohne ein Ja baut TuxLabel keine
+    # Netzwerkverbindung auf.
+    from tuxlabel.update_check import maybe_ask_consent
+    maybe_ask_consent()
+
     # Import NACH QApplication, damit label_canvas.py beim Laden des Moduls
     # die Bildschirm-DPI abfragen kann – für physikalisch korrekte
     # Schriftdarstellung (WYSIWYG).
@@ -75,6 +82,10 @@ def main() -> None:
 
     window = MainWindow()
     window.show()
+
+    # Erst prüfen, wenn das Fenster steht — die Abfrage läuft asynchron, der
+    # Start darf dadurch nicht einmal kurz stocken.
+    QTimer.singleShot(1500, window.start_update_check)
 
     sys.exit(app.exec())
 

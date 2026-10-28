@@ -36,6 +36,9 @@ from .i18n import (
 from .label_canvas import (
     TAPE_WIDTHS, MARGIN_SETTING_KEY, MARGIN_DEFAULT_MM, MARGIN_MAX_MM,
 )
+from .update_check import (
+    UPDATE_CHECK_KEY, UPDATE_CHECK_DEFAULT,
+)
 from .theme import DARK_MODE_KEY, apply_theme
 
 
@@ -60,6 +63,7 @@ class SettingsDialog(QDialog):
         "font_strikeout": False,
         "flag_print_middle_line": True,
         MARGIN_SETTING_KEY: MARGIN_DEFAULT_MM,
+        UPDATE_CHECK_KEY:   UPDATE_CHECK_DEFAULT,
         DARK_MODE_KEY:    False,
         LANGUAGE_KEY:     "de",
     }
@@ -167,6 +171,13 @@ class SettingsDialog(QDialog):
             s.value(MARGIN_SETTING_KEY, MARGIN_DEFAULT_MM, float))
         form.addRow(tr("settings.margin_row"), self._margin_spin)
 
+        # --- Update-Prüfung ---
+        self._cb_update = QCheckBox(tr("settings.update_check"))
+        self._cb_update.setToolTip(tr("settings.update_tip"))
+        self._cb_update.setChecked(
+            s.value(UPDATE_CHECK_KEY, UPDATE_CHECK_DEFAULT, bool))
+        form.addRow(tr("settings.update_row"), self._cb_update)
+
         hint = QLabel(tr("settings.defaults_hint"))
         hint.setWordWrap(True)
         hint.setStyleSheet("QLabel { color: #888888; padding-top: 8px; }")
@@ -192,6 +203,7 @@ class SettingsDialog(QDialog):
         self._cb_strikeout.setChecked(self.FACTORY["font_strikeout"])
         self._cb_flag_midline.setChecked(self.FACTORY["flag_print_middle_line"])
         self._margin_spin.setValue(self.FACTORY[MARGIN_SETTING_KEY])
+        self._cb_update.setChecked(self.FACTORY[UPDATE_CHECK_KEY])
         self._cb_dark_mode.setChecked(self.FACTORY[DARK_MODE_KEY])
         self._lang_combo.setCurrentIndex(0)   # Deutsch (eingebaut)
         self._factory_reset_requested = True
@@ -258,6 +270,7 @@ class SettingsDialog(QDialog):
         s.setValue("font_strikeout", self._cb_strikeout.isChecked())
         s.setValue("flag_print_middle_line", self._cb_flag_midline.isChecked())
         s.setValue(MARGIN_SETTING_KEY, self._margin_spin.value())
+        s.setValue(UPDATE_CHECK_KEY, self._cb_update.isChecked())
 
         # Sprache: alle Texte entstehen beim Aufbau der Fenster, daher wird die
         # neue Sprache erst beim nächsten Programmstart wirksam.
@@ -290,6 +303,10 @@ class SettingsDialog(QDialog):
         # Zeichenfläche muss ihn sofort übernehmen, nicht erst beim Neustart.
         if parent is not None and hasattr(parent, "refresh_margin"):
             parent.refresh_margin()
+        # Beim Einschalten gleich einmal nachsehen, beim Ausschalten einen
+        # offenen Hinweis entfernen.
+        if parent is not None and hasattr(parent, "refresh_update_setting"):
+            parent.refresh_update_setting()
 
         self.accept()
 

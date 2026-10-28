@@ -154,6 +154,7 @@ _DEFAULTS: dict[str, object] = {
     "menu.help":            "&Hilfe",
     "menu.help_contents":   "&Inhalt",
     "menu.help_shortcuts":  "&Tastenkürzel",
+    "menu.help_updates":    "Nach &Updates suchen",
     "menu.help_about":      "&Über",
     "menu.recent_empty":    "(leer)",
     "menu.recent_clear":    "Verlauf leeren",
@@ -213,12 +214,21 @@ _DEFAULTS: dict[str, object] = {
                                 "ist eine Reserve\ngegen die Schnitttoleranz. Er bestimmt auch, "
                                 "wie weit die Auto-Länge\nüber den Inhalt hinauswächst.\n"
                                 "0 schaltet ihn ab."),
+    "settings.update_row":     "Updates:",
+    "settings.update_check":   "Beim Start auf GitHub nach einer neuen Version suchen",
+    "settings.update_tip":     ("Fragt höchstens einmal täglich die Release-Seite des "
+                                "Projekts ab und\nzeigt einen Hinweis in der Statusleiste, "
+                                "wenn eine neuere Version\nvorliegt. Ohne diese Funktion "
+                                "baut TuxLabel keine Netzwerk-\nverbindung auf.\n\n"
+                                "Es werden keine Daten über dich übertragen und das Programm "
+                                "aktualisiert\nsich nicht selbst — der Hinweis verlinkt nur "
+                                "die Release-Seite."),
     "settings.flag_row":       "Fähnchen:",
     "settings.flag_midline":   ("Mittellinie (Falzlinie) drucken — hilft beim mittigen "
                                 "Aufkleben"),
     "settings.defaults_hint":  ("Bandbreite und Schrift gelten beim Programmstart und beim "
                                 "Klick auf »Neu«; sie entsprechen dem »Standard«-Knopf in der "
-                                "Werkzeugleiste. Fähnchen und Sicherheitsrand wirken sofort."),
+                                "Werkzeugleiste. Die übrigen Einstellungen wirken sofort."),
     "settings.theme_row":      "Design:",
     "settings.dark_mode":      "Dunkles Design (Darkmode) verwenden",
     "settings.dark_hint":      ("Der Darkmode betrifft nur die Programmoberfläche. Das Etikett "
@@ -234,6 +244,33 @@ _DEFAULTS: dict[str, object] = {
     "settings.language_restart_title": "Sprache geändert",
     "settings.language_restart_body":  ("Die neue Sprache wird nach einem Neustart von "
                                         "TuxLabel wirksam."),
+
+    # --- Update-Prüfung ---
+    "update.consent_title": "Nach Updates suchen?",
+    "update.consent_body":  ("Soll TuxLabel beim Start nachsehen, ob auf GitHub eine "
+                             "neuere Version vorliegt?\n\n"
+                             "Dazu wird höchstens einmal täglich die Release-Seite des "
+                             "Projekts abgefragt. Es werden keine Daten über dich "
+                             "übertragen, und TuxLabel aktualisiert sich nicht selbst — "
+                             "bei einer neuen Version erscheint lediglich ein Hinweis in "
+                             "der Statusleiste.\n\n"
+                             "Ohne diese Funktion baut das Programm keine "
+                             "Netzwerkverbindung auf. Die Einstellung lässt sich "
+                             "jederzeit unter Datei → Einstellungen ändern."),
+    "update.consent_yes":   "Ja, nachsehen",
+    "update.consent_no":    "Nein, danke",
+    # Statusleisten-Hinweis. Beide Verweise liegen in einem Widget: der erste
+    # öffnet die Release-Seite, der zweite blendet die Version dauerhaft aus.
+    "update.status_text":   "Version {version} verfügbar",
+    "update.status_skip":   "ausblenden",
+    "update.status_tip":    ("Öffnet die Release-Seite im Browser.\n"
+                             "Das Update wird dort als .deb-Datei heruntergeladen und "
+                             "wie beim ersten Mal\nper Doppelklick installiert."),
+    "update.uptodate_title": "Kein Update verfügbar",
+    "update.uptodate_body":  "TuxLabel {version} ist die neueste Version.",
+    "update.failed_title":   "Prüfung nicht möglich",
+    "update.failed_body":    ("Die Release-Seite war nicht erreichbar. Besteht eine "
+                              "Internetverbindung?"),
 
     # --- Über-Dialog ---
     "about.title": "Über TuxLabel",

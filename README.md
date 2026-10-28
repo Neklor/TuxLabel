@@ -76,6 +76,10 @@ Linux Mint und Debian als `.deb` Paket. Zum installieren einfach die .deb Datei 
 * Mehrsprachig: Deutsch ist fest eingebaut, Englisch/Spanisch/Französisch liegen als
   JSON-Dateien bei — eigene Übersetzungen sind ohne Programmieren möglich
   (siehe [lang/README.md](lang/README.md))
+* Optionaler Update-Hinweis: Auf Wunsch sieht TuxLabel höchstens einmal
+  täglich nach, ob hier eine neuere Version liegt, und zeigt sie als
+  anklickbaren Text in der Statusleiste. Ohne diese Funktion baut das Programm
+  überhaupt keine Netzwerkverbindung auf; gefragt wird einmal beim ersten Start
 
 ## Installation
 
@@ -418,6 +422,10 @@ and Debian as a `.deb` package. To install, simply launch the `.deb` file.
 * Multilingual: German is built into the program; English, Spanish and French
   ship as JSON files, and adding your own translation requires no programming
   — see [lang/README.md](lang/README.md)
+* Optional update notice: if you want it, TuxLabel checks at most once a day
+  whether a newer version is available here and shows it as clickable text in
+  the status bar. Without this feature the program makes no network connection
+  at all; you are asked once on first start
 
 ### Installation
 

@@ -3,6 +3,57 @@
 Jede Version steht hier zuerst auf Deutsch, direkt darunter auf Englisch.
 *Each version is listed in German first, followed by English.*
 
+## [1.5.0] — 2026-10-28
+
+### Neu
+
+* **Hinweis auf neue Versionen.** Auf Wunsch sieht TuxLabel beim Start nach,
+  ob auf GitHub eine neuere Version vorliegt, und zeigt sie als anklickbaren
+  Text in der Statusleiste — ein Klick öffnet die Release-Seite. Keine
+  Popup-Fenster, und die Anzeige lässt sich für eine Version ausblenden.
+
+  Gefragt wird einmal beim ersten Start. Lehnt man ab, baut TuxLabel wie
+  bisher **überhaupt keine Netzwerkverbindung** auf. Umstellen lässt sich das
+  jederzeit unter *Datei → Einstellungen*, und *Hilfe → Nach Updates suchen*
+  prüft auf Zuruf.
+
+  Nachgesehen wird höchstens einmal am Tag. Übertragen wird dabei nichts über
+  dich, und TuxLabel aktualisiert sich nicht selbst — das `.deb` wird wie beim
+  ersten Mal per Doppelklick installiert.
+
+### Geändert
+
+* Die **getesteten Druckermodelle** stehen jetzt in der README. Neben dem
+  PT-P700 ist das PT-2430PC von einem Nutzer als einwandfrei funktionierend
+  gemeldet.
+* Die Installationsanleitung warnt davor, dass Verknüpfungen aus einer
+  früheren Installation aus dem Quellcode die des `.deb`-Pakets verdecken —
+  ein Update schien dadurch wirkungslos.
+
+### New *(English)*
+
+* **Notice for new versions.** If you want it, TuxLabel checks at startup
+  whether a newer version is available on GitHub and shows it as clickable
+  text in the status bar — one click opens the release page. No pop-up
+  windows, and the notice can be hidden for a given version.
+
+  You are asked once on first start. If you decline, TuxLabel makes **no
+  network connection at all**, exactly as before. The setting can be changed
+  at any time under *File → Settings*, and *Help → Check for updates* checks
+  on demand.
+
+  The check runs at most once a day. No data about you is transmitted, and
+  TuxLabel does not update itself — the `.deb` is installed by double-clicking
+  it, just like the first time.
+
+### Changed *(English)*
+
+* The **tested printer models** are now listed in the README. Besides the
+  PT-P700, the PT-2430PC has been reported by a user as working flawlessly.
+* The installation instructions now warn that shortcuts from an earlier
+  install from source shadow those of the `.deb` package, which made an update
+  look ineffective.
+
 ## [1.4.0] — 2026-10-14
 
 ### Neu

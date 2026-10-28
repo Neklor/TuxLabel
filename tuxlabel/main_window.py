@@ -7,8 +7,10 @@ from __future__ import annotations
 import os
 from datetime import datetime
 
-from PyQt6.QtCore import Qt, QSettings, QSize, QTimer
-from PyQt6.QtGui import QAction, QFont, QKeySequence, QPalette, QPixmap
+from PyQt6.QtCore import Qt, QSettings, QSize, QTimer, QUrl
+from PyQt6.QtGui import (
+    QAction, QDesktopServices, QFont, QKeySequence, QPalette, QPixmap,
+)
 from PyQt6.QtWidgets import (
     QButtonGroup,
     QComboBox,
@@ -172,6 +174,16 @@ class MainWindow(QMainWindow):
         self._status_hint = QLabel(tr("status.hint"))
         self._status_hint.setStyleSheet("QLabel { color: #888888; }")
         self.statusBar().addPermanentWidget(self._status_hint)
+
+        # Update-Hinweis — bleibt leer und unsichtbar, solange es nichts zu
+        # melden gibt. Zwei Verweise in einem Widget: Release-Seite öffnen und
+        # diese Version ausblenden. Absichtlich kein Dialog.
+        self._status_update = QLabel()
+        self._status_update.setTextFormat(Qt.TextFormat.RichText)
+        self._status_update.setStyleSheet("QLabel { padding: 0 8px; }")
+        self._status_update.linkActivated.connect(self._on_update_link)
+        self._status_update.hide()
+        self.statusBar().addPermanentWidget(self._status_update)
 
         self._status_length = QLabel()
         self._style_status_length()
@@ -930,6 +942,10 @@ class MainWindow(QMainWindow):
         act_shortcuts.triggered.connect(self._help_shortcuts)
         m_help.addAction(act_shortcuts)
 
+        act_updates = QAction(tr("menu.help_updates"), self)
+        act_updates.triggered.connect(self._check_updates_manually)
+        m_help.addAction(act_updates)
+
         m_help.addSeparator()
 
         act_about = QAction(tr("menu.help_about"), self)
@@ -1142,6 +1158,82 @@ class MainWindow(QMainWindow):
 
     def _help_about(self) -> None:
         AboutDialog(self).exec()
+
+    # ------------------------------------------------------------------
+    # Update-Prüfung
+    # ------------------------------------------------------------------
+    def _update_checker(self):
+        """Legt den Prüfer beim ersten Bedarf an (und nur dann).
+
+        So entsteht kein QNetworkAccessManager, solange niemand prüfen will —
+        bei abgeschalteter Funktion bleibt das Programm völlig netzfrei."""
+        if getattr(self, "_updater", None) is None:
+            from .update_check import UpdateChecker
+            self._updater = UpdateChecker(self)
+            self._updater.updateAvailable.connect(self._on_update_available)
+            self._updater.upToDate.connect(self._on_update_uptodate)
+            self._updater.checkFailed.connect(self._on_update_failed)
+        return self._updater
+
+    def start_update_check(self) -> None:
+        """Automatische Prüfung — tut nichts, wenn abgeschaltet oder heute
+        schon geprüft. Wird kurz nach dem Start aufgerufen, damit das Fenster
+        zuerst erscheint."""
+        from .update_check import is_enabled
+        if not is_enabled():
+            return
+        self._update_checker().check(manual=False)
+
+    def _check_updates_manually(self) -> None:
+        """Hilfe → Nach Updates suchen: meldet auch »alles aktuell«."""
+        self._update_checker().check(manual=True)
+
+    def refresh_update_setting(self) -> None:
+        """Übernimmt den Schalter aus den Einstellungen.
+
+        Beim Einschalten wird gleich einmal nachgesehen, damit die Wirkung
+        sichtbar ist; beim Ausschalten verschwindet ein offener Hinweis."""
+        from .update_check import is_enabled
+        if is_enabled():
+            self.start_update_check()
+        else:
+            self._status_update.hide()
+
+    def _on_update_available(self, version: str) -> None:
+        from .update_check import RELEASES_URL
+        self._pending_update = version
+        text = str(tr("update.status_text")).format(version=version)
+        skip = str(tr("update.status_skip"))
+        self._status_update.setText(
+            f'<a href="{RELEASES_URL}">{text}</a> '
+            f'<a href="tuxlabel:skip" style="color:#888888;">({skip})</a>'
+        )
+        self._status_update.setToolTip(str(tr("update.status_tip")))
+        self._status_update.show()
+
+    def _on_update_uptodate(self) -> None:
+        from . import __version__
+        QMessageBox.information(
+            self,
+            str(tr("update.uptodate_title")),
+            str(tr("update.uptodate_body")).format(version=__version__),
+        )
+
+    def _on_update_failed(self) -> None:
+        QMessageBox.warning(
+            self,
+            str(tr("update.failed_title")),
+            str(tr("update.failed_body")),
+        )
+
+    def _on_update_link(self, href: str) -> None:
+        """Klick im Statusleisten-Hinweis: ausblenden oder Seite öffnen."""
+        if href == "tuxlabel:skip":
+            from .update_check import skip_version
+            skip_version(getattr(self, "_pending_update", "") or "")
+            self._status_update.hide()
+            return
+        QDesktopServices.openUrl(QUrl(href))
 
     # ------------------------------------------------------------------
     # Einstellungsdialog
