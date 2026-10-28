@@ -171,7 +171,13 @@ class UpdateChecker(QObject):
         *manual* = True für *Hilfe → Nach Updates suchen*: umgeht Einwilligung,
         Tageslimit und übersprungene Version und meldet jedes Ergebnis.
         """
-        if self._reply is not None:          # läuft schon
+        if self._reply is not None:
+            # Es läuft schon eine Anfrage. Eine manuelle übernimmt die
+            # laufende, damit »Nach Updates suchen« nicht wirkungslos bleibt,
+            # wenn die automatische Prüfung gerade unterwegs ist — sonst
+            # klickt der Nutzer und es passiert sichtbar nichts.
+            if manual:
+                self._manual = True
             return
         if not manual:
             if not is_enabled() or _checked_today():
