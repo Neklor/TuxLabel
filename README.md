@@ -143,6 +143,18 @@ anlegen — das Skript verändert nichts außerhalb des Benutzerverzeichnisses:
 python3 install_shortcut.py
 ```
 
+> **Wichtig beim späteren Wechsel auf das `.deb`-Paket:** Dieses Skript legt
+> Verknüpfungen in deinem Benutzerverzeichnis an, und die haben Vorrang vor
+> denen des Pakets. Der Menüeintrag startet dann weiterhin diesen
+> Quellcode-Ordner — ein Update über das `.deb` scheint dadurch wirkungslos,
+> weil weiterhin der alte Stand läuft. Vor der Paketinstallation einmal
+> aufräumen:
+>
+> ```bash
+> rm -f ~/.local/share/applications/tuxlabel.desktop
+> rm -f ~/Desktop/TuxLabel.desktop ~/Schreibtisch/TuxLabel.desktop
+> ```
+
 ### Selbst ein .deb bauen
 
 ```bash
@@ -432,6 +444,17 @@ python3 main.py
 Run `python3 install_shortcut.py` to add an application-menu entry and a
 desktop shortcut; it writes nothing outside your home directory. To build the
 Debian package yourself, run `./tools/build-deb.sh`.
+
+> **Important when switching to the `.deb` package later:** that script writes
+> shortcuts into your home directory, and those take precedence over the
+> package's own. The menu entry would keep launching this source folder, which
+> makes an update via the `.deb` look ineffective because the old code is still
+> running. Clean up once before installing the package:
+>
+> ```bash
+> rm -f ~/.local/share/applications/tuxlabel.desktop
+> rm -f ~/Desktop/TuxLabel.desktop
+> ```
 
 ### Setting up the printer
 
