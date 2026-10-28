@@ -164,12 +164,36 @@ lpstat -p          # eingerichtete Drucker anzeigen
 ```
 
 Erscheint der PT-P700 in dieser Liste, findet ihn auch der Druckdialog von
-TuxLabel. Falls nicht, braucht es zuerst den Brother-CUPS-Treiber für das
-Modell — den stellt Brother auf seinen Support-Seiten bereit.
+TuxLabel. Falls nicht, fehlt der CUPS-Treiber: Für P-Touch-Geräte unter Linux
+ist das `printer-driver-ptouch` — in Ubuntu, Mint und Debian direkt in den
+Paketquellen, in Fedora als `ptouch-driver`, in Arch im AUR.
+
+```bash
+sudo apt install printer-driver-ptouch     # Ubuntu / Mint / Debian
+```
 
 > **Hinweis:** Die im Werkzeugkasten eingestellte Bandbreite muss dem
 > eingelegten TZe-Band entsprechen — sonst quittiert der PT-P700 den Auftrag
 > mit rot blinkender Anzeige.
+
+### Getestete Modelle
+
+Welche Geräte überhaupt in Frage kommen, entscheidet `printer-driver-ptouch`
+und nicht TuxLabel: Was dort eine PPD erhält und in `lpstat -p` auftaucht,
+findet auch der Druckdialog. Diese Modelle sind tatsächlich im Einsatz:
+
+| Modell | Rückmeldung |
+| --- | --- |
+| **PT-P700** | Entwicklungsgerät — hier wird jede Funktion vor dem Release gedruckt |
+| **PT-2430PC** | Von einem Nutzer als einwandfrei funktionierend gemeldet |
+
+Welche Bandbreiten zur Verfügung stehen, hängt dabei vom Modell ab: Das
+PT-2430PC kennt zum Beispiel die 3,5-mm-Breite nicht, die das PT-P700 anbietet.
+Eine im Werkzeugkasten gewählte Breite, die das Gerät nicht beherrscht, lehnt
+der Drucker ab.
+
+Läuft TuxLabel bei dir mit einem anderen Modell? Eine kurze Rückmeldung über
+ein [Issue](../../issues) genügt, und es kommt hier mit auf die Liste.
 
 ## Voraussetzungen
 
@@ -184,7 +208,8 @@ darum; diese Liste ist für alle anderen Wege gedacht.
   erforderlich; Entwerfen und Speichern funktioniert auch ohne Drucker
 
 Der Editor ist nicht an den PT-P700 gebunden — andere P-Touch-Modelle mit
-CUPS-Treiber können funktionieren, sind aber ungetestet.
+CUPS-Treiber funktionieren ebenfalls, siehe [Getestete
+Modelle](#getestete-modelle).
 
 ### Und macOS?
 
@@ -418,11 +443,34 @@ lpstat -p          # list configured printers
 ```
 
 If the PT-P700 appears in that list, TuxLabel's print dialog will find it too.
-If it does not, you first need Brother's CUPS driver for the model, which
-Brother provides on its support pages.
+If it does not, the CUPS driver is missing: for P-Touch devices on Linux that
+is `printer-driver-ptouch` — in the Ubuntu, Mint and Debian repositories, in
+Fedora as `ptouch-driver`, in Arch in the AUR.
+
+```bash
+sudo apt install printer-driver-ptouch     # Ubuntu / Mint / Debian
+```
 
 > **Note:** The tape width set in the toolbar must match the TZe tape actually
 > loaded — otherwise the PT-P700 rejects the job and blinks red.
+
+#### Tested models
+
+Which devices are possible at all is decided by `printer-driver-ptouch`, not by
+TuxLabel: whatever gets a PPD there and shows up in `lpstat -p` will be found
+by the print dialog as well. These models are in actual use:
+
+| Model | Report |
+| --- | --- |
+| **PT-P700** | Development device — every feature is printed here before a release |
+| **PT-2430PC** | Reported by a user as working flawlessly |
+
+Which tape widths are available depends on the model: the PT-2430PC, for
+instance, does not offer the 3.5 mm width that the PT-P700 does. A width chosen
+in the toolbar that the device cannot handle will be rejected by the printer.
+
+Running TuxLabel with a different model? A short note via an
+[issue](../../issues) is enough and it goes on this list.
 
 ### Requirements
 
@@ -430,7 +478,7 @@ Handled automatically by the `.deb` package; this list applies to every other
 route. Linux, Python **3.10+**, PyQt6, `cups-client` for the `lp` command, and
 CUPS with a Brother PT-P700 driver. Only printing needs the last two —
 designing and saving works without a printer. Other P-Touch models with a CUPS
-driver may work but are untested.
+driver work as well — see [Tested models](#tested-models).
 
 The full keyboard shortcut list is available in the app under
 *Help → Keyboard shortcuts*.
