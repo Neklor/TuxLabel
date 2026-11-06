@@ -201,11 +201,16 @@ IMAGE_INSET_MM: float = 0.5
 #                       Der Drucker/Treiber erzwingt also einen Mindestrand,
 #                       obwohl *HWMargins in der PPD 0 0 0 0 ist.
 #
-# 10 mm ist ein Kompromiss, der über dem erzwungenen Mindestrand liegen sollte
-# und das Band dennoch nahe an der Editor-Länge hält. Falls 10 mm noch
-# abschneidet, Richtung 15–20 mm erhöhen; falls es passt, beim nächsten Mal
-# 5 mm probieren, um weiter zu verkleinern.
-PRINT_HARDWARE_LEADER_MM: float = 10.0
+# Nachmessung mit 10 mm Vorlauf (12-mm-Band, 65-mm-Etikett, 06.11.2026):
+#
+#   Seite laut Rechnung 75,14 mm → Band gemessen 74,89 mm, Abweichung 0,25 mm.
+#   Leer vor dem ersten Zeichen 8,59 mm, nach dem letzten 10,41 mm — davon je
+#   5,07 mm Vorlauf, der Rest ist Sicherheitsrand und ungenutzte Etikettlänge.
+#   Nichts abgeschnitten, es war also Luft.
+#
+# Daher auf 5 mm verkleinert: 2,5 mm je Ende statt 5,07, immer noch über dem
+# erzwungenen Mindestrand. Zeigt sich doch ein Anschnitt, zurück auf 10 mm.
+PRINT_HARDWARE_LEADER_MM: float = 5.0
 
 
 def _image_safe_mm(tape_mm: float) -> float:

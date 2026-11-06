@@ -259,6 +259,7 @@
   "print.no_printer_item": "(No se encontró ninguna impresora)",
   "print.label_row": "Etiqueta:",
   "print.label_info": "Cinta: {tape} mm  ·  Longitud: <b>{length} mm</b>",
+  "print.tape_usage": "Consumo de cinta unos {used} mm: la impresora necesita un pequeño margen de avance en ambos extremos, de lo contrario recorta el contenido.",
   "print.autocut": "Cortar automáticamente (AutoCut)",
   "print.match": "Imprimir solo si el ancho de cinta coincide",
   "print.match_tip_disabled": "Desactivado automáticamente para la cinta de {tape} mm.\n\nLos tamaños de página personalizados de menos de 12,7 mm son\nredondeados a 12,7 mm por el PPD — la comprobación «el ancho de\ncinta coincide» falla entonces y el P700 parpadea en rojo.",

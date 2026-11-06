@@ -339,6 +339,7 @@
   "print.no_printer_item": "(No printer found)",
   "print.label_row": "Label:",
   "print.label_info": "Tape: {tape} mm  ·  Label length: <b>{length} mm</b>",
+  "print.tape_usage": "Tape used about {used} mm — the printer needs a short lead-in at both ends, otherwise it clips the content.",
   "print.autocut": "Cut automatically (AutoCut)",
   "print.match": "Only print if the tape width matches",
   "print.match_tip_disabled": "Automatically disabled for {tape} mm tape.\n\nCustom page sizes narrower than 12.7 mm are rounded up\nto 12.7 mm by the PPD — the \"tape width matches\" check\nthen fails and the P700 blinks red.",

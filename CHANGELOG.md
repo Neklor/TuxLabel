@@ -3,6 +3,34 @@
 Jede Version steht hier zuerst auf Deutsch, direkt darunter auf Englisch.
 *Each version is listed in German first, followed by English.*
 
+## [1.6.0] — 2026-11-06
+
+### Geändert
+
+* **Weniger Bandverschnitt.** Der Drucker braucht an beiden Enden etwas
+  Vorlauf, sonst schneidet er den Inhalt an. Dieser Vorlauf ist von 10 auf
+  5 mm verkleinert — ein 65-mm-Etikett verbraucht damit rund 70 statt 75 mm
+  Band. Nachgemessen auf dem PT-P700 mit 12-mm-Band.
+
+### Neu
+
+* **Bandverbrauch im Druckdialog.** Neben der Etikettlänge steht jetzt, wie
+  viel Band der Druck tatsächlich braucht. Dass etwas mehr herauskommt als das
+  Etikett lang ist, liegt am Vorlauf — bisher sah das wie ein Fehler aus.
+
+### Changed *(English)*
+
+* **Less wasted tape.** The printer needs a short lead-in at both ends, or it
+  clips the content. That lead-in is down from 10 mm to 5 mm, so a 65 mm label
+  now uses about 70 mm of tape instead of 75 mm. Measured on the PT-P700 with
+  12 mm tape.
+
+### New *(English)*
+
+* **Tape consumption in the print dialog.** Next to the label length, the
+  dialog now states how much tape the job actually uses. The extra length
+  comes from the lead-in; until now it looked like a fault.
+
 ## [1.5.0] — 2026-10-28
 
 ### Neu

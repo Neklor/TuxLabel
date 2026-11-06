@@ -395,6 +395,11 @@ _DEFAULTS: dict[str, object] = {
     "print.no_printer_item":  "(Kein Drucker gefunden)",
     "print.label_row":        "Etikett:",
     "print.label_info":       "Band: {tape} mm  ·  Etikettlänge: <b>{length} mm</b>",
+    # Erklärt, warum mehr Band herauskommt als das Etikett lang ist. Ohne diese
+    # Angabe wirkt der Vorlauf wie ein Fehler.
+    "print.tape_usage":       ("Bandverbrauch etwa {used} mm — der Drucker braucht an "
+                               "beiden Enden etwas Vorlauf, sonst schneidet er den "
+                               "Inhalt an."),
     "print.autocut":          "Automatisch schneiden (AutoCut)",
     "print.match":            "Nur drucken wenn Bandbreite übereinstimmt",
     "print.match_tip_disabled": ("Für {tape} mm Band automatisch deaktiviert.\n\n"

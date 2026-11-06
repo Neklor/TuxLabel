@@ -260,6 +260,7 @@
   "print.no_printer_item": "(Aucune imprimante trouvée)",
   "print.label_row": "Étiquette :",
   "print.label_info": "Ruban : {tape} mm  ·  Longueur : <b>{length} mm</b>",
+  "print.tape_usage": "Consommation de ruban environ {used} mm — l'imprimante a besoin d'une petite amorce aux deux extrémités, sinon elle rogne le contenu.",
   "print.autocut": "Couper automatiquement (AutoCut)",
   "print.match": "N'imprimer que si la largeur du ruban correspond",
   "print.match_tip_disabled": "Désactivé automatiquement pour le ruban de {tape} mm.\n\nLes tailles de page personnalisées de moins de 12,7 mm sont arrondies\nà 12,7 mm par le PPD — la vérification « largeur du ruban » échoue\nalors et le P700 clignote en rouge.",
