@@ -42,7 +42,7 @@ from PyQt6.QtWidgets import (
 )
 
 from .i18n import fmt_number, tr
-from .label_canvas import PRINT_HARDWARE_LEADER_MM, _page_length_mm
+from .label_canvas import PRINT_HARDWARE_LEADER_MM
 
 if TYPE_CHECKING:
     from .label_canvas import LabelScene
@@ -539,20 +539,6 @@ class PrintDialog(QDialog):
             tr("print.label_info", tape=_fmt_mm(tw), length=ll)
         )
         form.addRow(tr("print.label_row"), self._info_label)
-
-        # Tatsächlicher Bandverbrauch. Bewusst sichtbar gemacht: Die Seite ist
-        # um PRINT_HARDWARE_LEADER_MM länger als das Etikett, sonst schneidet
-        # der Treiber an beiden Enden Inhalt ab. Ohne diese Zeile wirkt das
-        # längere Band wie ein Fehler — genau so entstand Issue #1.
-        # Dieselbe Funktion wie in _send_to_printer, damit Anzeige und Druck
-        # nicht auseinanderlaufen können.
-        used_mm = _page_length_mm(ll + PRINT_HARDWARE_LEADER_MM)
-        self._usage_label = QLabel(
-            tr("print.tape_usage", used=_fmt_mm(used_mm))
-        )
-        self._usage_label.setWordWrap(True)
-        self._usage_label.setStyleSheet("QLabel { color: #888888; }")
-        form.addRow(self._usage_label)
 
         # --- Konfliktwarnung ---
         self._mismatch_label = QLabel()

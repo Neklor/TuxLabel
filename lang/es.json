@@ -15,6 +15,8 @@
 
   "status.hint": "Doble clic: editar texto  |  Ctrl+V: pegar imagen  |  Supr: eliminar  |  Ctrl+rueda: zoom",
   "status.length": "Longitud: {cm} cm",
+  "status.tape_usage": "Consumo de cinta: aprox. {cm} cm",
+  "status.tape_usage_tip": "Cantidad de cinta que consume esta impresión.\nLa impresora necesita un pequeño margen de avance en ambos extremos, de lo contrario recorta\nel contenido, por eso algo más que la longitud de la etiqueta.",
 
   "toolbar.title": "Herramientas",
   "toolbar.group_add": "Añadir",
@@ -259,7 +261,6 @@
   "print.no_printer_item": "(No se encontró ninguna impresora)",
   "print.label_row": "Etiqueta:",
   "print.label_info": "Cinta: {tape} mm  ·  Longitud: <b>{length} mm</b>",
-  "print.tape_usage": "Consumo de cinta unos {used} mm: la impresora necesita un pequeño margen de avance en ambos extremos, de lo contrario recorta el contenido.",
   "print.autocut": "Cortar automáticamente (AutoCut)",
   "print.match": "Imprimir solo si el ancho de cinta coincide",
   "print.match_tip_disabled": "Desactivado automáticamente para la cinta de {tape} mm.\n\nLos tamaños de página personalizados de menos de 12,7 mm son\nredondeados a 12,7 mm por el PPD — la comprobación «el ancho de\ncinta coincide» falla entonces y el P700 parpadea en rojo.",

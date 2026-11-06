@@ -14,9 +14,10 @@ Jede Version steht hier zuerst auf Deutsch, direkt darunter auf Englisch.
 
 ### Neu
 
-* **Bandverbrauch im Druckdialog.** Neben der Etikettlänge steht jetzt, wie
-  viel Band der Druck tatsächlich braucht. Dass etwas mehr herauskommt als das
-  Etikett lang ist, liegt am Vorlauf — bisher sah das wie ein Fehler aus.
+* **Bandverbrauch in der Fußzeile.** Unten links steht jetzt dauerhaft, wie
+  viel Band der Druck tatsächlich braucht — schon beim Entwerfen, nicht erst
+  im Druckdialog. Dass etwas mehr herauskommt als das Etikett lang ist, liegt
+  am Vorlauf; bisher sah das wie ein Fehler aus.
 
 ### Changed *(English)*
 
@@ -27,9 +28,10 @@ Jede Version steht hier zuerst auf Deutsch, direkt darunter auf Englisch.
 
 ### New *(English)*
 
-* **Tape consumption in the print dialog.** Next to the label length, the
-  dialog now states how much tape the job actually uses. The extra length
-  comes from the lead-in; until now it looked like a fault.
+* **Tape consumption in the status bar.** The bottom left now permanently
+  shows how much tape the print will use — while designing, not just in the
+  print dialog. The extra length comes from the lead-in; until now it looked
+  like a fault.
 
 ## [1.5.0] — 2026-10-28
 

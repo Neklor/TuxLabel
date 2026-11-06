@@ -208,8 +208,10 @@ IMAGE_INSET_MM: float = 0.5
 #   5,07 mm Vorlauf, der Rest ist Sicherheitsrand und ungenutzte Etikettlänge.
 #   Nichts abgeschnitten, es war also Luft.
 #
-# Daher auf 5 mm verkleinert: 2,5 mm je Ende statt 5,07, immer noch über dem
-# erzwungenen Mindestrand. Zeigt sich doch ein Anschnitt, zurück auf 10 mm.
+# Daher auf 5 mm verkleinert und nachgedruckt (06.11.2026): Band 69,85 mm,
+# leer vor dem ersten Zeichen 5,4 mm, nach dem letzten 8,71 mm, nichts
+# abgeschnitten. 2,5 mm je Ende reichen also. Weiter herunter ist riskant —
+# bei 0 mm war der Inhalt an beiden Enden angeschnitten.
 PRINT_HARDWARE_LEADER_MM: float = 5.0
 
 

@@ -68,6 +68,13 @@ _DEFAULTS: dict[str, object] = {
     "status.hint": ("Doppelklick: Text bearbeiten  |  Strg+V: Bild einfügen  |  "
                     "Entf: löschen  |  Strg+Rad: Zoom"),
     "status.length": "Länge: {cm} cm",
+    # Fußzeile links. Erklärt per Tooltip, warum mehr Band verbraucht wird als
+    # das Etikett lang ist — ohne diese Angabe wirkt der Vorlauf wie ein Fehler.
+    "status.tape_usage":     "Bandverbrauch: ca. {cm} cm",
+    "status.tape_usage_tip": ("So viel Band verbraucht der Druck.\n"
+                              "Der Drucker braucht an beiden Enden etwas Vorlauf, sonst "
+                              "schneidet er den Inhalt an —\ndeshalb etwas mehr als die "
+                              "Etikettlänge."),
 
     # --- Werkzeugleiste ---
     "toolbar.title":            "Werkzeuge",
@@ -395,11 +402,6 @@ _DEFAULTS: dict[str, object] = {
     "print.no_printer_item":  "(Kein Drucker gefunden)",
     "print.label_row":        "Etikett:",
     "print.label_info":       "Band: {tape} mm  ·  Etikettlänge: <b>{length} mm</b>",
-    # Erklärt, warum mehr Band herauskommt als das Etikett lang ist. Ohne diese
-    # Angabe wirkt der Vorlauf wie ein Fehler.
-    "print.tape_usage":       ("Bandverbrauch etwa {used} mm — der Drucker braucht an "
-                               "beiden Enden etwas Vorlauf, sonst schneidet er den "
-                               "Inhalt an."),
     "print.autocut":          "Automatisch schneiden (AutoCut)",
     "print.match":            "Nur drucken wenn Bandbreite übereinstimmt",
     "print.match_tip_disabled": ("Für {tape} mm Band automatisch deaktiviert.\n\n"

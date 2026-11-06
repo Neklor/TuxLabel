@@ -171,6 +171,14 @@ class MainWindow(QMainWindow):
         #     es überschreibt dieses Widget nie, sodass der Hinweis z. B. nach
         #     dem Einfügen eines Bildes sichtbar bleibt.
         #   • aktuelle Etikettenlänge ganz rechts.
+        # Geschätzter Bandverbrauch, ganz links. addWidget() statt
+        # addPermanentWidget(): nur so sitzt es am linken Rand. Preis dafür ist,
+        # dass showMessage() es kurzzeitig verdeckt — die Meldung ist in dem
+        # Moment die wichtigere Information.
+        self._status_tape = QLabel()
+        self._status_tape.setToolTip(tr("status.tape_usage_tip"))
+        self.statusBar().addWidget(self._status_tape)
+
         self._status_hint = QLabel(tr("status.hint"))
         self._status_hint.setStyleSheet("QLabel { color: #888888; }")
         self.statusBar().addPermanentWidget(self._status_hint)
@@ -1301,6 +1309,9 @@ class MainWindow(QMainWindow):
         self._status_length.setStyleSheet(
             f"QLabel {{ font-weight: bold; padding-left: 14px; color: {color}; }}"
         )
+        self._status_tape.setStyleSheet(
+            f"QLabel {{ font-weight: bold; padding-left: 6px; color: {color}; }}"
+        )
 
     def refresh_theme(self, dark: bool | None = None) -> None:
         """Zeichnet design-abhängige, selbstgezeichnete Elemente nach einem
@@ -1358,9 +1369,19 @@ class MainWindow(QMainWindow):
             self._update_title()
 
     def _update_status_length(self, _mm: int | None = None) -> None:
-        """Frischt die dauerhafte Anzeige »Länge: X,X cm« in der Statusleiste auf."""
-        cm = self._scene.get_label_length_mm() / 10.0
+        """Frischt beide Längenanzeigen der Statusleiste auf.
+
+        Bewusst in einer Methode: Etikettlänge und Bandverbrauch hängen am
+        selben Wert und dürfen nie auseinanderlaufen."""
+        mm = self._scene.get_label_length_mm()
+        cm = mm / 10.0
         self._status_length.setText(tr("status.length", cm=fmt_number(cm, 1)))
+
+        # Dieselbe Funktion, die _send_to_printer für die Seitenlänge benutzt.
+        from .label_canvas import PRINT_HARDWARE_LEADER_MM, _page_length_mm
+        tape_cm = _page_length_mm(mm + PRINT_HARDWARE_LEADER_MM) / 10.0
+        self._status_tape.setText(
+            tr("status.tape_usage", cm=fmt_number(tape_cm, 1)))
 
     def _update_title(self) -> None:
         base = "TuxLabel"

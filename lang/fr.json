@@ -15,6 +15,8 @@
 
   "status.hint": "Double-clic : modifier le texte  |  Ctrl+V : coller une image  |  Suppr : supprimer  |  Ctrl+molette : zoom",
   "status.length": "Longueur : {cm} cm",
+  "status.tape_usage": "Consommation de ruban : env. {cm} cm",
+  "status.tape_usage_tip": "Quantité de ruban consommée par cette impression.\nL'imprimante a besoin d'une petite amorce aux deux extrémités, sinon elle rogne\nle contenu, d'où un peu plus que la longueur de l'étiquette.",
 
   "toolbar.title": "Outils",
   "toolbar.group_add": "Ajouter",
@@ -260,7 +262,6 @@
   "print.no_printer_item": "(Aucune imprimante trouvée)",
   "print.label_row": "Étiquette :",
   "print.label_info": "Ruban : {tape} mm  ·  Longueur : <b>{length} mm</b>",
-  "print.tape_usage": "Consommation de ruban environ {used} mm — l'imprimante a besoin d'une petite amorce aux deux extrémités, sinon elle rogne le contenu.",
   "print.autocut": "Couper automatiquement (AutoCut)",
   "print.match": "N'imprimer que si la largeur du ruban correspond",
   "print.match_tip_disabled": "Désactivé automatiquement pour le ruban de {tape} mm.\n\nLes tailles de page personnalisées de moins de 12,7 mm sont arrondies\nà 12,7 mm par le PPD — la vérification « largeur du ruban » échoue\nalors et le P700 clignote en rouge.",
