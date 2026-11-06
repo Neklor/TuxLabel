@@ -436,7 +436,11 @@ class MainWindow(QMainWindow):
         self._length_spin.setValue(30)
         self._length_spin.setSuffix(tr("toolbar.mm_suffix"))
         _fit_spin_width(self._length_spin, "2000" + tr("toolbar.mm_suffix"), 76)
-        self._length_spin.setToolTip(tr("toolbar.length_tip"))
+        from .label_canvas import PRINT_HARDWARE_LEADER_MM
+        self._length_spin.setToolTip(
+            tr("toolbar.length_tip",
+               lead=fmt_number(PRINT_HARDWARE_LEADER_MM, 0))
+        )
         self._length_spin.setEnabled(False)   # im Auto-Modus deaktiviert
         self._length_spin.valueChanged.connect(self._on_length_changed)
         row2.addWidget(self._length_spin)

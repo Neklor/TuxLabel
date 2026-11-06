@@ -54,7 +54,7 @@
   "toolbar.vcenter_tip": "Centrar verticalmente en la cinta los cuadros de texto seleccionados",
   "toolbar.hcenter_tip": "Centrar horizontalmente en la etiqueta los cuadros de texto seleccionados",
   "toolbar.length": " Longitud: ",
-  "toolbar.length_tip": "Longitud de la etiqueta en mm",
+  "toolbar.length_tip": "Longitud del área de diseño en mm.\nLa cinta terminada sale unos {lead} mm más larga: la impresora necesita un pequeño\nmargen de avance en ambos extremos, de lo contrario recorta el contenido.\nEl consumo real se muestra abajo a la izquierda en la barra de estado.",
   "toolbar.mm_suffix": " mm",
   "toolbar.auto": "Auto",
   "toolbar.auto_tip": ["Ampliar la longitud automáticamente cuando el contenido ya no quepa.", "Desactivar para una longitud de etiqueta fija."],

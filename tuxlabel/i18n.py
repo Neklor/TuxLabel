@@ -116,7 +116,13 @@ _DEFAULTS: dict[str, object] = {
     "toolbar.vcenter_tip":      "Markierte Textfelder vertikal auf dem Band zentrieren",
     "toolbar.hcenter_tip":      "Markierte Textfelder horizontal auf dem Etikett zentrieren",
     "toolbar.length":           " Länge: ",
-    "toolbar.length_tip":       "Länge des Etiketts in mm",
+    # {lead} kommt aus PRINT_HARDWARE_LEADER_MM — nicht fest eintragen, sonst
+    # veraltet der Hinweis, sobald der Vorlauf angepasst wird.
+    "toolbar.length_tip":       ("Länge der Gestaltungsfläche in mm.\n"
+                                 "Das fertige Band wird etwa {lead} mm länger: Der Drucker "
+                                 "braucht an beiden\nEnden etwas Vorlauf, sonst schneidet er "
+                                 "den Inhalt an.\nDen tatsächlichen Verbrauch zeigt die "
+                                 "Fußzeile unten links."),
     "toolbar.mm_suffix":        " mm",
     "toolbar.auto":             "Auto",
     "toolbar.auto_tip":         ("Länge automatisch erweitern, wenn Inhalt nicht mehr passt.\n"

@@ -54,7 +54,7 @@
   "toolbar.vcenter_tip": "Centrer verticalement les zones de texte sélectionnées sur le ruban",
   "toolbar.hcenter_tip": "Centrer horizontalement les zones de texte sélectionnées sur l'étiquette",
   "toolbar.length": " Longueur : ",
-  "toolbar.length_tip": "Longueur de l'étiquette en mm",
+  "toolbar.length_tip": "Longueur de la zone de création en mm.\nLe ruban fini sort environ {lead} mm plus long : l'imprimante a besoin d'une petite\namorce aux deux extrémités, sinon elle rogne le contenu.\nLa consommation réelle est indiquée en bas à gauche dans la barre d'état.",
   "toolbar.mm_suffix": " mm",
   "toolbar.auto": "Auto",
   "toolbar.auto_tip": ["Étendre automatiquement la longueur quand le contenu ne tient plus.", "Désactiver pour une longueur d'étiquette fixe."],

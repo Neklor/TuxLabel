@@ -57,7 +57,7 @@
   "toolbar.vcenter_tip": "Center the selected text boxes vertically on the tape",
   "toolbar.hcenter_tip": "Center the selected text boxes horizontally on the label",
   "toolbar.length": " Length: ",
-  "toolbar.length_tip": "Length of the label in mm",
+  "toolbar.length_tip": "Length of the design area in mm.\nThe finished tape comes out about {lead} mm longer: the printer needs a short\nlead-in at both ends, otherwise it clips the content.\nThe status bar at the bottom left shows the actual consumption.",
   "toolbar.mm_suffix": " mm",
   "toolbar.auto": "Auto",
   "toolbar.auto_tip": [
