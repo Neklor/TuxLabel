@@ -342,7 +342,7 @@
   "print.label_row": "Label:",
   "print.label_info": "Tape: {tape} mm  ·  Label length: <b>{length} mm</b>",
   "print.autocut": "Cut automatically (AutoCut)",
-  "print.autocut_tip": "On: the printer cuts the label off after printing.\n\nOff: chain printing. Several labels run one after another with no gap,\nso no tape is wasted between them. The last one stays inside the\nmachine until it is cut.",
+  "print.autocut_tip": "On: the printer cuts the label off after printing.\nTo do so it advances about 2.5 cm before each label and trims it off as a scrap -\nthe print head sits that far before the cutter.\n\nOff: nothing is cut. The scrap is saved, but the 2.5 cm stay blank at the end\nof the tape. Print several labels in one go and cut once afterwards, and you\npay it once instead of per label.",
   "print.match": "Only print if the tape width matches",
   "print.match_tip_disabled": "Automatically disabled for {tape} mm tape.\n\nCustom page sizes narrower than 12.7 mm are rounded up\nto 12.7 mm by the PPD — the \"tape width matches\" check\nthen fails and the P700 blinks red.",
   "print.match_tip": "Disable to print on a tape of a different width.\nOn a mismatch the P700 blinks red – disabling fixes that.",

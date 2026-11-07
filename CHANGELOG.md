@@ -7,51 +7,50 @@ Jede Version steht hier zuerst auf Deutsch, direkt darunter auf Englisch.
 
 ### Behoben
 
-* **Ohne »Automatisch schneiden« ging Band verloren.** War die Option im
-  Druckdialog abgeschaltet, schob der Drucker das Band trotzdem bis zur
-  Schneide vor. Wer dann von Hand schnitt, warf rund zwei Zentimeter leeres
-  Band weg.
-
-  Der Grund: Der Treiber kennt zwei getrennte Einstellungen — schneiden und
-  vorschieben. TuxLabel hat nur die erste gesetzt, die zweite blieb auf
-  ihrem Standard. »Nicht schneiden, aber vorschieben« ergibt keinen Sinn und
-  kostete bei jedem Etikett Band.
-
-  Jetzt gehören beide zusammen: **Ohne Schnitt läuft der Druck als
-  Kettendruck.** Mehrere Etiketten folgen lückenlos aufeinander und werden am
-  Ende einmal geschnitten — das zuletzt gedruckte bleibt bis dahin im Gerät.
-  Der Hinweistext am Knopf erklärt das.
-
-  Gemeldet von @boinappi in [#1](../../issues/1).
-
 * **Der Bandverbrauch in der Fußzeile war zu niedrig.** Angezeigt wurde nur
   die Länge des Etiketts. Jeder Schnitt kostet zusätzlich rund 2,5 cm: Der
-  Druckkopf sitzt diese Strecke vor der Schneide, und der Drucker wirft sie
-  vor jedem Etikett als Schnipsel weg. Die Anzeige rechnet das jetzt mit und
-  der Hinweistext zeigt die Aufteilung.
+  Druckkopf sitzt diese Strecke vor der Schneide, und der Drucker schiebt sie
+  vor jedem Etikett vor und schneidet sie als Schnipsel ab. Die Anzeige
+  rechnet das jetzt mit, der Hinweistext zeigt die Aufteilung.
+
+  Ein 65-mm-Etikett verbraucht damit rund 9,5 statt der bisher angezeigten
+  7,0 cm — nachgemessen auf dem PT-P700 mit 12-mm-Band.
+
+### Geändert
+
+* **Ohne »Automatisch schneiden« wird jetzt auch der Bandvorschub
+  abgeschaltet.** Der Treiber kennt beides getrennt; TuxLabel hat bisher nur
+  das Schneiden gesetzt und den Vorschub auf dem Systemstandard gelassen.
+  Nun werden beide Werte ausdrücklich gesendet, sodass das Ergebnis nicht
+  mehr davon abhängt, was in den CUPS-Vorgaben des jeweiligen Rechners steht.
+
+  Am Band eines einzelnen Etiketts ändert sich dadurch nichts.
+
+Beides kam bei der Untersuchung von [#1](../../issues/1) heraus, gemeldet von
+@boinappi.
 
 ### Fixed *(English)*
 
-* **Tape was wasted when "Auto Cut" was switched off.** With the option
-  disabled in the print dialog, the printer still fed the tape forward to the
-  cutter. Cutting by hand then threw away about two centimetres of blank tape.
-
-  The cause: the driver has two separate settings — cutting and feeding.
-  TuxLabel only set the first and left the second at its default. "Do not cut,
-  but do feed" makes no sense and cost tape on every label.
-
-  The two now belong together: **with cutting off, printing runs as chain
-  printing.** Several labels follow one another with no gap and are cut once
-  at the end; the last one stays inside the machine until then. The tooltip on
-  the checkbox explains it.
-
-  Reported by @boinappi in [#1](../../issues/1).
-
 * **The tape consumption in the status bar was too low.** It only showed the
   length of the label. Every cut costs about 2.5 cm on top: the print head
-  sits that far before the cutter, and the printer trims the distance off as
-  a scrap before each label. The figure now includes it, and the tooltip
-  shows the breakdown.
+  sits that far before the cutter, so before each label the printer advances
+  the tape by that distance and trims it off as a scrap. The figure now
+  includes it, and the tooltip shows the breakdown.
+
+  A 65 mm label therefore uses about 9.5 cm rather than the 7.0 cm shown
+  before - measured on the PT-P700 with 12 mm tape.
+
+### Changed *(English)*
+
+* **With "Auto Cut" switched off, the tape feed is now switched off too.**
+  The driver keeps the two apart; TuxLabel used to set only the cutting and
+  leave the feed at the system default. Both values are now sent explicitly,
+  so the result no longer depends on what the CUPS defaults on a given
+  machine happen to say.
+
+  This makes no difference to the tape of a single label.
+
+Both came out of looking into [#1](../../issues/1), reported by @boinappi.
 
 ## [1.6.0] — 2026-11-06
 

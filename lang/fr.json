@@ -263,7 +263,7 @@
   "print.label_row": "Étiquette :",
   "print.label_info": "Ruban : {tape} mm  ·  Longueur : <b>{length} mm</b>",
   "print.autocut": "Couper automatiquement (AutoCut)",
-  "print.autocut_tip": "Activé : l'imprimante coupe l'étiquette après l'impression.\n\nDésactivé : impression en chaîne. Plusieurs étiquettes se suivent sans espace,\naucun ruban n'est perdu entre elles. La dernière reste dans l'appareil\njusqu'à la coupe.",
+  "print.autocut_tip": "Activé : l'imprimante coupe l'étiquette après l'impression.\nPour cela, elle avance d'environ 2,5 cm avant chaque étiquette et les coupe en chute :\nla tête se trouve à cette distance avant la lame.\n\nDésactivé : rien n'est coupé. La chute est évitée, mais ces 2,5 cm restent vides\nen fin de ruban. Si vous imprimez plusieurs étiquettes d'affilée et ne coupez\nqu'une fois ensuite, vous ne les payez qu'une seule fois au lieu de chaque fois.",
   "print.match": "N'imprimer que si la largeur du ruban correspond",
   "print.match_tip_disabled": "Désactivé automatiquement pour le ruban de {tape} mm.\n\nLes tailles de page personnalisées de moins de 12,7 mm sont arrondies\nà 12,7 mm par le PPD — la vérification « largeur du ruban » échoue\nalors et le P700 clignote en rouge.",
   "print.match_tip": "Désactiver pour imprimer sur un ruban d'une autre largeur.\nEn cas de différence, le P700 clignote en rouge – désactiver corrige cela.",

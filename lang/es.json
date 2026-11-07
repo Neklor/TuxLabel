@@ -262,7 +262,7 @@
   "print.label_row": "Etiqueta:",
   "print.label_info": "Cinta: {tape} mm  ·  Longitud: <b>{length} mm</b>",
   "print.autocut": "Cortar automáticamente (AutoCut)",
-  "print.autocut_tip": "Activado: la impresora corta la etiqueta después de imprimir.\n\nDesactivado: impresión en cadena. Varias etiquetas salen seguidas sin hueco,\npor lo que no se desperdicia cinta entre ellas. La última permanece dentro\nde la máquina hasta que se corta.",
+  "print.autocut_tip": "Activado: la impresora corta la etiqueta después de imprimir.\nPara ello avanza unos 2,5 cm antes de cada etiqueta y los recorta como trocito:\nel cabezal está a esa distancia antes de la cuchilla.\n\nDesactivado: no se corta nada. Se ahorra el trocito, pero esos 2,5 cm quedan\nen blanco al final de la cinta. Si imprimes varias etiquetas seguidas y cortas\nuna sola vez al final, solo lo pagas una vez en lugar de por etiqueta.",
   "print.match": "Imprimir solo si el ancho de cinta coincide",
   "print.match_tip_disabled": "Desactivado automáticamente para la cinta de {tape} mm.\n\nLos tamaños de página personalizados de menos de 12,7 mm son\nredondeados a 12,7 mm por el PPD — la comprobación «el ancho de\ncinta coincide» falla entonces y el P700 parpadea en rojo.",
   "print.match_tip": "Desactivar para imprimir en una cinta de otro ancho.\nSi no coincide, el P700 parpadea en rojo – desactivarlo lo soluciona.",
