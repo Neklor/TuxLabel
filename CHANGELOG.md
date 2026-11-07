@@ -24,8 +24,6 @@ Jede Version steht hier zuerst auf Deutsch, direkt darunter auf Englisch.
   Nun werden beide Werte ausdrücklich gesendet, sodass das Ergebnis nicht
   mehr davon abhängt, was in den CUPS-Vorgaben des jeweiligen Rechners steht.
 
-  Am Band eines einzelnen Etiketts ändert sich dadurch nichts.
-
 ### Fixed *(English)*
 
 * **The tape consumption in the status bar was too low.** It only showed the
@@ -44,8 +42,6 @@ Jede Version steht hier zuerst auf Deutsch, direkt darunter auf Englisch.
   leave the feed at the system default. Both values are now sent explicitly,
   so the result no longer depends on what the CUPS defaults on a given
   machine happen to say.
-
-  This makes no difference to the tape of a single label.
 
 ## [1.6.0] — 2026-11-06
 
