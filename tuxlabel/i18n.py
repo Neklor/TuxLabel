@@ -80,7 +80,7 @@ _DEFAULTS: dict[str, object] = {
                               "hängt sie hinten am Band.\n\n"
                               "Diese Strecke fällt je Schnitt an, nicht je Etikett: Wer "
                               "AutoCut abschaltet,\nmehrere Etiketten am Stück druckt und "
-                              "einmal schneidet, zahlt sie nur einmal."),
+                              "einmal schneidet, verliert sie nur einmal."),
 
     # --- Werkzeugleiste ---
     "toolbar.title":            "Werkzeuge",
@@ -422,7 +422,7 @@ _DEFAULTS: dict[str, object] = {
                                "Aus: Es wird nicht geschnitten. Der Schnipsel entfällt, dafür "
                                "bleiben die 2,5 cm\nleer am Ende des Bandes. Wer mehrere "
                                "Etiketten am Stück druckt und erst danach\neinmal schneidet, "
-                               "zahlt sie nur einmal statt bei jedem Etikett."),
+                               "verliert sie nur einmal statt bei jedem Etikett."),
     "print.match":            "Nur drucken wenn Bandbreite übereinstimmt",
     "print.match_tip_disabled": ("Für {tape} mm Band automatisch deaktiviert.\n\n"
                                  "Custom-Page-Größen <12,7 mm Breite werden von der PPD\n"
