@@ -176,7 +176,6 @@ class MainWindow(QMainWindow):
         # dass showMessage() es kurzzeitig verdeckt — die Meldung ist in dem
         # Moment die wichtigere Information.
         self._status_tape = QLabel()
-        self._status_tape.setToolTip(tr("status.tape_usage_tip"))
         self.statusBar().addWidget(self._status_tape)
 
         self._status_hint = QLabel(tr("status.hint"))
@@ -1381,11 +1380,21 @@ class MainWindow(QMainWindow):
         cm = mm / 10.0
         self._status_length.setText(tr("status.length", cm=fmt_number(cm, 1)))
 
-        # Dieselbe Funktion, die _send_to_printer für die Seitenlänge benutzt.
-        from .label_canvas import PRINT_HARDWARE_LEADER_MM, _page_length_mm
-        tape_cm = _page_length_mm(mm + PRINT_HARDWARE_LEADER_MM) / 10.0
+        # Seitenlänge mit derselben Funktion wie _send_to_printer, dazu das
+        # Band, das der Schnitt kostet: Der Drucker wirft vor jedem Etikett
+        # einen Schnipsel in Höhe des Abstands Druckkopf–Schneide weg (mit
+        # AutoCut), bzw. hängt ihn ohne AutoCut hinten ans Etikett. Beides
+        # landet im Verbrauch, sonst untertreibt die Anzeige um 2,5 cm.
+        from .label_canvas import (PRINT_HARDWARE_LEADER_MM, PRINT_CUT_WASTE_MM,
+                                   _page_length_mm)
+        page_mm = _page_length_mm(mm + PRINT_HARDWARE_LEADER_MM)
+        tape_cm = (page_mm + PRINT_CUT_WASTE_MM) / 10.0
         self._status_tape.setText(
             tr("status.tape_usage", cm=fmt_number(tape_cm, 1)))
+        self._status_tape.setToolTip(
+            tr("status.tape_usage_tip",
+               label=fmt_number(page_mm / 10.0, 1),
+               cut=fmt_number(PRINT_CUT_WASTE_MM / 10.0, 1)))
 
     def _update_title(self) -> None:
         base = "TuxLabel"

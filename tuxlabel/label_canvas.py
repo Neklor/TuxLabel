@@ -215,6 +215,27 @@ IMAGE_INSET_MM: float = 0.5
 PRINT_HARDWARE_LEADER_MM: float = 5.0
 
 
+# Band, das jeder Schnitt kostet (mm) — der Abstand zwischen Druckkopf und
+# Schneide. Ausgemessen am PT-P700 (07.11.2026):
+#
+#   Mit AutoCut schiebt der Drucker vor jedem Etikett genau diese Strecke vor
+#   und schneidet sie als Schnipsel ab, damit das Etikett an der Schnittkante
+#   beginnt. Gemessener Schnipsel: 24,90 mm, und zwar bei jedem Druck.
+#
+#   Ohne AutoCut entfällt der Schnipsel, dafür hängt die Strecke als leeres
+#   Band am Etikettende: 65-mm-Etikett → 90,53 mm Band statt 69,85 mm.
+#
+# Unterm Strich kostet also JEDER Schnitt diese Strecke, in beiden Betriebs-
+# arten (94,75 gegenüber 90,53 mm — 4 mm Unterschied). Kettendruck spart sie
+# nicht pro Etikett, sondern pro Schnitt: Wer fünf Etiketten am Stück druckt
+# und einmal schneidet, spart rund 10 cm.
+#
+# Der Wert gilt für den PT-P700; andere Modelle haben andere Bauabstände.
+# Deshalb wird er nur für die Verbrauchsschätzung benutzt, nie für die
+# Seitengröße.
+PRINT_CUT_WASTE_MM: float = 24.9
+
+
 def _image_safe_mm(tape_mm: float) -> float:
     """Standard-Bildhöhe (mm) — druckbarer Bereich minus Sicherheitseinzug oben
     und unten."""

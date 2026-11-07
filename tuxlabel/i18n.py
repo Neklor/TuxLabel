@@ -71,10 +71,16 @@ _DEFAULTS: dict[str, object] = {
     # Fußzeile links. Erklärt per Tooltip, warum mehr Band verbraucht wird als
     # das Etikett lang ist — ohne diese Angabe wirkt der Vorlauf wie ein Fehler.
     "status.tape_usage":     "Bandverbrauch: ca. {cm} cm",
-    "status.tape_usage_tip": ("So viel Band verbraucht der Druck.\n"
-                              "Der Drucker braucht an beiden Enden etwas Vorlauf, sonst "
-                              "schneidet er den Inhalt an —\ndeshalb etwas mehr als die "
-                              "Etikettlänge."),
+    "status.tape_usage_tip": ("So viel Band kostet ein Druck mit Schnitt.\n\n"
+                              "{label} cm Etikett (der Drucker braucht an beiden Enden "
+                              "etwas Vorlauf)\n"
+                              "{cut} cm für den Schnitt — der Druckkopf sitzt diese Strecke "
+                              "vor der Schneide.\n"
+                              "Der Drucker schneidet sie als Schnipsel ab, ohne AutoCut "
+                              "hängt sie hinten am Band.\n\n"
+                              "Diese Strecke fällt je Schnitt an, nicht je Etikett: Wer "
+                              "AutoCut abschaltet,\nmehrere Etiketten am Stück druckt und "
+                              "einmal schneidet, zahlt sie nur einmal."),
 
     # --- Werkzeugleiste ---
     "toolbar.title":            "Werkzeuge",

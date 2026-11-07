@@ -16,7 +16,7 @@
   "status.hint": "Double-clic : modifier le texte  |  Ctrl+V : coller une image  |  Suppr : supprimer  |  Ctrl+molette : zoom",
   "status.length": "Longueur : {cm} cm",
   "status.tape_usage": "Consommation de ruban : env. {cm} cm",
-  "status.tape_usage_tip": "Quantité de ruban consommée par cette impression.\nL'imprimante a besoin d'une petite amorce aux deux extrémités, sinon elle rogne\nle contenu, d'où un peu plus que la longueur de l'étiquette.",
+  "status.tape_usage_tip": "Voici ce que coûte en ruban une impression avec coupe.\n\n{label} cm d'étiquette (l'imprimante a besoin d'une petite amorce aux deux extrémités)\n{cut} cm pour la coupe : la tête se trouve à cette distance avant la lame.\nL'imprimante la coupe en chute ; sans coupe automatique, elle reste sur le ruban.\n\nCela se produit par coupe, pas par étiquette : désactivez la coupe automatique,\nimprimez plusieurs étiquettes d'affilée et coupez une fois, vous ne payez qu'une fois.",
 
   "toolbar.title": "Outils",
   "toolbar.group_add": "Ajouter",

@@ -13,7 +13,7 @@
   "status.hint": "Double-click: edit text  |  Ctrl+V: paste image  |  Del: delete  |  Ctrl+wheel: zoom",
   "status.length": "Length: {cm} cm",
   "status.tape_usage": "Tape used: approx. {cm} cm",
-  "status.tape_usage_tip": "How much tape this print consumes.\nThe printer needs a short lead-in at both ends, otherwise it clips the content —\nhence slightly more than the label length.",
+  "status.tape_usage_tip": "This is what one print with a cut costs in tape.\n\n{label} cm label (the printer needs a short lead-in at both ends)\n{cut} cm for the cut - the print head sits that far before the cutter.\nThe printer trims it off as a scrap; without Auto Cut it stays on the tape.\n\nThis happens per cut, not per label: switch Auto Cut off, print several\nlabels in one go and cut once, and you pay it only once.",
   "toolbar.title": "Tools",
   "toolbar.group_add": "Add",
   "toolbar.add_text_tip": "Insert text — new text box on the label",

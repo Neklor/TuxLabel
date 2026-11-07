@@ -16,7 +16,7 @@
   "status.hint": "Doble clic: editar texto  |  Ctrl+V: pegar imagen  |  Supr: eliminar  |  Ctrl+rueda: zoom",
   "status.length": "Longitud: {cm} cm",
   "status.tape_usage": "Consumo de cinta: aprox. {cm} cm",
-  "status.tape_usage_tip": "Cantidad de cinta que consume esta impresión.\nLa impresora necesita un pequeño margen de avance en ambos extremos, de lo contrario recorta\nel contenido, por eso algo más que la longitud de la etiqueta.",
+  "status.tape_usage_tip": "Esto es lo que cuesta en cinta una impresión con corte.\n\n{label} cm de etiqueta (la impresora necesita un pequeño margen de avance en ambos extremos)\n{cut} cm para el corte: el cabezal está a esa distancia antes de la cuchilla.\nLa impresora la recorta como un trocito; sin corte automático se queda en la cinta.\n\nOcurre por corte, no por etiqueta: desactiva el corte automático, imprime varias\netiquetas seguidas y corta una vez, y solo lo pagas una vez.",
 
   "toolbar.title": "Herramientas",
   "toolbar.group_add": "Añadir",

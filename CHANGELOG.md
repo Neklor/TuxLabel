@@ -24,6 +24,12 @@ Jede Version steht hier zuerst auf Deutsch, direkt darunter auf Englisch.
 
   Gemeldet von @boinappi in [#1](../../issues/1).
 
+* **Der Bandverbrauch in der Fußzeile war zu niedrig.** Angezeigt wurde nur
+  die Länge des Etiketts. Jeder Schnitt kostet zusätzlich rund 2,5 cm: Der
+  Druckkopf sitzt diese Strecke vor der Schneide, und der Drucker wirft sie
+  vor jedem Etikett als Schnipsel weg. Die Anzeige rechnet das jetzt mit und
+  der Hinweistext zeigt die Aufteilung.
+
 ### Fixed *(English)*
 
 * **Tape was wasted when "Auto Cut" was switched off.** With the option
@@ -40,6 +46,12 @@ Jede Version steht hier zuerst auf Deutsch, direkt darunter auf Englisch.
   the checkbox explains it.
 
   Reported by @boinappi in [#1](../../issues/1).
+
+* **The tape consumption in the status bar was too low.** It only showed the
+  length of the label. Every cut costs about 2.5 cm on top: the print head
+  sits that far before the cutter, and the printer trims the distance off as
+  a scrap before each label. The figure now includes it, and the tooltip
+  shows the breakdown.
 
 ## [1.6.0] — 2026-11-06
 
