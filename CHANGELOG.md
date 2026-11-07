@@ -3,6 +3,44 @@
 Jede Version steht hier zuerst auf Deutsch, direkt darunter auf Englisch.
 *Each version is listed in German first, followed by English.*
 
+## [1.6.1] — 2026-11-07
+
+### Behoben
+
+* **Ohne »Automatisch schneiden« ging Band verloren.** War die Option im
+  Druckdialog abgeschaltet, schob der Drucker das Band trotzdem bis zur
+  Schneide vor. Wer dann von Hand schnitt, warf rund zwei Zentimeter leeres
+  Band weg.
+
+  Der Grund: Der Treiber kennt zwei getrennte Einstellungen — schneiden und
+  vorschieben. TuxLabel hat nur die erste gesetzt, die zweite blieb auf
+  ihrem Standard. »Nicht schneiden, aber vorschieben« ergibt keinen Sinn und
+  kostete bei jedem Etikett Band.
+
+  Jetzt gehören beide zusammen: **Ohne Schnitt läuft der Druck als
+  Kettendruck.** Mehrere Etiketten folgen lückenlos aufeinander und werden am
+  Ende einmal geschnitten — das zuletzt gedruckte bleibt bis dahin im Gerät.
+  Der Hinweistext am Knopf erklärt das.
+
+  Gemeldet von @boinappi in [#1](../../issues/1).
+
+### Fixed *(English)*
+
+* **Tape was wasted when "Auto Cut" was switched off.** With the option
+  disabled in the print dialog, the printer still fed the tape forward to the
+  cutter. Cutting by hand then threw away about two centimetres of blank tape.
+
+  The cause: the driver has two separate settings — cutting and feeding.
+  TuxLabel only set the first and left the second at its default. "Do not cut,
+  but do feed" makes no sense and cost tape on every label.
+
+  The two now belong together: **with cutting off, printing runs as chain
+  printing.** Several labels follow one another with no gap and are cut once
+  at the end; the last one stays inside the machine until then. The tooltip on
+  the checkbox explains it.
+
+  Reported by @boinappi in [#1](../../issues/1).
+
 ## [1.6.0] — 2026-11-06
 
 ### Geändert

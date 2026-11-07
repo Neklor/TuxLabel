@@ -409,6 +409,11 @@ _DEFAULTS: dict[str, object] = {
     "print.label_row":        "Etikett:",
     "print.label_info":       "Band: {tape} mm  ·  Etikettlänge: <b>{length} mm</b>",
     "print.autocut":          "Automatisch schneiden (AutoCut)",
+    "print.autocut_tip":      ("An: Der Drucker schneidet das Etikett nach dem Druck ab.\n\n"
+                               "Aus: Kettendruck. Mehrere Etiketten laufen lückenlos "
+                               "hintereinander,\nes geht kein Band dazwischen verloren. "
+                               "Das zuletzt gedruckte bleibt\nim Gerät, bis geschnitten "
+                               "wird."),
     "print.match":            "Nur drucken wenn Bandbreite übereinstimmt",
     "print.match_tip_disabled": ("Für {tape} mm Band automatisch deaktiviert.\n\n"
                                  "Custom-Page-Größen <12,7 mm Breite werden von der PPD\n"

@@ -473,6 +473,20 @@ def _send_to_printer(
         "-d", printer_name,
         "-o", f"PageSize={page_size}",
         "-o", f"AutoCut={'True' if auto_cut else 'False'}",
+        # AutoEject hängt bewusst an AutoCut. In der PPD heißt AutoEject=False
+        # »ChainPrinting«: Das Band wird nach dem Druck NICHT bis zur Schneide
+        # vorgeschoben. Ohne Schnitt ist der Vorschub nur Verschnitt — der
+        # Druckkopf sitzt rund zwei Zentimeter vor der Schneide, und wer dann
+        # von Hand schneidet, wirft diese Strecke weg. Genau das meldete
+        # Issue #1.
+        #
+        # »Nicht schneiden« heißt deshalb hier: mehrere Etiketten laufen
+        # lückenlos hintereinander und werden am Ende einmal geschnitten.
+        # Das letzte bleibt bis dahin im Gerät.
+        #
+        # Beide Werte werden ausdrücklich gesendet, damit das Ergebnis nicht
+        # von den Vorgaben in ~/.cups/lpoptions abhängt.
+        "-o", f"AutoEject={'True' if auto_cut else 'False'}",
         "-o", f"RequireMatchingLabelSize={'True' if require_match else 'False'}",
         image_path,
     ]
@@ -556,6 +570,7 @@ class PrintDialog(QDialog):
 
         # --- Optionen ---
         self._autocut_cb = QCheckBox(tr("print.autocut"))
+        self._autocut_cb.setToolTip(tr("print.autocut_tip"))
         self._autocut_cb.setChecked(True)
         layout.addWidget(self._autocut_cb)
 
