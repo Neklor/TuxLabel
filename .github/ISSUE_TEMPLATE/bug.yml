@@ -1,0 +1,95 @@
+name: Bug report
+description: Something in TuxLabel does not work the way it should
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time. The more precise this first message is,
+        the fewer questions have to come back to you.
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: What did you do, and what did TuxLabel do instead of what you expected?
+      placeholder: |
+        I placed a text box at the bottom of a 24 mm label.
+        On the printed tape the lower half is missing.
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: How to see it happen
+      description: >
+        The steps someone else would follow to get the same result. For
+        anything that reaches the printer, a photo of the tape next to a ruler
+        settles more than a paragraph - the label file helps just as much.
+        GitHub refuses `.ptle` attachments, so rename the file to `.txt`
+        before dropping it in this box.
+      placeholder: |
+        1. Set the tape width to 24 mm
+        2. Add a text box and move it to the lower edge of the label
+        3. Print
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: TuxLabel version
+      description: Help, then About shows it.
+      placeholder: "1.6.0"
+    validations:
+      required: true
+
+  - type: input
+    id: system
+    attributes:
+      label: Distribution and version
+      description: >
+        If you started TuxLabel from the source code rather than the .deb
+        package, please add the Python and PyQt6 versions as well - the
+        package pins them, a manual setup does not.
+      placeholder: "Linux Mint 22.3, Debian 13, Fedora 43, ..."
+    validations:
+      required: true
+
+  - type: dropdown
+    id: install
+    attributes:
+      label: How did it get onto the machine?
+      options:
+        - The .deb package from the releases page
+        - Started from the source code
+        - Some other way
+    validations:
+      required: false
+
+  - type: input
+    id: printer
+    attributes:
+      label: Printer model
+      description: Only if the problem has something to do with printing.
+      placeholder: "PT-P700"
+    validations:
+      required: false
+
+  - type: dropdown
+    id: tape
+    attributes:
+      label: Tape width
+      description: >
+        Only if the problem has something to do with printing. The printable
+        area differs for every width, so this often decides the answer.
+      options:
+        - 3.5 mm
+        - 6 mm
+        - 9 mm
+        - 12 mm
+        - 18 mm
+        - 24 mm
+    validations:
+      required: false

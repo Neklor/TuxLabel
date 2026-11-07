@@ -1,0 +1,20 @@
+name: Idea or wish
+description: Something TuxLabel should be able to do
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: idea
+    attributes:
+      label: What should TuxLabel be able to do?
+    validations:
+      required: true
+
+  - type: textarea
+    id: purpose
+    attributes:
+      label: What would you use it for
+      description: >
+        What you are trying to get done matters more than the feature itself.
+        Knowing it sometimes turns up a simpler way to get you there.
+    validations:
+      required: false

@@ -1,0 +1,61 @@
+name: Printer report
+description: Tell us about a P-touch model you have used with TuxLabel
+labels: ["printer-request"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        TuxLabel is developed on a PT-P700. Other models driven by the
+        open-source `printer-driver-ptouch` should work the same way, but
+        only a report from someone who owns one can confirm it.
+
+        Models that are confirmed here go into the list of tested models in
+        the README, so the next person knows what to expect.
+
+  - type: input
+    id: model
+    attributes:
+      label: Printer model
+      placeholder: "PT-2430PC"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: result
+    attributes:
+      label: How well does it work?
+      options:
+        - Works, nothing to complain about
+        - Works, but with limitations
+        - Does not work
+        - I do not own it yet and would like it supported
+    validations:
+      required: true
+
+  - type: input
+    id: tape
+    attributes:
+      label: Which tape widths did you use?
+      placeholder: "6 mm and 12 mm"
+    validations:
+      required: false
+
+  - type: textarea
+    id: details
+    attributes:
+      label: Anything worth knowing
+      description: >
+        Limitations, surprises, or how the printer had to be set up. If the
+        print came out wrong, a photo of the tape next to a ruler says more
+        than a description.
+    validations:
+      required: false
+
+  - type: input
+    id: version
+    attributes:
+      label: TuxLabel version
+      description: Help, then About shows it.
+      placeholder: "1.6.0"
+    validations:
+      required: false

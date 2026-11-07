@@ -352,8 +352,10 @@ Hilfreich sind:
   besitzt kann berichten ob es einwandfrei funktioniert oder ob es Fehler gibt,
   so muss ich nur Modelle mit Problemen oder fehlenden Funktionen kaufen.
 
-Bitte im Fehlerbericht die Linux-Distribution, die Python- und PyQt6-Version,
-das Druckermodell sowie die betroffene Bandbreite angeben.
+Für beides gibt es [vorbereitete Formulare](../../issues/new/choose) — sie
+fragen gleich das ab, was zur Klärung nötig ist: Distribution, Version,
+Druckermodell und Bandbreite. Was in keine Vorlage passt, darf gern als
+leeres Issue kommen.
 
 ## Lizenz
 
@@ -595,8 +597,10 @@ Particularly helpful are:
   if you own a device, you can report whether it works flawlessly or where it
   fails, so I only need to buy models that have problems or missing features.
 
-When reporting a bug, please include your distribution, your Python and PyQt6
-versions, the printer model and the tape width involved.
+There are [prepared forms](../../issues/new/choose) for both — they ask up
+front for what it takes to settle the question: distribution, version,
+printer model and tape width. Anything that fits none of them is welcome as
+a plain issue.
 
 ### License
 
