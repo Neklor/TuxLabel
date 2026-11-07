@@ -473,19 +473,22 @@ def _send_to_printer(
         "-d", printer_name,
         "-o", f"PageSize={page_size}",
         "-o", f"AutoCut={'True' if auto_cut else 'False'}",
-        # AutoEject hängt bewusst an AutoCut. In der PPD heißt AutoEject=False
-        # »ChainPrinting«: Das Band wird nach dem Druck NICHT bis zur Schneide
-        # vorgeschoben. Ohne Schnitt ist der Vorschub nur Verschnitt — der
-        # Druckkopf sitzt rund zwei Zentimeter vor der Schneide, und wer dann
-        # von Hand schneidet, wirft diese Strecke weg. Genau das meldete
-        # Issue #1.
+        # AutoEject hängt an AutoCut, weil »nicht schneiden, aber vorschieben«
+        # keinen sinnvollen Auftrag ergibt. In der PPD heißt AutoEject=False
+        # »ChainPrinting«; im Datenstrom setzt es Bit 3 von ESC i K von 0x08
+        # auf 0x00 — nachgeprüft, indem die Filterkette ohne Drucker
+        # durchlaufen und die erzeugten Befehle verglichen wurden.
         #
-        # »Nicht schneiden« heißt deshalb hier: mehrere Etiketten laufen
-        # lückenlos hintereinander und werden am Ende einmal geschnitten.
-        # Das letzte bleibt bis dahin im Gerät.
+        # ACHTUNG, bevor hier jemand »aufräumt«: Am Band eines EINZELNEN
+        # Etiketts ändert diese Einstellung nichts. Am PT-P700 nachgemessen
+        # (07.11.2026) — mit und ohne Vorschub kamen dieselben 90,53 mm
+        # heraus. Der Grund für die Kopplung ist nicht eine Ersparnis,
+        # sondern dass beide Werte ausdrücklich gesendet werden: Sonst gilt
+        # für AutoEject der Standard aus ~/.cups/lpoptions, und dieselbe
+        # TuxLabel-Version druckt auf zwei Rechnern unterschiedlich.
         #
-        # Beide Werte werden ausdrücklich gesendet, damit das Ergebnis nicht
-        # von den Vorgaben in ~/.cups/lpoptions abhängt.
+        # Ob der Kettendruck beim Druck mehrerer Etiketten am Stück etwas
+        # bringt, ist NICHT gemessen.
         "-o", f"AutoEject={'True' if auto_cut else 'False'}",
         "-o", f"RequireMatchingLabelSize={'True' if require_match else 'False'}",
         image_path,

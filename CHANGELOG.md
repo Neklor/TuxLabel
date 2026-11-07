@@ -26,9 +26,6 @@ Jede Version steht hier zuerst auf Deutsch, direkt darunter auf Englisch.
 
   Am Band eines einzelnen Etiketts ändert sich dadurch nichts.
 
-Beides kam bei der Untersuchung von [#1](../../issues/1) heraus, gemeldet von
-@boinappi.
-
 ### Fixed *(English)*
 
 * **The tape consumption in the status bar was too low.** It only showed the
@@ -49,8 +46,6 @@ Beides kam bei der Untersuchung von [#1](../../issues/1) heraus, gemeldet von
   machine happen to say.
 
   This makes no difference to the tape of a single label.
-
-Both came out of looking into [#1](../../issues/1), reported by @boinappi.
 
 ## [1.6.0] — 2026-11-06
 
