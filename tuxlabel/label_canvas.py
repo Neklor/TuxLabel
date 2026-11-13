@@ -1025,20 +1025,30 @@ class LabelScene(QGraphicsScene):
             # »Tinten«-Ausdehnung hält den SICHTBAREN Text auch dann symmetrisch,
             # wenn er innerhalb eines breiteren Feldes ausgerichtet ist.
             if self._flag_mode and self._flag_copy:
-                img_scale  = w_px / (print_length_mm * PIXELS_PER_MM)
-                flag_w_img = self._flag_width_mm * PIXELS_PER_MM * img_scale
-                right_org  = ((self._flag_width_mm + self._flag_middle_mm)
-                              * PIXELS_PER_MM * img_scale)
+                # Alle Maße in Bildpixeln. Seit 1.2.1 umfasst das Bild die ganze
+                # Seite: Der Inhalt beginnt erst bei lead_px, und der druckbare
+                # Streifen erst bei band_top_mm. Beides muss hier einfließen —
+                # vorher stand hier das nicht mehr vorhandene h_print_px, was
+                # den Druck im Fähnchenmodus mit Spiegelung abstürzen ließ.
+                band_y0_px = int(round(band_top_mm  * px_per_mm))
+                band_h_px  = max(1, int(round(printable_mm * px_per_mm)))
+                flag_w_img = lead_px + self._flag_width_mm * px_per_mm
+                right_org  = lead_px + ((self._flag_width_mm
+                                         + self._flag_middle_mm) * px_per_mm)
                 bounds = self._ink_col_bounds(
-                    image, int(round(flag_w_img)), h_print_px,
+                    image, int(round(flag_w_img)), band_h_px,
                     lambda px: (px & 0xFFFFFF) != 0xFFFFFF,   # jedes nicht-weiße Pixel
+                    band_y0_px,
                 )
                 if bounds is not None:
                     c0, c1 = bounds
-                    strip  = image.copy(c0, 0, c1 - c0, h_print_px)
+                    strip  = image.copy(c0, band_y0_px, c1 - c0, band_h_px)
+                    # Spiegelung an der Falzlinie: Der Abstand vom Tintenende
+                    # bis zum Fähnchenrand wird rechts zum Abstand vom Beginn
+                    # des rechten Fähnchens. lead_px kürzt sich dabei heraus.
                     dest_x = int(round(right_org + (flag_w_img - c1)))
                     blit = QPainter(image)
-                    blit.drawImage(dest_x, 0, strip)
+                    blit.drawImage(dest_x, band_y0_px, strip)
                     blit.end()
         finally:
             # Den UI-Zustand immer wiederherstellen, selbst wenn das Rendern eine Ausnahme wirft
@@ -1191,13 +1201,18 @@ class LabelScene(QGraphicsScene):
         return QPixmap.fromImage(img)
 
     @staticmethod
-    def _ink_col_bounds(image: QImage, x_max: int, h: int, is_ink) -> tuple[int, int] | None:
+    def _ink_col_bounds(image: QImage, x_max: int, h: int, is_ink,
+                        y0: int = 0) -> tuple[int, int] | None:
         """Linkeste/rechteste Spalten (in [0, x_max)), die »Tinte« enthalten.
+
+        Gesucht wird in den Zeilen *y0* bis *y0+h*. Seit das Druckbild die ganze
+        Seite umfasst, liegt der druckbare Streifen nicht mehr am oberen Rand —
+        ohne *y0* würde hier der leere Seitenrand abgesucht.
 
         *is_ink(pixel)* entscheidet, ob ein Pixel als gezeichneter Inhalt zählt."""
         c0 = c1 = None
         for x in range(min(x_max, image.width())):
-            for y in range(0, h, 2):
+            for y in range(y0, min(y0 + h, image.height()), 2):
                 if is_ink(image.pixel(x, y)):
                     if c0 is None:
                         c0 = x

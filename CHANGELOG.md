@@ -3,6 +3,40 @@
 Jede Version steht hier zuerst auf Deutsch, direkt darunter auf Englisch.
 *Each version is listed in German first, followed by English.*
 
+## [1.6.2] — 2026-11-13
+
+### Behoben
+
+* **Im Kabelfähnchen-Modus mit Spiegelung kam kein Etikett.** War *Spiegeln*
+  eingeschaltet, brach der Druck ohne Meldung ab — es passierte schlicht
+  nichts. Betroffen waren alle Bandbreiten seit **1.2.1**.
+
+  Ursache war ein Fehler aus dem Umbau des Druckbereichs in 1.2.1: Die
+  Spiegelung rechnete noch mit einer Größe, die es seitdem nicht mehr gibt.
+  Fähnchen *ohne* Spiegelung war nie betroffen, deshalb fiel es lange nicht
+  auf.
+
+* **Ein gescheiterter Druck blieb stumm.** Ging beim Aufbereiten des Bildes
+  etwas schief, schloss sich der Druckdialog nicht und es erschien keine
+  Meldung. Jetzt nennt ein Fehlerdialog den Grund. Genau diese Stille hat den
+  Fähnchen-Fehler so lange verborgen.
+
+### Fixed *(English)*
+
+* **No label came out in cable-flag mode with mirroring.** With *Mirror*
+  enabled, printing aborted without a message — nothing happened at all. All
+  tape widths were affected, going back to **1.2.1**.
+
+  The cause was a mistake from reworking the printable area in 1.2.1: the
+  mirroring still referred to a measurement that no longer exists. Flag mode
+  *without* mirroring was never affected, which is why this went unnoticed
+  for so long.
+
+* **A failed print stayed silent.** If something went wrong while preparing
+  the image, the print dialog simply stayed open with no message. An error
+  dialog now names the reason. That silence is exactly what hid the flag-mode
+  bug for so long.
+
 ## [1.6.1] — 2026-11-07
 
 ### Behoben

@@ -742,6 +742,14 @@ class PrintDialog(QDialog):
                 auto_cut        = self._autocut_cb.isChecked(),
                 require_match   = self._match_cb.isChecked(),
             )
+        except Exception as exc:
+            # Scheitert das Rendern, darf das nicht still bleiben. Ohne diesen
+            # Zweig verschwindet die Ausnahme auf stderr, der Dialog bleibt
+            # offen, und es sieht aus, als sei der Druck einfach ohne Wirkung
+            # geblieben — genau so fiel der Fähnchen-Absturz monatelang nicht
+            # auf. Die Meldung geht in denselben Fehlerdialog wie ein
+            # abgelehnter Druckauftrag.
+            ok, msg = False, f"{type(exc).__name__}: {exc}"
         finally:
             try:
                 os.unlink(tmp_path)
