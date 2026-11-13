@@ -20,6 +20,9 @@ Jede Version steht hier zuerst auf Deutsch, direkt darunter auf Englisch.
   etwas schief, schloss sich der Druckdialog nicht und es erschien keine
   Fehlermeldung. Jetzt kommt ein Fehlerdialog mit dem Grund.
 
+* **Zentrieren im Fähnchen-Modus** bezog sich auf das ganze Etikett, der Text
+  landete in der Wickelzone. Jetzt wird auf dem linken Fähnchen zentriert.
+
 ### Fixed *(English)*
 
 * **No label came out in cable-flag mode with mirroring.** With *Mirror*
@@ -34,6 +37,9 @@ Jede Version steht hier zuerst auf Deutsch, direkt darunter auf Englisch.
 * **Render crash without an error message.** If something went wrong while
   preparing the image, the print dialog simply stayed open and no error
   message appeared. An error dialog now gives the reason.
+
+* **Centring in cable-flag mode** used the whole label, so the text ended up in
+  the wrapping zone. It is now centred on the left flag.
 
 ## [1.6.1] — 2026-11-07
 
