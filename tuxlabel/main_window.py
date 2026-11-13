@@ -806,14 +806,29 @@ class MainWindow(QMainWindow):
             item.setY((printable_h_px - item_h_px) / 2)
 
     def _center_horizontal(self) -> None:
-        """Zentriert ausgewählte Textfelder horizontal zwischen den Sicherheitsrändern."""
+        """Zentriert ausgewählte Textfelder waagerecht.
+
+        Im Fähnchen-Modus bezieht sich das auf das LINKE Fähnchen. Dort steht
+        der Inhalt; die rechte Hälfte ist nur dessen Spiegelbild, und dazwischen
+        liegt die Wickelzone ums Kabel. Über das ganze Etikett zentriert käme
+        der Text genau dort zu liegen, wo er später nicht zu lesen ist.
+
+        Im Normalfall wird zwischen den Sicherheitsrändern zentriert. Ist das
+        Feld breiter als der Bereich, wird es auf den linken Rand gesetzt
+        statt in den Sicherheitsrand hineingeschoben."""
         from .label_canvas import PIXELS_PER_MM, margin_mm
         m = margin_mm()
-        left_px  = m * PIXELS_PER_MM
-        right_px = (self._scene.get_label_length_mm() - m) * PIXELS_PER_MM
+        if self._scene.get_flag_mode():
+            left_mm, right_mm = 0.0, self._scene.get_flag_width_mm()
+        else:
+            left_mm, right_mm = m, self._scene.get_label_length_mm() - m
+        left_px  = left_mm * PIXELS_PER_MM
+        right_px = right_mm * PIXELS_PER_MM
+        min_x_px = m * PIXELS_PER_MM
         for item in self._selected_text_boxes():
             item_w_px = item._rect.width()
-            item.setX(left_px + (right_px - left_px - item_w_px) / 2)
+            x = left_px + (right_px - left_px - item_w_px) / 2
+            item.setX(max(min_x_px, x))
 
     def _restore_settings(self) -> None:
         s = QSettings()

@@ -21,6 +21,12 @@ Jede Version steht hier zuerst auf Deutsch, direkt darunter auf Englisch.
   Meldung. Jetzt nennt ein Fehlerdialog den Grund. Genau diese Stille hat den
   Fähnchen-Fehler so lange verborgen.
 
+* **»Waagerecht zentrieren« zielte im Fähnchen-Modus auf das ganze Etikett.**
+  Der Text landete dadurch mitten in der Wickelzone ums Kabel, also genau
+  dort, wo er später nicht zu lesen ist. Jetzt wird auf dem linken Fähnchen
+  zentriert — dort steht der Inhalt, die rechte Hälfte ist nur dessen
+  Spiegelbild.
+
 ### Fixed *(English)*
 
 * **No label came out in cable-flag mode with mirroring.** With *Mirror*
@@ -36,6 +42,11 @@ Jede Version steht hier zuerst auf Deutsch, direkt darunter auf Englisch.
   the image, the print dialog simply stayed open with no message. An error
   dialog now names the reason. That silence is exactly what hid the flag-mode
   bug for so long.
+
+* **"Centre horizontally" used the whole label in cable-flag mode.** The text
+  ended up in the middle of the wrapping zone around the cable, which is
+  exactly where it cannot be read afterwards. It is now centred on the left
+  flag, where the content belongs; the right half is only its mirror image.
 
 ## [1.6.1] — 2026-11-07
 
