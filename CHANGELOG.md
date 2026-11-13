@@ -3,6 +3,26 @@
 Jede Version steht hier zuerst auf Deutsch, direkt darunter auf Englisch.
 *Each version is listed in German first, followed by English.*
 
+## [Unveröffentlicht]
+
+### Behoben
+
+* **Nach dem Ausschalten des Kabelfähnchen-Modus blieb das Etikett zu lang.**
+  Es behielt die Fähnchenlänge (zwei Fähnchen plus Wickelzone), auch ein Klick
+  auf *Auto* half nicht, weil die Auto-Länge nur wachsen kann. Jetzt springt
+  die Länge beim Ausschalten auf die Auto-Länge des verbliebenen Inhalts
+  zurück. Bei manueller Länge bleibt sie wie bisher stehen.
+  Betroffen waren alle Versionen seit **1.0.0**.
+
+### Fixed *(English)*
+
+* **The label stayed too long after leaving cable-flag mode.** It kept the
+  flag length (two flags plus the wrapping zone), and clicking *Auto* did not
+  help either, because the auto length can only grow. Switching flag mode off
+  now resets the length to the auto length of the remaining content. With a
+  manual length it stays as it was.
+  All versions back to **1.0.0** were affected.
+
 ## [1.6.2] — 2026-11-13
 
 ### Behoben

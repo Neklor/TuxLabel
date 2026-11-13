@@ -600,6 +600,16 @@ class LabelScene(QGraphicsScene):
         if auto:
             self._do_auto_expand()
 
+    def reset_auto_length(self) -> None:
+        """Setzt die Länge auf die Auto-Länge des aktuellen Inhalts zurück.
+
+        _do_auto_expand lässt das Etikett nur wachsen. Nach dem Verlassen des
+        Fähnchen-Modus steht aber noch die Fähnchenlänge (2·Fähnchen + Mitte),
+        die deutlich länger sein kann als der verbliebene Inhalt — daher hier
+        neu ab der Standardlänge rechnen, wie bei einem neuen Dokument."""
+        needed_mm = int(self.get_print_length_mm()) + 1
+        self.set_label_length_mm(max(DEFAULT_LABEL_LENGTH_MM, needed_mm))
+
     def set_label_length_mm(self, mm: int) -> None:
         self._label_length_mm = mm
         self._safe_rebuild()
