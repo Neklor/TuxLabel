@@ -8,45 +8,32 @@ Jede Version steht hier zuerst auf Deutsch, direkt darunter auf Englisch.
 ### Behoben
 
 * **Im Kabelfähnchen-Modus mit Spiegelung kam kein Etikett.** War *Spiegeln*
-  eingeschaltet, brach der Druck ohne Meldung ab — es passierte schlicht
-  nichts. Betroffen waren alle Bandbreiten seit **1.2.1**.
+  eingeschaltet, brach der Druck ohne Meldung ab.
+  Betroffen waren alle Bandbreiten seit **1.2.1**.
 
   Ursache war ein Fehler aus dem Umbau des Druckbereichs in 1.2.1: Die
   Spiegelung rechnete noch mit einer Größe, die es seitdem nicht mehr gibt.
   Fähnchen *ohne* Spiegelung war nie betroffen, deshalb fiel es lange nicht
   auf.
 
-* **Ein gescheiterter Druck blieb stumm.** Ging beim Aufbereiten des Bildes
+* **Absturz des Renderns ohne Fehlermeldung.** Ging beim Aufbereiten des Bildes
   etwas schief, schloss sich der Druckdialog nicht und es erschien keine
-  Meldung. Jetzt nennt ein Fehlerdialog den Grund. Genau diese Stille hat den
-  Fähnchen-Fehler so lange verborgen.
-
-* **»Waagerecht zentrieren« zielte im Fähnchen-Modus auf das ganze Etikett.**
-  Der Text landete dadurch mitten in der Wickelzone ums Kabel, also genau
-  dort, wo er später nicht zu lesen ist. Jetzt wird auf dem linken Fähnchen
-  zentriert — dort steht der Inhalt, die rechte Hälfte ist nur dessen
-  Spiegelbild.
+  Fehlermeldung. Jetzt kommt ein Fehlerdialog mit dem Grund.
 
 ### Fixed *(English)*
 
 * **No label came out in cable-flag mode with mirroring.** With *Mirror*
-  enabled, printing aborted without a message — nothing happened at all. All
-  tape widths were affected, going back to **1.2.1**.
+  enabled, printing aborted without a message.
+  All tape widths were affected, going back to **1.2.1**.
 
   The cause was a mistake from reworking the printable area in 1.2.1: the
   mirroring still referred to a measurement that no longer exists. Flag mode
   *without* mirroring was never affected, which is why this went unnoticed
   for so long.
 
-* **A failed print stayed silent.** If something went wrong while preparing
-  the image, the print dialog simply stayed open with no message. An error
-  dialog now names the reason. That silence is exactly what hid the flag-mode
-  bug for so long.
-
-* **"Centre horizontally" used the whole label in cable-flag mode.** The text
-  ended up in the middle of the wrapping zone around the cable, which is
-  exactly where it cannot be read afterwards. It is now centred on the left
-  flag, where the content belongs; the right half is only its mirror image.
+* **Render crash without an error message.** If something went wrong while
+  preparing the image, the print dialog simply stayed open and no error
+  message appeared. An error dialog now gives the reason.
 
 ## [1.6.1] — 2026-11-07
 
