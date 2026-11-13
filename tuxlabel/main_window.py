@@ -647,6 +647,11 @@ class MainWindow(QMainWindow):
 
     def _on_flag_toggled(self, checked: bool) -> None:
         self._scene.set_flag_mode(checked)
+        # Beim Ausschalten bliebe sonst die Fähnchenlänge stehen. Bewusst nur
+        # hier und nicht in set_flag_mode, das auch Laden/Undo nutzen (dort
+        # gilt die gespeicherte Länge).
+        if not checked and self._btn_auto_length.isChecked():
+            self._scene.reset_auto_length()
         self._update_flag_controls_enabled()
         self._view._fit_label()
 
