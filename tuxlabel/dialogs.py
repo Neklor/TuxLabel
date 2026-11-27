@@ -29,6 +29,7 @@ from PyQt6.QtWidgets import (
 from . import __version__
 from .i18n import (
     LANGUAGE_KEY,
+    fmt_number,
     LANGUAGE_PROMPT_KEY,
     available_languages,
     lang_dir_for_user,
@@ -446,7 +447,10 @@ class BarcodeDialog(QDialog):
         layout.addWidget(self._info)
 
         if printable_mm is not None and printable_mm < BARCODE_HEIGHT_HINT_MM:
-            warn = QLabel(tr("barcode.narrow_tape", mm=f"{printable_mm:.1f}"))
+            # fmt_number statt roher Formatierung: Sonst steht im Deutschen,
+            # Spanischen und Französischen ein Punkt, wo ein Komma hingehört.
+            warn = QLabel(tr("barcode.narrow_tape",
+                             mm=fmt_number(printable_mm, 1)))
             warn.setWordWrap(True)
             warn.setStyleSheet(
                 "QLabel { background: #FFF3CD; color: #856404;"
