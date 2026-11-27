@@ -3,6 +3,38 @@
 Jede Version steht hier zuerst auf Deutsch, direkt darunter auf Englisch.
 *Each version is listed in German first, followed by English.*
 
+## [1.7.0] — 2026-11-27
+
+### Neu
+
+* **Barcodes** als neuer Knopf im Bereich *Hinzufügen*: Nummer eingeben,
+  Art wählen, fertig. Zur Wahl stehen **Code 128** für beliebig lange
+  Nummern und Buchstaben sowie **EAN-13** für Handelsartikel. Die Nummer
+  kann unter den Balken stehen oder weggelassen werden.
+
+  Die Prüfziffer errechnet TuxLabel selbst; bei EAN-13 genügen zwölf Ziffern.
+  Ist ein Barcode ausgewählt, ändert derselbe Knopf diesen. Auf schmalem Band
+  weist ein Dialog darauf hin, dass die Balken zum Scannen ggf. zu niedrig
+  werden.
+
+  Die Größe der Ziffern unter den Balken stellt die Schriftgrößen-Auswahl
+  der Werkzeugleiste ein, wie bei einem Textfeld. Angeboten werden nur
+  Größen, die auf dem Element auch Platz haben.
+
+### New *(English)*
+
+* **Barcodes** as a new button in the *Add* area: enter a number, pick a
+  type, done. **Code 128** takes numbers and letters of any length, **EAN-13**
+  covers retail articles. The number can be shown below the bars or left out.
+
+  TuxLabel calculates the check digit itself; twelve digits are enough for
+  EAN-13. With a barcode selected, the same button edits it. On narrow tape
+  a dialog points out that the bars may be too short to scan.
+
+  The size of the digits below the bars is set with the font-size box in the
+  toolbar, just as for a text box. Only sizes that actually fit the element
+  are offered.
+
 ## [1.6.3] — 2026-11-13
 
 ### Behoben

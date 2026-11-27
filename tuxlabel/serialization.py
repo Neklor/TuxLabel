@@ -18,6 +18,8 @@ from PyQt6.QtGui import QFont, QPixmap
 from . import label_canvas as _lc
 from .text_item import TextBox
 from .image_item import ImageBox
+from .barcode_item import BarcodeBox
+from .label_canvas import CONTENT_ITEMS
 
 FILE_VERSION = 1
 
@@ -78,6 +80,20 @@ def item_to_dict(item) -> dict | None:
             "h_mm":         item._rect.height() / ppmm,
             "data_png_b64": _pixmap_to_b64(item.get_pixmap()),
         }
+    if isinstance(item, BarcodeBox):
+        return {
+            # Seit 1.7.0. Ältere Programmstände kennen den Typ nicht und
+            # überspringen ihn beim Laden, statt die Datei abzulehnen.
+            "type":       "barcode",
+            "x_mm":       item.pos().x() / ppmm,
+            "y_mm":       item.pos().y() / ppmm,
+            "w_mm":       item._rect.width()  / ppmm,
+            "h_mm":       item._rect.height() / ppmm,
+            "data":       item.get_data(),
+            "symbology":  item.get_symbology(),
+            "show_text":  item.get_show_text(),
+            "text_pt":    item.get_text_pt(),
+        }
     return None
 
 
@@ -126,6 +142,21 @@ def item_from_dict(entry: dict):
                   float(entry.get("y_mm", 0)) * ppmm)
         return ib
 
+    if kind == "barcode":
+        bb = BarcodeBox(entry.get("data", ""),
+                        entry.get("symbology", "code128"),
+                        bool(entry.get("show_text", True)))
+        bb.set_text_pt(float(entry.get("text_pt", 8.0)))
+        # Nicht kodierbar (etwa von Hand verändert) — lieber überspringen als
+        # ein leeres Element auf dem Etikett zu hinterlassen.
+        if not bb.get_data():
+            return None
+        bb.set_size(float(entry.get("w_mm", 30)) * ppmm,
+                    float(entry.get("h_mm", 12)) * ppmm)
+        bb.setPos(float(entry.get("x_mm", 0)) * ppmm,
+                  float(entry.get("y_mm", 0)) * ppmm)
+        return bb
+
     return None
 
 
@@ -151,7 +182,7 @@ def scene_to_dict(scene) -> dict:
 def scene_from_dict(scene, data: dict) -> None:
     # Vorhandene Inhaltselemente entfernen (Hintergrund/Lineal/etc. behalten)
     for item in list(scene.items()):
-        if isinstance(item, (TextBox, ImageBox)):
+        if isinstance(item, CONTENT_ITEMS):
             scene.removeItem(item)
 
     # Band + Länge zuerst anwenden, damit die Koordinaten im richtigen

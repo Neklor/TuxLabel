@@ -414,3 +414,38 @@ def make_add_image_icon(size: int = 28, dark: bool | None = None) -> QIcon:
     _draw_plus_badge(p, size)
     p.end()
     return QIcon(pm)
+
+
+def make_add_barcode_icon(size: int = 28, dark: bool | None = None) -> QIcon:
+    """Striche unterschiedlicher Breite mit »+«-Abzeichen — »Barcode hinzufügen«.
+
+    Die Strichbreiten sind bewusst ungleichmäßig: Gleich breite Striche sehen
+    aus wie ein Gitter, erst der Wechsel macht das Symbol als Barcode lesbar."""
+    pm = QPixmap(size, size)
+    pm.fill(Qt.GlobalColor.transparent)
+    p = QPainter(pm)
+    p.setRenderHint(QPainter.RenderHint.Antialiasing)
+
+    top = size * 0.20
+    hoehe = size * 0.50
+    einheit = size * 0.058
+    muster = (2, 1, 1, 1, 3, 1, 1, 2, 1, 1)   # Strich, Lücke, Strich, ...
+    p.setPen(Qt.PenStyle.NoPen)
+    p.setBrush(QBrush(_ink(dark)))
+    x = size * 0.12
+    dunkel = True
+    for b in muster:
+        w = b * einheit
+        if dunkel:
+            p.drawRect(QRectF(x, top, w, hoehe))
+        x += w
+        dunkel = not dunkel
+
+    # Klarschrift nur angedeutet: ein dünner Strich unter den Balken.
+    p.setBrush(QBrush(_ink(dark)))
+    p.drawRect(QRectF(size * 0.12, top + hoehe + size * 0.10,
+                      x - size * 0.12, max(1.0, size * 0.055)))
+
+    _draw_plus_badge(p, size)
+    p.end()
+    return QIcon(pm)

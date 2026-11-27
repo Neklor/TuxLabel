@@ -12,6 +12,7 @@ from PyQt6.QtGui import (
     QAction, QDesktopServices, QFont, QKeySequence, QPalette, QPixmap,
 )
 from PyQt6.QtWidgets import (
+    QDialog,
     QButtonGroup,
     QComboBox,
     QDoubleSpinBox,
@@ -35,9 +36,10 @@ from .dialogs import AboutDialog, HelpDialog, SettingsDialog, ShortcutsDialog
 from .i18n import fmt_number, tr
 from .theme import DARK_MODE_KEY
 from .icons import (
-    make_add_image_icon, make_add_text_icon, make_align_icon, make_textdir_icon, make_shadow_icon, make_print_icon,
+    make_add_barcode_icon, make_add_image_icon, make_add_text_icon, make_align_icon, make_textdir_icon, make_shadow_icon, make_print_icon,
 )
 from .image_item import ImageBox
+from .label_canvas import CONTENT_ITEMS
 from .label_canvas import (
     DEFAULT_LABEL_LENGTH_MM,
     TAPE_WIDTHS,
@@ -255,6 +257,14 @@ class MainWindow(QMainWindow):
         self._btn_add_image.setToolTip(tr("toolbar.add_image_tip"))
         self._btn_add_image.clicked.connect(self._load_image)
         add_row.addWidget(self._btn_add_image)
+
+        self._btn_add_barcode = QPushButton()
+        self._btn_add_barcode.setIcon(make_add_barcode_icon(40))
+        self._btn_add_barcode.setIconSize(QSize(34, 34))
+        self._btn_add_barcode.setFixedSize(50, 52)
+        self._btn_add_barcode.setToolTip(tr("toolbar.add_barcode_tip"))
+        self._btn_add_barcode.clicked.connect(self._add_or_edit_barcode)
+        add_row.addWidget(self._btn_add_barcode)
 
         outer.addWidget(self._add_group)
 
@@ -528,6 +538,38 @@ class MainWindow(QMainWindow):
     def _add_text_box(self) -> None:
         self._scene.add_text_box(font=self._current_font())
 
+    def _add_or_edit_barcode(self) -> None:
+        """Legt einen Barcode an — oder ändert den ausgewählten.
+
+        Derselbe Knopf für beides: Ist genau ein Barcode ausgewählt, öffnet er
+        ihn zum Ändern, sonst entsteht ein neuer. Das spart einen zweiten
+        Knopf, und etwas anderes erwartet man von einem Knopf in dieser Lage
+        auch nicht."""
+        from .dialogs import BarcodeDialog
+        from .label_canvas import _printable_mm
+
+        vorhanden = self._scene.selected_barcode()
+        dlg = BarcodeDialog(
+            self,
+            data      = vorhanden.get_data()      if vorhanden else "",
+            symbology = vorhanden.get_symbology() if vorhanden else "code128",
+            show_text = vorhanden.get_show_text() if vorhanden else True,
+            printable_mm = _printable_mm(self._scene.get_tape_width_mm()),
+        )
+        if dlg.exec() != QDialog.DialogCode.Accepted:
+            return
+        data, sym, show_text = dlg.values()
+
+        if vorhanden is not None:
+            # Breite mitwachsen lassen: Eine längere Nummer braucht mehr
+            # Module, bei gleicher Breite würden die Striche sonst dünner.
+            alt_modulbreite = vorhanden.module_width()
+            if vorhanden.set_content(data, sym, show_text):
+                vorhanden.set_size(vorhanden.natural_width(alt_modulbreite),
+                                   vorhanden._rect.height())
+        else:
+            self._scene.add_barcode_box(data, sym, show_text)
+
     def _load_image(self) -> None:
         path, _ = QFileDialog.getOpenFileName(
             self,
@@ -566,7 +608,17 @@ class MainWindow(QMainWindow):
             f = item.get_font()
             f.setPointSize(pt)
             item.set_font(f)
+        # Barcodes haben keine Schriftart, aber eine Klarschrift darunter —
+        # die Größenauswahl soll dort dasselbe bewirken wie bei einem
+        # Textfeld, sonst wäre sie für ausgewählte Barcodes wirkungslos.
+        for item in self._selected_barcodes():
+            item.set_text_pt(pt)
         self._recenter_after_font_change()
+
+    def _selected_barcodes(self) -> list:
+        from .barcode_item import BarcodeBox
+        return [it for it in self._scene.selectedItems()
+                if isinstance(it, BarcodeBox)]
 
     def _set_font_attr(self, attr: str, value: bool) -> None:
         for item in self._target_text_boxes():
@@ -713,11 +765,99 @@ class MainWindow(QMainWindow):
         if scene_w * self._view.transform().m11() > viewport_w:
             self._view._fit_label()
 
+    def _show_all_sizes(self) -> None:
+        """Hebt eine Einschränkung der Schriftgrößen wieder auf."""
+        view = self._size_combo.view()
+        for i in range(self._size_combo.count()):
+            view.setRowHidden(i, False)
+
+    def _sync_size_combo_to_barcode(self) -> bool:
+        """Zeigt die Klarschriftgröße des ausgewählten Barcodes an und blendet
+        die Größen aus, die auf diesem Element nichts bewirken.
+
+        Der Platz für die Ziffern ist auf einen Anteil der Elementhöhe
+        begrenzt, damit die Balken lesbar bleiben. Größere Werte wurden
+        bisher stillschweigend heruntergerechnet — die Auswahl zeigte dann
+        eine Zahl, die nichts mehr änderte. Jetzt steht nur noch zur Wahl,
+        was auch wirkt.
+
+        True, wenn ein Barcode die Anzeige bestimmt."""
+        bcs = self._selected_barcodes()
+        if not bcs:
+            return False
+        item = bcs[0]
+        grenze = self._barcode_max_pt(item)
+
+        self._size_combo.blockSignals(True)
+        view = self._size_combo.view()
+        sichtbar = []
+        for i in range(self._size_combo.count()):
+            pt = self._size_combo.itemData(i)
+            passt = pt <= grenze
+            view.setRowHidden(i, not passt)
+            if passt:
+                sichtbar.append(i)
+        # Nie alles ausblenden: Auf schmalem Band passt keine der angebotenen
+        # Größen, dann bleibt die kleinste stehen statt einer leeren Liste.
+        if not sichtbar:
+            view.setRowHidden(0, False)
+            sichtbar = [0]
+
+        # Trägt das Element eine Größe, die ohnehin heruntergerechnet wird,
+        # auf die wirksame Grenze setzen. Sonst zeigt die Auswahl einen
+        # anderen Wert an als den gespeicherten, und beim nächsten
+        # Vergrößern des Elements spränge die Schrift unerwartet hoch.
+        # Passt gar nichts, gilt die kleinste angebotene Größe als Grenze —
+        # kleiner geht die Auswahl ohnehin nicht, und die Schrift wird dann
+        # beim Zeichnen weiter verkleinert.
+        wirksam = grenze if grenze > 0.0 else self._size_combo.itemData(sichtbar[0])
+        if item.get_text_pt() > wirksam:
+            item.set_text_pt(wirksam)
+
+        ziel = item.get_text_pt()
+        best_i, best_d = sichtbar[0], 10_000.0
+        for i in sichtbar:
+            d = abs(self._size_combo.itemData(i) - ziel)
+            if d < best_d:
+                best_d, best_i = d, i
+        self._size_combo.setCurrentIndex(best_i)
+        self._size_combo.setEnabled(True)
+        self._size_combo.blockSignals(False)
+        return True
+
+    def _barcode_max_pt(self, item) -> float:
+        """Größte Punktzahl, die auf diesem Barcode noch etwas bewirkt.
+
+        Wird gemessen statt gerechnet: Die Zeilenhöhe hängt von der Schriftart
+        ab, und eine Formel dafür ginge bei anderer Schrift daneben."""
+        from PyQt6.QtGui import QFontMetricsF
+        from .barcode_item import _TEXT_MAX_FRAC, _TEXT_GAP_FRAC
+
+        erlaubt = item._rect.height() * _TEXT_MAX_FRAC
+        merk = item.get_text_pt()
+        grenze = 0.0
+        try:
+            for i in range(self._size_combo.count()):
+                pt = self._size_combo.itemData(i)
+                item.set_text_pt(pt)
+                hoehe = QFontMetricsF(item._text_font()).height()
+                if hoehe * (1.0 + _TEXT_GAP_FRAC) <= erlaubt:
+                    grenze = max(grenze, pt)
+        finally:
+            item.set_text_pt(merk)
+        return grenze
+
     def _on_selection_changed(self) -> None:
         """Aktualisiert die Bedienelemente der Werkzeugleiste passend zum ersten ausgewählten Element."""
         boxes = self._selected_text_boxes()
         if not boxes:
+            # Kein Textfeld — ist aber ein Barcode ausgewählt, soll die
+            # Größenauswahl dessen Klarschrift anzeigen, damit sichtbar ist,
+            # was der nächste Griff dorthin verändert.
+            if not self._sync_size_combo_to_barcode():
+                self._show_all_sizes()
             return
+        self._show_all_sizes()
         font = boxes[0].get_font()
         va   = boxes[0].get_vertical_align()
         ha   = boxes[0].get_h_align()
@@ -1149,7 +1289,7 @@ class MainWindow(QMainWindow):
     def _edit_cut(self) -> None:
         if self._scene.copy_selection():
             for item in list(self._scene.selectedItems()):
-                if isinstance(item, (TextBox, ImageBox)):
+                if isinstance(item, CONTENT_ITEMS):
                     self._scene.removeItem(item)
 
     def _edit_copy(self) -> None:
@@ -1164,7 +1304,7 @@ class MainWindow(QMainWindow):
 
     def _edit_delete(self) -> None:
         for item in list(self._scene.selectedItems()):
-            if isinstance(item, (TextBox, ImageBox)):
+            if isinstance(item, CONTENT_ITEMS):
                 self._scene.removeItem(item)
 
     def _edit_duplicate(self) -> None:

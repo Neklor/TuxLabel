@@ -1,6 +1,6 @@
 # SPDX-FileCopyrightText: 2026 Christoph Krogmann
 # SPDX-License-Identifier: GPL-3.0-or-later
-"""Zusätzliche Dialoge: Einstellungen, Über, Tastenkürzel, Hilfe."""
+"""Zusätzliche Dialoge: Einstellungen, Barcode, Über, Tastenkürzel, Hilfe."""
 
 from __future__ import annotations
 
@@ -17,6 +17,7 @@ from PyQt6.QtWidgets import (
     QFormLayout,
     QHBoxLayout,
     QLabel,
+    QLineEdit,
     QMessageBox,
     QPushButton,
     QTabWidget,
@@ -40,6 +41,7 @@ from .update_check import (
     UPDATE_CHECK_KEY, UPDATE_CHECK_DEFAULT,
 )
 from .theme import DARK_MODE_KEY, apply_theme
+from . import barcode as _bc
 
 
 _FONT_SIZES = [6, 7, 8, 9, 10, 11, 12, 14, 16, 18, 20, 22, 24, 28, 32, 36, 48, 72]
@@ -397,3 +399,105 @@ class HelpDialog(QDialog):
         buttons.rejected.connect(self.reject)
         buttons.accepted.connect(self.accept)
         layout.addWidget(buttons)
+
+
+#: Unterhalb dieser druckbaren Höhe wird das Lesen unzuverlässig. Erfahrungs-
+#: wert, keine Norm: Scanner brauchen ein Stück Balken, um die Zeile zu
+#: finden. Auf 6-mm-Band sind nur 3 mm bedruckbar.
+BARCODE_HEIGHT_HINT_MM = 8.0
+
+
+class BarcodeDialog(QDialog):
+    """Nummer eingeben, Art wählen, Klarschrift an oder aus.
+
+    Derselbe Dialog legt einen Barcode an und ändert einen vorhandenen —
+    deshalb nimmt er die Startwerte entgegen und gibt sie über ``values()``
+    zurück, statt selbst ein Element anzufassen."""
+
+    def __init__(self, parent=None, data: str = "",
+                 symbology: str = _bc.CODE128, show_text: bool = True,
+                 printable_mm: float | None = None):
+        super().__init__(parent)
+        self.setWindowTitle(str(tr("barcode.title")))
+        self.setMinimumWidth(420)
+
+        layout = QVBoxLayout(self)
+        form = QFormLayout()
+        layout.addLayout(form)
+
+        self._kind = QComboBox()
+        self._kind.addItem(str(tr("barcode.kind_code128")), _bc.CODE128)
+        self._kind.addItem(str(tr("barcode.kind_ean13")),   _bc.EAN13)
+        i = self._kind.findData(symbology)
+        self._kind.setCurrentIndex(max(0, i))
+        form.addRow(tr("barcode.kind_row"), self._kind)
+
+        self._input = QLineEdit(data)
+        form.addRow(tr("barcode.data_row"), self._input)
+
+        self._cb_text = QCheckBox(tr("barcode.show_text"))
+        self._cb_text.setChecked(show_text)
+        form.addRow("", self._cb_text)
+
+        # Rückmeldung zur Eingabe. Steht immer da, damit der Dialog beim
+        # Tippen nicht springt.
+        self._info = QLabel()
+        self._info.setWordWrap(True)
+        layout.addWidget(self._info)
+
+        if printable_mm is not None and printable_mm < BARCODE_HEIGHT_HINT_MM:
+            warn = QLabel(tr("barcode.narrow_tape", mm=f"{printable_mm:.1f}"))
+            warn.setWordWrap(True)
+            warn.setStyleSheet(
+                "QLabel { background: #FFF3CD; color: #856404;"
+                " border: 1px solid #FFEAA7; border-radius: 4px; padding: 6px; }")
+            layout.addWidget(warn)
+
+        self._buttons = QDialogButtonBox(
+            QDialogButtonBox.StandardButton.Ok
+            | QDialogButtonBox.StandardButton.Cancel)
+        self._buttons.accepted.connect(self.accept)
+        self._buttons.rejected.connect(self.reject)
+        layout.addWidget(self._buttons)
+
+        self._input.textChanged.connect(self._revalidate)
+        self._kind.currentIndexChanged.connect(self._revalidate)
+        self._revalidate()
+        self._input.setFocus()
+
+    def _revalidate(self) -> None:
+        """Hält OK und den Hinweistext am Stand der Eingabe.
+
+        Die Prüfung läuft durch denselben Kodierer wie der Druck — was hier
+        angenommen wird, lässt sich auch erzeugen."""
+        text = self._input.text().strip()
+        sym  = self._kind.currentData()
+        if not text:
+            self._info.setText(str(tr("barcode.hint_" + ("ean13" if sym == _bc.EAN13
+                                                         else "code128"))))
+            self._info.setStyleSheet("QLabel { color: #888888; }")
+            ok = False
+        else:
+            fehler = _bc.check_input(text, sym)
+            if fehler is not None:
+                schluessel, params = fehler
+            if fehler is None:
+                voll = _bc.normalize(text, sym)
+                if sym == _bc.EAN13 and voll != text:
+                    # Prüfziffer ergänzt — das soll der Nutzer sehen.
+                    self._info.setText(str(tr("barcode.check_added", code=voll)))
+                else:
+                    self._info.setText(str(tr("barcode.ok", code=voll)))
+                self._info.setStyleSheet("QLabel { color: #2E7D32; }")
+                ok = True
+            else:
+                self._info.setText(str(tr(schluessel, **params)))
+                self._info.setStyleSheet("QLabel { color: #C62828; }")
+                ok = False
+        self._buttons.button(QDialogButtonBox.StandardButton.Ok).setEnabled(ok)
+
+    def values(self) -> tuple[str, str, bool]:
+        """(Nummer, Barcode-Art, Klarschrift anzeigen)."""
+        return (self._input.text().strip(),
+                self._kind.currentData(),
+                self._cb_text.isChecked())

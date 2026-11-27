@@ -48,6 +48,14 @@ from PyQt6.QtWidgets import (
 
 from .text_item import TextBox
 from .image_item import ImageBox
+from .barcode_item import BarcodeBox
+
+#: Alle Elementarten, die Inhalt tragen und gedruckt werden.
+#:
+#: An einer Stelle gepflegt, weil sonst jede neue Art in rund fünfzehn
+#: isinstance-Prüfungen quer durch das Projekt nachgetragen werden müsste —
+#: und eine davon zu übersehen fällt erst beim Drucken auf.
+CONTENT_ITEMS = (TextBox, ImageBox, BarcodeBox)
 
 # Benutzerdefinierter MIME-Typ, um kopierte Etikettenelemente in die
 # System-Zwischenablage zu legen. Das mitgeführte eigene JSON lässt Strg+C /
@@ -548,7 +556,7 @@ class LabelScene(QGraphicsScene):
         left_extent = 0.0
         right_over  = 0.0
         for item in self.items():
-            if not isinstance(item, (TextBox, ImageBox)):
+            if not isinstance(item, CONTENT_ITEMS):
                 continue
             left_mm  = item.pos().x() / PIXELS_PER_MM
             right_mm = (item.pos().x() + item._rect.width()) / PIXELS_PER_MM
@@ -585,7 +593,7 @@ class LabelScene(QGraphicsScene):
         """
         max_right_px = 0.0
         for item in self.items():
-            if isinstance(item, (TextBox, ImageBox)):
+            if isinstance(item, CONTENT_ITEMS):
                 right_px = item.pos().x() + item._rect.width()
                 if right_px > max_right_px:
                     max_right_px = right_px
@@ -760,6 +768,47 @@ class LabelScene(QGraphicsScene):
         item.setSelected(True)
         return item
 
+    def add_barcode_box(self, data: str, symbology: str,
+                        show_text: bool = True):
+        """Fügt einen Barcode hinzu, auf die druckbare Höhe gelegt.
+
+        Die Breite ergibt sich aus der Modulzahl: Ein Modul bekommt drei
+        Druckpunkte. Weniger wäre riskant — bei 180 dpi ist ein Punkt 0,14 mm
+        breit, und unter etwa zwei Punkten je Modul verschluckt der
+        Thermodruck die schmalsten Striche. Drei Punkte sind der übliche
+        Kompromiss aus Lesbarkeit und Bandverbrauch.
+
+        Gibt None zurück, wenn *data* nicht kodierbar ist."""
+        from .barcode_item import BarcodeBox
+
+        item = BarcodeBox(data, symbology, show_text)
+        if not item.get_data():
+            return None
+
+        printable_h_px = _printable_mm(self._tape_width_mm) * PIXELS_PER_MM
+        safe_h_px      = _image_safe_mm(self._tape_width_mm) * PIXELS_PER_MM
+        inset_px       = (printable_h_px - safe_h_px) / 2.0
+
+        # Drei Druckpunkte je Modul, umgerechnet in Szenenpixel.
+        modul_mm = 3.0 * 25.4 / 180.0
+        item.set_size(item.natural_width(modul_mm * PIXELS_PER_MM), safe_h_px)
+
+        item.setPos(margin_mm() * PIXELS_PER_MM, inset_px)
+        self.addItem(item)
+        self.clearSelection()
+        item.setSelected(True)
+        return item
+
+    def selected_barcode(self):
+        """Der einzelne ausgewählte Barcode, sonst None.
+
+        Damit entscheidet der Knopf in der Werkzeugleiste, ob er einen neuen
+        Barcode anlegt oder den ausgewählten ändert."""
+        from .barcode_item import BarcodeBox
+        treffer = [it for it in self.selectedItems()
+                   if isinstance(it, BarcodeBox)]
+        return treffer[0] if len(treffer) == 1 else None
+
     def paste_image_from_clipboard(self) -> bool:
         """Fügt ein Bild aus der System-Zwischenablage ein. Gibt bei Erfolg True zurück."""
         cb = QApplication.clipboard()
@@ -779,7 +828,7 @@ class LabelScene(QGraphicsScene):
         from . import serialization as _ser
 
         items = [it for it in self.selectedItems()
-                 if isinstance(it, (TextBox, ImageBox))]
+                 if isinstance(it, CONTENT_ITEMS)]
         if not items:
             return False
 
@@ -810,7 +859,7 @@ class LabelScene(QGraphicsScene):
         mit kleinem Versatz. Rührt die interne Kopieren/Einfügen-Zwischenablage
         nicht an."""
         sources = [it for it in self.selectedItems()
-                   if isinstance(it, (TextBox, ImageBox))]
+                   if isinstance(it, CONTENT_ITEMS)]
         if not sources:
             return False
         self.clearSelection()
@@ -835,16 +884,16 @@ class LabelScene(QGraphicsScene):
     def clear_content(self) -> None:
         """Entfernt alle TextBox-/ImageBox-Elemente und lässt die Szenen-Bedienelemente unangetastet."""
         for item in list(self.items()):
-            if isinstance(item, (TextBox, ImageBox)):
+            if isinstance(item, CONTENT_ITEMS):
                 self.removeItem(item)
 
     def select_all_content(self) -> None:
         for item in self.items():
-            if isinstance(item, (TextBox, ImageBox)):
+            if isinstance(item, CONTENT_ITEMS):
                 item.setSelected(True)
 
     def has_content(self) -> bool:
-        return any(isinstance(it, (TextBox, ImageBox)) for it in self.items())
+        return any(isinstance(it, CONTENT_ITEMS) for it in self.items())
 
     def paste_clipboard(self) -> bool:
         """Fügt Etikettenelemente aus der System-Zwischenablage ein. Gibt True
@@ -918,7 +967,7 @@ class LabelScene(QGraphicsScene):
         extra_hidden: list = []
         if item_filter is not None:
             for item in self.items():
-                if isinstance(item, (TextBox, ImageBox)) and not item_filter(item):
+                if isinstance(item, CONTENT_ITEMS) and not item_filter(item):
                     if item.isVisible():
                         item.setVisible(False)
                         extra_hidden.append(item)
@@ -1107,7 +1156,7 @@ class LabelScene(QGraphicsScene):
             return
         xs: list[float] = []
         for item in self.selectedItems():
-            if isinstance(item, (TextBox, ImageBox)):
+            if isinstance(item, CONTENT_ITEMS):
                 left  = item.pos().x()
                 right = left + item._rect.width()
                 xs.append(left)
@@ -1173,7 +1222,7 @@ class LabelScene(QGraphicsScene):
         for it in self.items():
             if it.parentItem() is not None:
                 continue
-            if isinstance(it, (TextBox, ImageBox)):
+            if isinstance(it, CONTENT_ITEMS):
                 cx = it.pos().x() + it._rect.width() / 2.0
                 keep = cx < boundary_px
             else:
@@ -1558,7 +1607,7 @@ class LabelView(QGraphicsView):
             event.accept()
         elif event.key() in arrow_keys:
             selected = [it for it in self.scene().selectedItems()
-                        if isinstance(it, (TextBox, ImageBox))]
+                        if isinstance(it, CONTENT_ITEMS)]
             if not selected:
                 super().keyPressEvent(event)
                 return

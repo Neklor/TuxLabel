@@ -40,6 +40,8 @@ Linux Mint und Debian als `.deb` Paket. Zum installieren einfach die .deb Datei 
 * Textfelder mit freier Schriftart, -größe und -stil (fett, kursiv,
   unterstrichen, durchgestrichen), Ausrichtung links/zentriert/rechts/Blocksatz
 * Bilder aus Datei oder direkt aus der Zwischenablage (`Strg+V`)
+* Barcodes: Code 128 (beliebige Länge) oder EAN-13, wahlweise mit der Nummer
+  unter den Balken
 * Verschieben per Maus oder Pfeiltasten (1 mm, mit `Strg` in 0,1-mm-Schritten),
   Größenänderung über Anfasser
 * Schatten je Textfeld — grauer Schatten hinter der Schrift, der auch
@@ -404,6 +406,8 @@ and Debian as a `.deb` package. To install, simply launch the `.deb` file.
 * Text boxes with any font, size and style; left/centre/right/justified
   alignment
 * Images from file or pasted from the clipboard (`Ctrl+V`)
+* Barcodes: Code 128 (any length) or EAN-13, optionally with the number below
+  the bars
 * Move with the mouse or arrow keys (1 mm, or 0.1 mm with `Ctrl`), resize via
   handles, copy formatting between text boxes, centre elements on the tape
 * Writing direction per text box — horizontal, vertical or tilted by 90°,

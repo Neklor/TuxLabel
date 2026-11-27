@@ -88,6 +88,9 @@ _DEFAULTS: dict[str, object] = {
     "toolbar.add_text_tip":     "Text einfügen — neues Textfeld auf dem Etikett",
     "toolbar.add_image_tip":    ("Bild einfügen — aus Datei laden\n"
                                  "Tipp: Bilder aus der Zwischenablage mit Strg+V einfügen"),
+    "toolbar.add_barcode_tip":  ("Barcode einfügen — Nummer eingeben, Code 128 oder "
+                                 "EAN-13.\nIst ein Barcode ausgewählt, ändert dieser "
+                                 "Knopf ihn."),
     "toolbar.tape_width":       "Bandbreite: ",
     "toolbar.tape_width_tip":   "Breite des eingelegten TZe-Bandes",
     "toolbar.font":             " Schriftart: ",
@@ -291,6 +294,30 @@ _DEFAULTS: dict[str, object] = {
     "update.failed_body":    ("Die Release-Seite war nicht erreichbar. Besteht eine "
                               "Internetverbindung?"),
 
+    # --- Barcode ---
+    "barcode.title":        "Barcode",
+    "barcode.kind_row":     "Art:",
+    "barcode.kind_code128": "Code 128 — beliebige Länge",
+    "barcode.kind_ean13":   "EAN-13 — Handelsartikel",
+    "barcode.data_row":     "Nummer:",
+    "barcode.show_text":    "Nummer unter dem Barcode anzeigen",
+    "barcode.hint_code128": ("Ziffern, Buchstaben und Satzzeichen. Die Prüfziffer "
+                             "rechnet TuxLabel selbst."),
+    "barcode.hint_ean13":   ("Zwölf Ziffern eingeben, die dreizehnte wird als "
+                             "Prüfziffer ergänzt."),
+    "barcode.ok":           "Wird kodiert als {code}",
+    "barcode.check_added":  "Mit Prüfziffer: {code}",
+    "barcode.narrow_tape":  ("Auf diesem Band sind nur {mm} mm bedruckbar. Das reicht "
+                             "für einen Barcode meist nicht — viele Lesegeräte brauchen "
+                             "höhere Balken. Breiteres Band gibt ein verlässlicheres "
+                             "Ergebnis."),
+    "barcode.err_empty":      "Bitte eine Nummer eingeben.",
+    "barcode.err_char":       "Zeichen nicht darstellbar: {char}",
+    "barcode.err_ean_len":    "EAN-13 braucht genau zwölf Ziffern.",
+    "barcode.err_ean_digits": "EAN-13 nimmt nur Ziffern.",
+    "barcode.err_ean_check":  "Prüfziffer stimmt nicht — erwartet wird {digit}.",
+    "barcode.err_kind":       "Unbekannte Barcode-Art.",
+
     # --- Über-Dialog ---
     "about.title": "Über TuxLabel",
     # {version} wird aus tuxlabel.__version__ gefüllt. »Version« schreibt sich
@@ -352,6 +379,13 @@ _DEFAULTS: dict[str, object] = {
           das <b>Bild-Symbol</b> (mit grünem +) klicken, um eine Bilddatei
           zu laden. Mit <i>Strg+V</i> lassen sich Bilder direkt aus der
           Zwischenablage einfügen.</li>
+      <li><b>Barcode einfügen:</b> Im Werkzeugbereich <i>Hinzufügen</i> auf
+          das <b>Barcode-Symbol</b> klicken, Nummer eingeben und zwischen
+          <i>Code 128</i> (beliebige Länge) und <i>EAN-13</i> (Handelsartikel)
+          wählen. Die Nummer kann unter den Balken stehen oder entfallen.
+          Ist ein Barcode ausgewählt, ändert derselbe Knopf ihn.
+          Auf schmalem Band sind Barcodes oft nicht sicher lesbar — ab
+          12&nbsp;mm wird es zuverlässig.</li>
       <li><b>Verschieben:</b> Element mit der Maus ziehen oder mit den
           Pfeiltasten verschieben (Strg = Feinschritt 0,1&nbsp;mm).</li>
       <li><b>Größe ändern:</b> Element auswählen und an einem der blauen

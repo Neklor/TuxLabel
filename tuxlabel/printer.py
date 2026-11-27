@@ -42,7 +42,7 @@ from PyQt6.QtWidgets import (
 )
 
 from .i18n import fmt_number, tr
-from .label_canvas import PRINT_HARDWARE_LEADER_MM
+from .label_canvas import PRINT_HARDWARE_LEADER_MM, CONTENT_ITEMS
 
 if TYPE_CHECKING:
     from .label_canvas import LabelScene
@@ -287,7 +287,7 @@ def _overflowing_items(scene) -> list[str]:
 
     names: list[str] = []
     for item in scene.items():
-        if not isinstance(item, (TextBox, ImageBox)):
+        if not isinstance(item, CONTENT_ITEMS):
             continue
         r = item.sceneBoundingRect()
         # sceneBoundingRect enthält die Anfasser; der Inhalt ist das _rect.
